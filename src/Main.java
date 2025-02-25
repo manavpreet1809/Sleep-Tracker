@@ -1,9 +1,12 @@
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         boolean run = true;
+        ArrayList<double[]> userData = new ArrayList<>();
+
         while (run) {
             System.out.println("************************************************");
             System.out.println("\tWelcome to our sleep tracker application!");
@@ -14,12 +17,13 @@ public class Main {
             System.out.println("************************************************");
 
             int choice = validateInput(1,3);
+
             switch (choice) {
                 case 1:
-                    record();
+                    userData.add(record());
                     break;
                 case 2:
-                    analyze();
+                    analyze(userData);
                     break;
                 case 3:
                     run = false;
@@ -28,15 +32,16 @@ public class Main {
         }
     }
 
-    public static void record() {
-        System.out.println("Does nothing for now :P");
+    public static double[] record() {
+        double[] res = new double[20]; // 0th index is kept blank for readability.
+
         System.out.println("---------------------–-----------------------------");
         System.out.println("\tYou may enter any number of variables that you would like to log for this night.");
         System.out.println("\tChoose 1 of the following: ");
         System.out.println("\t1) Sleep quality (Scale of 1-10)");
         System.out.println("\t2) Room temperature (in °C)");
         System.out.println("\t3) Sleep duration (in hrs)");
-        System.out.println("\t4) Time spent doing cardi over the day (in minutes)");
+        System.out.println("\t4) Time spent doing cardio over the day (in minutes)");
         System.out.println("\t5) Time spent napping during the day (in minutes)");
         System.out.println("\t6) Screen time (in hrs)");
         System.out.println("\t7) Age of mattress in months (only enter once)");
@@ -47,12 +52,26 @@ public class Main {
         int variable_chosen = validateInput(1,10);
         switch (variable_chosen) {
             case 1: 
-            System.out.println("Enter your sleep quality from a scale of 1-10 (1=Restless, 10=Highly restorative):")
+                System.out.println("Enter your sleep quality from a scale of 1-10 (1=Restless, 10=Highly restorative):");
+                res[1] = validateInput(1,10);
+                break;
+            case 2:
+                System.out.println("Enter your room temperature in °C (Valid input range is 10.0-30.0)");
+                res[2] = validateInput(10.0, 30.0);
+                break;
         }
+
+        return res;
     }
 
-    public static void analyze() {
-        System.out.println("Does nothing for now :P");
+    public static void analyze(ArrayList<double[]> userData) {
+        if (userData.isEmpty()) {
+            System.out.println("No logs recorded so far! Please record at least one night's worth of data.");
+            return;
+        }
+
+        System.out.println("What data would you like to see/analyse?");
+        // ...
     }
 
     public static int validateInput(int min, int max) {
@@ -69,6 +88,32 @@ public class Main {
         while (!valid) {
             try {
                 res = input.nextInt();
+                if (min <= res && res <= max)
+                    valid = true;
+                else
+                    System.out.println("Please enter a number between " + min + " and " + max + ".");
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a number between " + min + " and " + max + ".");
+                input.next();
+            }
+        }
+        return res;
+    }
+
+    public static double validateInput(double min, double max) {
+        Scanner input = new Scanner(System.in);
+        boolean valid = false;
+        double res = 0;
+
+        if (min > max) {
+            double temp = min;
+            min = max;
+            max = temp;
+        }
+
+        while (!valid) {
+            try {
+                res = input.nextDouble();
                 if (min <= res && res <= max)
                     valid = true;
                 else
