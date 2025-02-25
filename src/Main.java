@@ -1,17 +1,19 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         boolean run = true;
         while (run) {
-            System.out.println("Welcome to our sleep tracker application!");
-            System.out.println("Please choose if you would like to:");
-            System.out.println("1) Record a new log");
-            System.out.println("2) Analyze trends");
-            System.out.println("3) Exit program");
+            System.out.println("************************************************");
+            System.out.println("\tWelcome to our sleep tracker application!");
+            System.out.println("\tPlease choose whether you would like to:");
+            System.out.println("\t1) Record a new log");
+            System.out.println("\t2) Analyze trends");
+            System.out.println("\t3) Exit program");
+            System.out.println("************************************************");
 
-            Scanner input = new Scanner(System.in);
-            int choice = input.nextInt();
+            int choice = validateInput(1,3);
             switch (choice) {
                 case 1:
                     record();
@@ -22,10 +24,7 @@ public class Main {
                 case 3:
                     run = false;
                     break;
-                default:
-                    System.out.println("Invalid choice. Please enter a valid option.");
             }
-
         }
     }
 
@@ -35,5 +34,31 @@ public class Main {
 
     public static void analyze() {
         System.out.println("Does nothing for now :P");
+    }
+
+    public static int validateInput(int min, int max) {
+        Scanner input = new Scanner(System.in);
+        boolean valid = false;
+        int res = 0;
+
+        if (min > max) {
+            int temp = min;
+            min = max;
+            max = temp;
+        }
+
+        while (!valid) {
+            try {
+                res = input.nextInt();
+                if (min <= res && res <= max)
+                    valid = true;
+                else
+                    System.out.println("Please enter a number between " + min + " and " + max + ".");
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a number between " + min + " and " + max + ".");
+                input.next();
+            }
+        }
+        return res;
     }
 }
