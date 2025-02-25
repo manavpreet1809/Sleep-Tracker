@@ -52,14 +52,47 @@ public class Main {
 
         int variable_chosen = validateInput(1,10);
         switch (variable_chosen) {
-            case 1: 
-                System.out.println("Enter your sleep quality from a scale of 1-10 (1=Restless, 10=Highly restorative):");
+            case 1: //Each variable is stored into res[] (indexes 1-10), to 2 decimal places
+                System.out.println("Enter your sleep quality from a scale of 1-10 (1=Restless, 10=Highly restorative):")
                 res[1] = validateInput(1,10);
                 break;
             case 2:
-                System.out.println("Enter your room temperature in °C (Valid input range is 10.0-30.0)");
+                System.out.println("Enter your room temperature in °C (Valid input range is 10.0-30.0):");
                 res[2] = validateInput(10.0, 30.0);
                 break;
+            case 3:
+                System.out.println("Enter your sleep duration in hours (Valid input rage is 0-24):");
+                res[3] = validateInput(0, 24); //User cannot sleep more than 24 hours per day
+                break;
+            case 4:
+                System.out.println("Enter the amount of time you spent on doing cardio today in minutes (Valid input range is 0-1380):");
+                res[4] = validateInput(0, 1380); 
+                break;
+            case 5:
+                System.out.println("Enter the amount of time you spent napping today in minutes (Valid input range is 0-180):");
+                res[5] = validateInput(0, 180); //3 hrs is the longest to be considered a nap 
+                break;
+            case 6:
+                System.out.println("Enter your Screen time today in hours (Valid input range is 0-24):");
+                res[6] = validateInput(0, 24);
+                break;
+            case 7:
+                System.out.println("Enter the age of your mattress in months just ONCE (Valid input range is 0-1560):");
+                res[7] = validateInput(0, 1560);
+                break;
+            case 8:
+                System.out.println("What is your water intake? Enter in mL (Valid input range is 0-12000):");
+                res[8] = validateInput(0, 12000);
+                break;
+            case 9:
+                System.out.println("Enter the time you went to bed (Next you will enter the time you woke up, enter both values in 24-hour-format, enter 22.50 (if 10:30PM) or 6.25 (if 6:15AM)");
+                res[9] = validateInput(0, 24));
+                System.out.println("Enter the time you woke up (Enter in 24-hour-format like last time, enter 22.50 (if 10:30PM) or 11.6 (if 11:36PM)")
+                res[10] = validateInput(0, 24));
+                break;   
+            case 10:
+                System.out.println("Congradulations, you completed your log for today!");
+                break;  //No need for a data entry here 
         }
 
         return res;
