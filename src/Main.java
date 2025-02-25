@@ -8,13 +8,13 @@ public class Main {
         ArrayList<double[]> userData = new ArrayList<>();
 
         while (run) {
-            System.out.println("************************************************");
+            System.out.println("---------------------–-----------------------------");
             System.out.println("\tWelcome to our sleep tracker application!");
             System.out.println("\tPlease choose whether you would like to:");
             System.out.println("\t1) Record a new log");
             System.out.println("\t2) Analyze trends");
             System.out.println("\t3) Exit program");
-            System.out.println("************************************************");
+            System.out.println("---------------------–-----------------------------");
 
             int choice = validateInput(1,3);
 
@@ -48,6 +48,7 @@ public class Main {
         System.out.println("\t8) Water intake (in mL)");
         System.out.println("\t9) Sleep/wake times (AM/PM)");
         System.out.println("\t10) Finish logging");
+        System.out.println("---------------------–-----------------------------");
 
         int variable_chosen = validateInput(1,10);
         switch (variable_chosen) {
@@ -70,8 +71,21 @@ public class Main {
             return;
         }
 
+        System.out.println("---------------------–-----------------------------");
         System.out.println("What data would you like to see/analyse?");
-        // ...
+        System.out.println("1) Show all data recorded so far.");
+        System.out.println("---------------------–-----------------------------");
+
+        int choice = validateInput(1,8);
+
+        switch (choice) {
+            case 1:
+                System.out.println("---------------------–-----------------------------");
+                displayRow("Sleep quality (1-10)", userData, 1);
+                displayRow("Room temperature (°C)", userData, 2);
+                System.out.println("---------------------–-----------------------------");
+
+        }
     }
 
     public static int validateInput(int min, int max) {
@@ -124,5 +138,15 @@ public class Main {
             }
         }
         return res;
+    }
+
+    public static void displayRow(String message, ArrayList<double[]> userData, int row) {
+        StringBuilder res = new StringBuilder();
+        res.append(message);
+        res.append(":\t");
+        for(double[] night : userData) {
+            res.append(night[row]).append("\t");
+        }
+        System.out.println(res);
     }
 }
