@@ -30,6 +30,25 @@ public class Main {
 
     public static void record() {
         System.out.println("Does nothing for now :P");
+        System.out.println("---------------------–-----------------------------");
+        System.out.println("\tYou may enter any number of variables that you would like to log for this night.");
+        System.out.println("\tChoose 1 of the following: ");
+        System.out.println("\t1) Sleep quality (Scale of 1-10)");
+        System.out.println("\t2) Room temperature (in °C)");
+        System.out.println("\t3) Sleep duration (in hrs)");
+        System.out.println("\t4) Time spent doing cardi over the day (in minutes)");
+        System.out.println("\t5) Time spent napping during the day (in minutes)");
+        System.out.println("\t6) Screen time (in hrs)");
+        System.out.println("\t7) Age of mattress in months (only enter once)");
+        System.out.println("\t8) Water intake (in mL)");
+        System.out.println("\t9) Sleep/wake times (AM/PM)");
+        System.out.println("\t10) Finish logging");
+
+        int variable_chosen = validateInput(1,10);
+        switch (variable_chosen) {
+            case 1: 
+            System.out.println("Enter your sleep quality from a scale of 1-10 (1=Restless, 10=Highly restorative):")
+        }
     }
 
     public static void analyze() {
