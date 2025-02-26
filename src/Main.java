@@ -53,7 +53,7 @@ public class Main {
         int variable_chosen = validateInput(1,10);
         switch (variable_chosen) {
             case 1: //Each variable is stored into res[] (indexes 1-10), to 2 decimal places
-                System.out.println("Enter your sleep quality from a scale of 1-10 (1=Restless, 10=Highly restorative):")
+                System.out.println("Enter your sleep quality from a scale of 1-10 (1=Restless, 10=Highly restorative):");
                 res[1] = validateInput(1,10);
                 break;
             case 2:
@@ -61,7 +61,7 @@ public class Main {
                 res[2] = validateInput(10.0, 30.0);
                 break;
             case 3:
-                System.out.println("Enter your sleep duration in hours (Valid input rage is 0-24):");
+                System.out.println("Enter your sleep duration in hours (Valid input range is 0-24):");
                 res[3] = validateInput(0, 24); //User cannot sleep more than 24 hours per day
                 break;
             case 4:
@@ -86,12 +86,12 @@ public class Main {
                 break;
             case 9:
                 System.out.println("Enter the time you went to bed (Next you will enter the time you woke up, enter both values in 24-hour-format, enter 22.50 (if 10:30PM) or 6.25 (if 6:15AM)");
-                res[9] = validateInput(0, 24));
-                System.out.println("Enter the time you woke up (Enter in 24-hour-format like last time, enter 22.50 (if 10:30PM) or 11.6 (if 11:36PM)")
-                res[10] = validateInput(0, 24));
+                res[9] = validateInput(0, 24);
+                System.out.println("Enter the time you woke up (Enter in 24-hour-format like last time, enter 22.50 (if 10:30PM) or 11.6 (if 11:36PM)");
+                res[10] = validateInput(0, 24);
                 break;   
             case 10:
-                System.out.println("Congradulations, you completed your log for today!");
+                System.out.println("Congratulations, you completed your log for today!");
                 break;  //No need for a data entry here 
         }
 
