@@ -74,7 +74,7 @@ public class Main {
                     res[5] = validateInput(0, 180); //3 hrs is the longest to be considered a nap
                     break;
                 case 6:
-                    System.out.println("Enter your Screen time today in hours (Valid input range is 0-24):");
+                    System.out.println("Enter your screen time today in hours (Valid input range is 0-24):");
                     res[6] = validateInput(0, 24);
                     break;
                 case 7:
@@ -87,9 +87,9 @@ public class Main {
                     break;
                 case 9:
                     System.out.println("Enter the time you went to bed (Next you will enter the time you woke up, enter both values in 24-hour-format, enter 22.50 (if 10:30PM) or 6.25 (if 6:15AM)");
-                    res[9] = validateInput(0, 24);
+                    res[9] = validateInput(0.0, 24.0);
                     System.out.println("Enter the time you woke up (Enter in 24-hour-format like last time, enter 22.50 (if 10:30PM) or 11.6 (if 11:36PM)");
-                    res[10] = validateInput(0, 24);
+                    res[10] = validateInput(0.0, 24.0);
                     break;
                 case 10:
                     System.out.println("Congratulations, you completed your log for today!");
@@ -116,8 +116,19 @@ public class Main {
         switch (choice) {
             case 1:
                 System.out.println("---------------------–-----------------------------");
-                displayRow("Sleep quality (1-10)", userData, 1);
-                displayRow("Room temperature (°C)", userData, 2);
+                displayRow("Sleep quality (1-10):\t", userData, 1);
+                displayRow("Room temperature (°C):\t", userData, 2);
+                displayRow("Sleep duration (hrs):\t", userData, 3);
+                displayRow("Cardio duration (mins):\t", userData, 4);
+                displayRow("Napping duration (mins):", userData, 5);
+                displayRow("Screen time (hrs):\t\t", userData, 6);
+                displayRow("Mattress age (months):\t", userData, 7);
+                displayRow("Water intake (mL):\t\t", userData, 8);
+                displayRow("Wake time (24hr):\t\t", userData, 9);
+                displayRow("Sleep time (24hr):\t\t", userData, 10);
+
+
+
                 System.out.println("---------------------–-----------------------------");
 
         }
@@ -178,7 +189,7 @@ public class Main {
     public static void displayRow(String message, ArrayList<double[]> userData, int row) {
         StringBuilder res = new StringBuilder();
         res.append(message);
-        res.append(":\t");
+        res.append("\t");
         for(double[] night : userData) {
             res.append(String.format("%.02f", night[row])).append("\t");
         }
