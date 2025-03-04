@@ -24,3 +24,6 @@
 hs_err_pid*
 replay_pid*
 
+# IDE specific, generally good practice to add
+.idea/
+
