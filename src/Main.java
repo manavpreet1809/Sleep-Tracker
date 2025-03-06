@@ -109,27 +109,63 @@ public class Main {
         System.out.println("---------------------–-----------------------------");
         System.out.println("What data would you like to see/analyse?");
         System.out.println("1) Show all data recorded so far.");
+        System.out.println("2) Show factors affecting sleep quality.");
+        System.out.println("3) Show factors affecting sleep duration.");
+        System.out.println("4) Show averages of recorded data.");
+        System.out.println("5) Show relative consistency of sleep/wake times.");
+        System.out.println("6) Exit.");
         System.out.println("---------------------–-----------------------------");
 
         int choice = validateInput(1,8);
 
         switch (choice) {
             case 1:
-                System.out.println("---------------------–-----------------------------");
-                displayRow("Sleep quality (1-10):\t", userData, 1);
-                displayRow("Room temperature (°C):\t", userData, 2);
-                displayRow("Sleep duration (hrs):\t", userData, 3);
-                displayRow("Cardio duration (mins):\t", userData, 4);
-                displayRow("Napping duration (mins):", userData, 5);
-                displayRow("Screen time (hrs):\t\t", userData, 6);
-                displayRow("Mattress age (months):\t", userData, 7);
-                displayRow("Water intake (mL):\t\t", userData, 8);
-                displayRow("Wake time (24hr):\t\t", userData, 9);
-                displayRow("Sleep time (24hr):\t\t", userData, 10);
-                System.out.println("---------------------–-----------------------------");
-
+                displayData(userData);
+                break;
+            case 2:
+                sleepQualityFactors(userData);
+                break;
+            case 3:
+                sleepDurationFactors(userData);
+                break;
+            case 4:
+                averages(userData);
+                break;
+            case 5:
+                sleepWakeConsistency(userData);
+                break;
+            case 6:
+                break;
         }
     }
+
+    public static void displayData(ArrayList<double[]> userData) {
+        System.out.println("---------------------–-----------------------------");
+        displayRow("Sleep quality (1-10):\t", userData, 1);
+        displayRow("Room temperature (°C):\t", userData, 2);
+        displayRow("Sleep duration (hrs):\t", userData, 3);
+        displayRow("Cardio duration (mins):\t", userData, 4);
+        displayRow("Napping duration (mins):", userData, 5);
+        displayRow("Screen time (hrs):\t\t", userData, 6);
+        displayRow("Mattress age (months):\t", userData, 7);
+        displayRow("Water intake (mL):\t\t", userData, 8);
+        displayRow("Wake time (24hr):\t\t", userData, 9);
+        displayRow("Sleep time (24hr):\t\t", userData, 10);
+        System.out.println("---------------------–-----------------------------");
+    }
+
+    private static void sleepQualityFactors(ArrayList<double[]> userData) {
+    }
+
+    private static void sleepDurationFactors(ArrayList<double[]> userData) {
+    }
+
+    private static void averages(ArrayList<double[]> userData) {
+    }
+
+    private static void sleepWakeConsistency(ArrayList<double[]> userData) {
+    }
+
 
     public static int validateInput(int min, int max) {
         Scanner input = new Scanner(System.in);
