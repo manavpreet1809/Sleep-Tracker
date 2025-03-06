@@ -152,32 +152,29 @@ public class Main {
 
             }
         }
-    }
-    public static int validateInput(int min, int max) {
-        Scanner input = new Scanner(System.in);
-        boolean valid = false;
-        int res = 0;
 
-        if (min > max) {
-            int temp = min;
-            min = max;
-            max = temp;
-        }
-
-        while (!valid) {
-            try {
-                res = input.nextInt();
-                if (min <= res && res <= max)
-                    valid = true;
-                else
-                    System.out.println("Please enter a number between " + min + " and " + max + ".");
-            } catch (InputMismatchException e) {
-                System.out.println("Please enter a number between " + min + " and " + max + ".");
-                input.next();
-            }
-        }
-        return res;
     }
+public static double calculateAverage(ArrayList<double[]> userData, int index) {
+    double sum = 0;
+    for (double[] entry : userData) {
+        sum += entry[index];
+    }
+    return sum / userData.size();
+}
+    public static void analyzeSleepWakeConsistency(ArrayList<double[]> userData) {
+    double avgSleepTime = calculateAverage(userData, 9);
+    double avgWakeTime = calculateAverage(userData, 10);
+
+    System.out.println("Average Sleep Time: " + avgSleepTime + " hrs");
+    System.out.println("Average Wake Time: " + avgWakeTime + " hrs");
+
+    if (avgSleepTime < 22 || avgSleepTime > 1) {
+        System.out.println("Your sleep time is inconsistent. Try to sleep at the same time daily.");
+    }
+    if (avgWakeTime < 6 || avgWakeTime > 9) {
+        System.out.println("Your wake-up time is inconsistent. Try to maintain a fixed routine.");
+    }
+}
 
     public static double validateInput(double min, double max) {
         Scanner input = new Scanner(System.in);
