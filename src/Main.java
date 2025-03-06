@@ -148,6 +148,9 @@ public class Main {
                 displayRow("Water intake (mL):\t\t", userData, 8);
                 displayRow("Wake time (24hr):\t\t", userData, 9);
                 displayRow("Sleep time (24hr):\t\t", userData, 10);
+
+
+
                 System.out.println("---------------------–-----------------------------");
 
             }
@@ -207,22 +210,8 @@ public static double calculateAverage(ArrayList<double[]> userData, int index) {
         res.append(message);
         res.append("\t");
         for(double[] night : userData) {
-            res.append(round(night[row])).append("\t");
+            res.append(String.format("%.02f", night[row])).append("\t");
         }
         System.out.println(res);
-    }
-
-    public static String round(double num) { // returns number normalized to 5 characters wide.
-        if (num >= 10000) {
-            return String.valueOf(Math.round(num));
-        } else if (num >= 1000) {
-            return " " + Math.round(num);
-        } else if (num >= 100) {
-            return String.format("%.1f", num);
-        } else if (num >= 10) {
-            return String.format("%.2f", num);
-        } else {
-            return String.format("%.3f", num);
-        }
     }
 }
