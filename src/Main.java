@@ -126,9 +126,6 @@ public class Main {
                 displayRow("Water intake (mL):\t\t", userData, 8);
                 displayRow("Wake time (24hr):\t\t", userData, 9);
                 displayRow("Sleep time (24hr):\t\t", userData, 10);
-
-
-
                 System.out.println("---------------------–-----------------------------");
 
         }
