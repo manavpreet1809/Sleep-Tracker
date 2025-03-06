@@ -111,10 +111,32 @@ public class Main {
         System.out.println("1) Show all data recorded so far.");
         System.out.println("---------------------–-----------------------------");
 
-        int choice = validateInput(1,8);
+        int choice = validateInput(1, 6);
 
         switch (choice) {
             case 1:
+                displayAllData(userData);
+                break;
+            case 2:
+                analyzeSleepQualityFactors(userData);
+                break;
+            case 3:
+                analyzeSleepDurationFactors(userData);
+                break;
+            case 4:
+                displayAverages(userData);
+                break;
+            case 5:
+                analyzeSleepWakeConsistency(userData);
+                break;
+            case 6:
+                System.out.println("Exiting analysis...");
+                return;
+        }
+    }
+
+
+            public static void displayAllData (ArrayList < double[]>userData){
                 System.out.println("---------------------–-----------------------------");
                 displayRow("Sleep quality (1-10):\t", userData, 1);
                 displayRow("Room temperature (°C):\t", userData, 2);
@@ -126,14 +148,11 @@ public class Main {
                 displayRow("Water intake (mL):\t\t", userData, 8);
                 displayRow("Wake time (24hr):\t\t", userData, 9);
                 displayRow("Sleep time (24hr):\t\t", userData, 10);
-
-
-
                 System.out.println("---------------------–-----------------------------");
 
+            }
         }
     }
-
     public static int validateInput(int min, int max) {
         Scanner input = new Scanner(System.in);
         boolean valid = false;
