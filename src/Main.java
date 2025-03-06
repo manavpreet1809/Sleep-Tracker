@@ -33,7 +33,7 @@ public class Main {
     }
 
     public static double[] record() {
-        double[] res = new double[20]; // 0th index is kept blank for readability.
+        double[] res = new double[11]; // 0th index is kept blank for readability.
         boolean run = true;
 
         while (run) {
