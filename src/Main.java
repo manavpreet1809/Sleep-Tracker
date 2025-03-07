@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -21,7 +20,7 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    userData.add(record(userData));
+                    userData.add(record());
                     break;
                 case 2:
                     analyze(userData);
@@ -33,37 +32,22 @@ public class Main {
         }
     }
 
-    public static double[] record(ArrayList<double[]> userData) {
+    public static double[] record() {
         double[] res = new double[11]; // 0th index is kept blank for readability.
-        Arrays.fill(res, -1); // User may want to input "0".
-        for (double[] day : userData)
-            if (day[7] != -1)
-                res[7] = day[7]; // Mattress age
-        boolean complete;
-
         boolean run = true;
 
         while (run) {
             System.out.println("---------------------–-----------------------------");
             System.out.println("\tYou may enter any number of variables that you would like to log for this night.");
-            if (res[1] == -1)
-                System.out.println("\t1) Sleep quality (Scale of 1-10)");
-            if (res[2] == -1)
-                System.out.println("\t2) Room temperature (in °C)");
-            if (res[3] == -1)
-                System.out.println("\t3) Sleep duration (in hrs)");
-            if (res[4] == -1)
-                System.out.println("\t4) Time spent doing cardio over the day (in minutes)");
-            if (res[5] == -1)
-                System.out.println("\t5) Time spent napping during the day (in minutes)");
-            if (res[6] == -1)
-                System.out.println("\t6) Screen time (in hrs)");
-            if (res[7] == -1)
-                System.out.println("\t7) Age of mattress in months (only enter once)");
-            if (res[8] == -1)
-                System.out.println("\t8) Water intake (in mL)");
-            if (res[9] == -1)
-                System.out.println("\t9) Sleep/wake times (AM/PM)");
+            System.out.println("\t1) Sleep quality (Scale of 1-10)");
+            System.out.println("\t2) Room temperature (in °C)");
+            System.out.println("\t3) Sleep duration (in hrs)");
+            System.out.println("\t4) Time spent doing cardio over the day (in minutes)");
+            System.out.println("\t5) Time spent napping during the day (in minutes)");
+            System.out.println("\t6) Screen time (in hrs)");
+            System.out.println("\t7) Age of mattress in months (only enter once)");
+            System.out.println("\t8) Water intake (in mL)");
+            System.out.println("\t9) Sleep/wake times (AM/PM)");
             System.out.println("\t10) Finish logging");
             System.out.println("---------------------–-----------------------------");
 
@@ -108,19 +92,8 @@ public class Main {
                     res[10] = validateTime();
                     break;
                 case 10:
-                    complete = true;
-                    for (int i = 1; i < res.length; i++) {
-                        if (res[i] == -1) {
-                            complete = false;
-                            break;
-                        }
-                    }
-                    if (complete) {
-                        System.out.println("Congratulations, you completed your log for today!");
-                        run = false;
-                    } else {
-                        System.out.println("Please complete the log before exiting.");
-                    }
+                    System.out.println("Congratulations, you completed your log for today!");
+                    run = false;
                     break;  //No need for a data entry here
             }
         }
@@ -220,10 +193,35 @@ public class Main {
             } else if (temperature > 18.5) {
                 tempDownCount++;
             }
+            if (screenTime >= 4) {
+                if (sleepQuality >= 7.5) {
+                    screenTimeUpCount++;
+                } else if (sleepQuality <= 3.5) {
+                    screenTimeDownCount++;
+                }
+            }
+            if (water >= 2000) {
+                if (sleepQuality >= 7.5) {
+                    waterUpCount++;
+                } else if (sleepQuality <= 3.5) {
+                    waterDownCount++;
+                }
+            }
+
+            if (nap_duration <= 30) {
+                if (sleepQuality >= 7.5) {
+                    napUpCount++;
+                } else if (sleepQuality <= 3.5) {
+                    napDownCount++;
+                }
+            }
         }
     }
 
     private static void sleepDurationFactors(ArrayList<double[]> userData) {
+
+
+    {
         int cardioHelpedSleep = 0, cardioReducedSleep = 0;
         int lowTempHelpedSleep = 0, highTempReducedSleep= 0;
         int screenTimeHelpedSleep = 0, highScreenTimeReducedSleep = 0;
@@ -273,8 +271,8 @@ public class Main {
         System.out.println(" - Low water intake: " + lowWaterReducedSleep);
          System.out.println(" - Long naps (>60 min): " + longNapsReducedSleep);
     }
-
-    public static double[] calculateAverages(ArrayList<double[]> userData) {
+}
+    private static double[] calculateAverages(ArrayList<double[]> userData) {
         double[] avg = new double[userData.getFirst().length];
         for (double[] log : userData)
             for (int i = 0; i < log.length; i++)
@@ -285,9 +283,8 @@ public class Main {
         return avg;
     }
 
-    private static void sleepWakeConsistency(ArrayList<double[]> userData) {
 
-    }
+
 
     public static int validateInput(int min, int max) {
         Scanner input = new Scanner(System.in);
