@@ -16,7 +16,7 @@ public class Main {
             System.out.println("\t3) Exit program");
             System.out.println("---------------------–-----------------------------");
 
-            int choice = validateInput(1, 3);
+            int choice = validateInput(1,3);
 
             switch (choice) {
                 case 1:
@@ -116,7 +116,7 @@ public class Main {
         System.out.println("6) Exit.");
         System.out.println("---------------------–-----------------------------");
 
-        int choice = validateInput(1, 6);
+        int choice = validateInput(1,6);
 
         switch (choice) {
             case 1:
@@ -162,6 +162,7 @@ public class Main {
         int screenTimeUpCount = 0, screenTimeDownCount = 0;
         int waterUpCount = 0, waterDownCount = 0;
         int napUpCount = 0, napDownCount = 0;
+        int sleep_durationUpCount = 0, sleep_durationDownCount = 0;
         //Up and Down in the naming represents the number of times a certain variable causes
         //an increase or decrease in sleep quality
         for (double[] log : userData) { //Sleep quality always starts at index 1
@@ -171,6 +172,7 @@ public class Main {
             double screenTime = log[6];
             double water = log[8];
             double nap_duration = log[5];
+            double sleep_duration = log[3];
             if (cardio >= 60) {
                 if (sleepQuality >= 7.5) {
                     cardioUpCount++; //7.5 out of 10 sleep quality indicates a solid rest
@@ -181,7 +183,7 @@ public class Main {
                 if (sleepQuality >= 7.5) {
                     cardioUpCount++;
                 } else if (sleepQuality <= 3.5) {
-                    cardioDownCount++;
+                    cardioDownCount++; //Ends here for cardio
                 }
             }
             if (temperature <= 18.5) {
@@ -191,38 +193,70 @@ public class Main {
                     tempDownCount++;
                 }
             } else if (temperature > 18.5) {
-                tempDownCount++;
+                if (sleepQuality >= 7.5) {
+                    tempUpCount++;
+                } else if (sleepQuality <= 3.5) {
+                    tempDownCount++;
+                }
+            }
+            if (screenTime <= 12) {
+                if (sleepQuality >= 7.5) {
+                    screenTimeUpCount++;
+                } else if (sleepQuality <= 3.5) {
+                    screenTimeDownCount++;
+                }
+            } else if (screenTime > 12) {
+                if (sleepQuality >= 7.5) {
+                    screenTimeUpCount++;
+                } else if (sleepQuality <= 3.5) {
+                    screenTimeDownCount++;
+                }
+            }
+            if (water <= 6000) {
+                if (sleepQuality >= 7.5) {
+                    waterUpCount++;
+                } else if (sleepQuality <= 3.5) {
+                    waterDownCount++;
+                }
+            } else if (water > 6000) {
+                if (sleepQuality >= 7.5) {
+                    waterUpCount++;
+                } else if (sleepQuality <= 3.5) {
+                    waterDownCount++;
+                }
+            }
+            if (nap_duration <= 90) {
+                if (sleepQuality >= 7.5) {
+                    napUpCount++;
+                } else if (sleepQuality <= 3.5) {
+                    napDownCount++;
+                }
+            } else if (nap_duration > 90) {
+                if (sleepQuality >= 7.5) {
+                    napUpCount++;
+                } else if (sleepQuality <= 3.5) {
+                    napDownCount++;
+                }
+            }
+            if (sleep_duration <= 8) {
+                if (sleepQuality >= 7.5) {
+                    sleep_durationUpCount++;
+                } else if (sleepQuality <= 3.5) {
+                    sleep_durationDownCount++;
+                }
+            } else if (sleep_duration > 8) {
+                if (sleepQuality >= 7.5) {
+                    sleep_durationUpCount++;
+                } else if (sleepQuality <= 3.5) {
+                    sleep_durationDownCount++;
+                }
             }
         }
     }
     private static void sleepDurationFactors(ArrayList<double[]> userData) {
     }
 
-            if (screenHours >= 4 && sleepHours <= 4) highScreenTimeReducedSleep++;
-
-            if (waterIntake >= 2000 && sleepHours >= 7) hydrationHelpedSleep++;
-            else if (waterIntake < 2000) lowWaterReducedSleep++;
-
-            if (napMinutes <= 30) shortNapsHelpedSleep++;
-             else if (napMinutes > 60) longNapsReducedSleep++;
-        }
-
-        System.out.println("Factors that improved sleep duration:");
-         System.out.println(" - More than 60 min cardio: " + cardioHelpedSleep);
-        System.out.println(" - Room temp below 18.5°C: " + lowTempHelpedSleep);
-          System.out.println(" - Drinking 2L+ water: " + hydrationHelpedSleep);
-         System.out.println(" - Short naps (<30 min): " + shortNapsHelpedSleep);
-
-        System.out.println("Factors that reduced sleep duration:");
-         System.out.println(" - Less than 60 min cardio: " + cardioReducedSleep);
-        System.out.println(" - Room temp above 18.5°C: " + highTempReducedSleep);
-         System.out.println(" - Screen time 4+ hours: " + highScreenTimeReducedSleep);
-        System.out.println(" - Low water intake: " + lowWaterReducedSleep);
-         System.out.println(" - Long naps (>60 min): " + longNapsReducedSleep);
-    }
-}
-    public static double[] calculateAverages(ArrayList<double[]> userData) {
-
+    private static double[] calculateAverages(ArrayList<double[]> userData) {
         double[] avg = new double[userData.getFirst().length];
         for (double[] log : userData)
             for (int i = 0; i < log.length; i++)
@@ -233,7 +267,8 @@ public class Main {
         return avg;
     }
 
-
+    private static void sleepWakeConsistency(ArrayList<double[]> userData) {
+    }
 
 
     public static int validateInput(int min, int max) {
@@ -340,38 +375,5 @@ public class Main {
         int mins = (int) ((timeNum - ((int) timeNum)) * 60);
         res += String.format("%02d", mins);
         return res;
-    }
-
-    public static void sleepWakeConsistency(ArrayList<double[]> userData) {
-        if (userData.isEmpty()) {
-            System.out.println("No logs recorded so far! Please record at least one night's worth of data.");
-            return;
-        }
-
-        double totalBedtimeDifference = 0;
-        double totalWakeTimeDifference = 0;
-        int numberOfNights = userData.size();
-
-        for (int i = 1; i < numberOfNights; i++) {
-            double[] previousNight = userData.get(i - 1);
-            double[] currentNight = userData.get(i);
-
-            double previousSleepTime = previousNight[9];
-            double currentSleepTime = currentNight[9];
-            double previousWakeTime = previousNight[10];
-            double currentWakeTime = currentNight[10];
-
-            totalBedtimeDifference += Math.abs(currentSleepTime - previousSleepTime);
-            totalWakeTimeDifference += Math.abs(currentWakeTime - previousWakeTime);
-        }
-
-        double averageBedtimeDifference = totalBedtimeDifference / (numberOfNights - 1);
-        double averageWakeTimeDifference = totalWakeTimeDifference / (numberOfNights - 1);
-
-        System.out.println("---------------------–-----------------------------");
-        System.out.println("Relative consistency of sleep/wake times:");
-        System.out.println("Average difference in sleep times: " + showTime (averageBedtimeDifference));
-        System.out.println("Average difference in wake times: " + showTime(averageWakeTimeDifference));
-        System.out.println("---------------------–-----------------------------");
     }
 }
