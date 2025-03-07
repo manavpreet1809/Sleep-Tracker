@@ -216,7 +216,21 @@ public class Main {
                 }
             }
         }
+        System.out.println("Factors that improved sleep quality:");
+        System.out.println(" - More than 60 min cardio: " + cardioUpCount);
+        System.out.println(" - Room temp below 18.5°C: " + tempUpCount);
+        System.out.println(" - Screen time less than 4 hours: " + screenTimeUpCount);
+        System.out.println(" - Drinking 2L+ water: " + waterUpCount);
+        System.out.println(" - Short naps (<30 min): " + napUpCount);
+
+        System.out.println("Factors that reduced sleep quality:");
+        System.out.println(" - Less than 60 min cardio: " + cardioDownCount);
+        System.out.println(" - Room temp above 18.5°C: " + tempDownCount);
+        System.out.println(" - Screen time 4+ hours: " + screenTimeDownCount);
+        System.out.println(" - Low water intake: " + waterDownCount);
+        System.out.println(" - Long naps (>30 min): " + napDownCount);
     }
+
 
     private static void sleepDurationFactors(ArrayList<double[]> userData) {
 
