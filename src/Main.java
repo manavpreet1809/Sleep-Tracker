@@ -157,8 +157,44 @@ public class Main {
     }
 
     private static void sleepQualityFactors(ArrayList<double[]> userData) {
+        int cardioUpCount = 0, cardioDownCount = 0;
+        int tempUpCount = 0, tempDownCount = 0;
+        int screenTimeUpCount = 0, screenTimeDownCount = 0;
+        int waterUpCount = 0, waterDownCount = 0;
+        int napUpCount = 0, napDownCount = 0;
+        //Up and Down in the naming represents the number of times a certain variable causes
+        //an increase or decrease in sleep quality
+        for (double[] log : userData) { //Sleep quality always starts at index 1
+            double sleepQuality = log[1];
+            double cardio = log[4];
+            double temperature = log[5];
+            double screenTime = log[6];
+            double water = log[7];
+            double nap_duration = log[8];
+            if (cardio >= 60) {
+                if (sleepQuality >= 7.5) {
+                    cardioUpCount++; //7.5 out of 10 sleep quality indicates a solid rest
+                } else if (sleepQuality <= 3.5) {
+                    cardioDownCount++; //3.5 out of 10 sleep quality indicates a restless night
+                }
+            } else if (cardio < 60) {
+                if (sleepQuality >= 7.5) {
+                    cardioUpCount++;
+                } else if (sleepQuality <= 3.5) {
+                    cardioDownCount++;
+                }
+            }
+            if (temperature <= 18.5) {
+                if (sleepQuality >= 7.5) {
+                    tempUpCount++;
+                } else if (sleepQuality <= 3.5) {
+                    tempDownCount++;
+                }
+            } else if (temperature > 18.5) {
+                tempDownCount++;
+            }
+        }
     }
-
     private static void sleepDurationFactors(ArrayList<double[]> userData) {
     }
 
