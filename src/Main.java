@@ -16,7 +16,7 @@ public class Main {
             System.out.println("\t3) Exit program");
             System.out.println("---------------------–-----------------------------");
 
-            int choice = validateInput(1,3);
+            int choice = validateInput(1, 3);
 
             switch (choice) {
                 case 1:
@@ -116,7 +116,7 @@ public class Main {
         System.out.println("6) Exit.");
         System.out.println("---------------------–-----------------------------");
 
-        int choice = validateInput(1,6);
+        int choice = validateInput(1, 6);
 
         switch (choice) {
             case 1:
@@ -269,6 +269,7 @@ public class Main {
         System.out.println(" - Insufficient sleep (<8 hours): " + sleep_durationDownCount);
 
     }
+
     private static void sleepDurationFactors(ArrayList<double[]> userData) {
         {
 
@@ -351,8 +352,36 @@ public class Main {
     }
 
     private static void sleepWakeConsistency(ArrayList<double[]> userData) {
-    }
+        if (userData.isEmpty()) {
+            System.out.println("No logs recorded so far! Please record at least one night's worth of data.");
+            return;
+        }
+        double totalBedtimeDifference = 0;
+        double totalWakeTimeDifference = 0;
+        int numberOfNights = userData.size();
 
+        for (int i = 1; i < numberOfNights; i++) {
+            double[] previousNight = userData.get(i - 1);
+            double[] currentNight = userData.get(i);
+
+            double previousSleepTime = previousNight[9];
+            double currentSleepTime = currentNight[9];
+            double previousWakeTime = previousNight[10];
+            double currentWakeTime = currentNight[10];
+
+            totalBedtimeDifference += Math.abs(currentSleepTime - previousSleepTime);
+            totalWakeTimeDifference += Math.abs(currentWakeTime - previousWakeTime);
+        }
+
+        double averageBedtimeDifference = totalBedtimeDifference / (numberOfNights - 1);
+        double averageWakeTimeDifference = totalWakeTimeDifference / (numberOfNights - 1);
+
+        System.out.println("---------------------–-----------------------------");
+        System.out.println("Relative consistency of sleep/wake times:");
+        System.out.println("Average difference in sleep times: " + showTime(averageBedtimeDifference));
+        System.out.println("Average difference in wake times: " + showTime(averageWakeTimeDifference));
+        System.out.println("---------------------–-----------------------------");
+    }
 
     public static int validateInput(int min, int max) {
         Scanner input = new Scanner(System.in);
