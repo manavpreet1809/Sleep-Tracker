@@ -196,35 +196,7 @@ public class Main {
         }
     }
     private static void sleepDurationFactors(ArrayList<double[]> userData) {
-
-
-    {
-        int cardioHelpedSleep = 0, cardioReducedSleep = 0;
-        int lowTempHelpedSleep = 0, highTempReducedSleep= 0;
-        int screenTimeHelpedSleep = 0, highScreenTimeReducedSleep = 0;
-        int hydrationHelpedSleep = 0, lowWaterReducedSleep = 0;
-        int shortNapsHelpedSleep = 0, longNapsReducedSleep = 0;
-
-        for (double[] log : userData) {
-
-            double sleepHours = log[3];
-            double cardioMinutes = log[4];
-            double roomTemp = log[2];
-             double screenHours = log[6];
-            double waterIntake = log[8];
-             double napMinutes = log[5];
-
-            if (cardioMinutes >= 60) {
-                if (sleepHours >= 7) cardioHelpedSleep++;
-                 else if (sleepHours <= 4) cardioReducedSleep++;
-            }
-
-            if (roomTemp <= 18.5) {
-                if (sleepHours >= 7) lowTempHelpedSleep++;
-                 else if (sleepHours <= 4) highTempReducedSleep++;
-            } else {
-                highTempReducedSleep++;
-            }
+    }
 
             if (screenHours >= 4 && sleepHours <= 4) highScreenTimeReducedSleep++;
 
