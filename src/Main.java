@@ -113,11 +113,10 @@ public class Main {
         System.out.println("3) Show factors affecting sleep duration.");
         System.out.println("4) Show averages of recorded data.");
         System.out.println("5) Show relative consistency of sleep/wake times.");
-        System.out.println("6) Show last night's sleep duration in sleep cycles.");
-        System.out.println("7) Exit.");
+        System.out.println("6) Exit.");
         System.out.println("---------------------–-----------------------------");
 
-        int choice = validateInput(1, 7);
+        int choice = validateInput(1, 6);
 
         switch (choice) {
             case 1:
@@ -138,10 +137,6 @@ public class Main {
                 sleepWakeConsistency(userData);
                 break;
             case 6:
-                int sleepCycles = sleepCycles(userData);
-                System.out.printf("Last night, you slept for %d sleep cycles.%n", sleepCycles);
-                break;
-            default:
                 break;
         }
     }
@@ -151,8 +146,8 @@ public class Main {
         displayRow("Sleep quality (1-10):\t", userData, 1);
         displayRow("Room temperature (°C):\t", userData, 2);
         displayRow("Sleep duration (hrs):\t", userData, 3);
-        displayRow("Cardio duration (minutes):\t", userData, 4);
-        displayRow("Napping duration (minutes):", userData, 5);
+        displayRow("Cardio duration (mins):\t", userData, 4);
+        displayRow("Napping duration (mins):", userData, 5);
         displayRow("Screen time (hrs):\t\t", userData, 6);
         displayRow("Mattress age (months):\t", userData, 7);
         displayRow("Water intake (mL):\t\t", userData, 8);
@@ -179,80 +174,80 @@ public class Main {
             double nap_duration = log[5];
             double sleep_duration = log[3];
             if (cardio >= 60) {
-                if (sleepQuality >= 5) {
+                if (sleepQuality >= 7.5) {
                     cardioUpCount++; //7.5 out of 10 sleep quality indicates a solid rest
-                } else if (sleepQuality < 5) {
+                } else if (sleepQuality <= 3.5) {
                     cardioDownCount++; //3.5 out of 10 sleep quality indicates a restless night
                 }
             } else if (cardio < 60) {
-                if (sleepQuality >= 5) {
+                if (sleepQuality >= 7.5) {
                     cardioUpCount++;
-                } else if (sleepQuality < 5) {
+                } else if (sleepQuality <= 3.5) {
                     cardioDownCount++; //Ends here for cardio
                 }
             }
             if (temperature <= 18.5) {
-                if (sleepQuality >= 5) {
+                if (sleepQuality >= 7.5) {
                     tempUpCount++;
-                } else if (sleepQuality < 5) {
+                } else if (sleepQuality <= 3.5) {
                     tempDownCount++;
                 }
             } else if (temperature > 18.5) {
-                if (sleepQuality >= 5) {
+                if (sleepQuality >= 7.5) {
                     tempUpCount++;
-                } else if (sleepQuality < 5) {
+                } else if (sleepQuality <= 3.5) {
                     tempDownCount++;
                 }
             }
             if (screenTime <= 4) {
-                if (sleepQuality >= 5) {
+                if (sleepQuality >= 7.5) {
                     screenTimeUpCount++;
-                } else if (sleepQuality < 5) {
+                } else if (sleepQuality <= 3.5) {
                     screenTimeDownCount++;
                 }
             } else if (screenTime > 4) {
-                if (sleepQuality >= 5) {
+                if (sleepQuality >= 7.5) {
                     screenTimeUpCount++;
-                } else if (sleepQuality < 5) {
+                } else if (sleepQuality <= 3.5) {
                     screenTimeDownCount++;
                 }
             }
             if (water >= 2000) {
-                if (sleepQuality >= 5) {
+                if (sleepQuality >= 7.5) {
                     waterUpCount++;
-                } else if (sleepQuality < 5) {
+                } else if (sleepQuality <= 3.5) {
                     waterDownCount++;
                 }
             } else if (water < 2000) {
-                if (sleepQuality >= 5) {
+                if (sleepQuality >= 7.5) {
                     waterUpCount++;
-                } else if (sleepQuality < 5) {
+                } else if (sleepQuality <= 3.5) {
                     waterDownCount++;
                 }
             }
             if (nap_duration <= 30) {
-                if (sleepQuality >= 5) {
+                if (sleepQuality >= 7.5) {
                     napUpCount++;
-                } else if (sleepQuality < 5) {
+                } else if (sleepQuality <= 3.5) {
                     napDownCount++;
                 }
             } else if (nap_duration > 30) {
-                if (sleepQuality >= 5) {
+                if (sleepQuality >= 7.5) {
                     napUpCount++;
-                } else if (sleepQuality < 5) {
+                } else if (sleepQuality <= 3.5) {
                     napDownCount++;
                 }
             }
             if (sleep_duration >= 8) {
-                if (sleepQuality >= 5) {
+                if (sleepQuality >= 7.5) {
                     sleep_durationUpCount++;
-                } else if (sleepQuality < 5) {
+                } else if (sleepQuality <= 3.5) {
                     sleep_durationDownCount++;
                 }
             } else if (sleep_duration < 8) {
-                if (sleepQuality >= 5) {
+                if (sleepQuality >= 7.5) {
                     sleep_durationUpCount++;
-                } else if (sleepQuality < 5) {
+                } else if (sleepQuality <= 3.5) {
                     sleep_durationDownCount++;
                 }
             }
@@ -295,65 +290,65 @@ public class Main {
                 if (cardioMinutes >= 60) {
                     if (sleepHours >= 8) {
                         increaseCardio++;
-                    } else if (sleepHours < 8) {
+                    } else if (sleepHours <= 5) {
                         decreaseCardio++;
                     }
                 } else if (cardioMinutes < 60) {
                     if (sleepHours >= 8) {
                         increaseCardio++;
-                    } else if (sleepHours < 8) {
+                    } else if (sleepHours <= 5) {
                         decreaseCardio++;
                     }
                 }
                 if (roomTemp <= 18.5) {
                     if (sleepHours >= 8) {
                         increaseTemp++;
-                    } else if (sleepHours < 8) {
+                    } else if (sleepHours <= 5) {
                         decreaseTemp++;
                     }
                 } else if (roomTemp > 18.5) {
                     if (sleepHours >= 8) {
                         increaseTemp++;
-                    } else if (sleepHours < 8) {
+                    } else if (sleepHours <= 5) {
                         decreaseTemp++;
                     }
                 }
                 if (screenHours <= 4) {
                     if (sleepHours >= 8) {
                         increaseScreenTime++;
-                    } else if (sleepHours < 8) {
+                    } else if (sleepHours <= 5) {
                         decreaseScreenTime++;
                     }
                 } else if (screenHours > 4) {
                     if (sleepHours >= 8) {
                         increaseScreenTime++;
-                    } else if (sleepHours < 8) {
+                    } else if (sleepHours <= 5) {
                         decreaseScreenTime++;
                     }
                 }
                 if (waterIntake >= 2000) {
                     if (sleepHours >= 8) {
                         increaseWater++;
-                    } else if (sleepHours < 8) {
+                    } else if (sleepHours <= 5) {
                         decreaseWater++;
                     }
                 } else if (waterIntake < 2000) {
                     if (sleepHours >= 8) {
                         increaseWater++;
-                    } else if (sleepHours < 8) {
+                    } else if (sleepHours <= 5) {
                         decreaseWater++;
                     }
                 }
                 if (napMinutes <= 30) {
                     if (sleepHours >= 8) {
                         increaseNap++;
-                    } else if (sleepHours < 8) {
+                    } else if (sleepHours <= 5) {
                         decreaseNap++;
                     }
                 } else if (napMinutes > 30) {
                     if (sleepHours >= 8) {
                         increaseNap++;
-                    } else if (sleepHours < 8) {
+                    } else if (sleepHours <= 5) {
                         decreaseNap++;
                     }
                 }
@@ -418,23 +413,6 @@ public class Main {
         System.out.println("---------------------–-----------------------------");
     }
 
-    /**
-     * Multiplies last sleep duration by 2/3 and truncates to get whole number of sleep cycles.
-     * @param userData User data dynamic array.
-     * @return Number of sleep cycles.
-     */
-    public static int sleepCycles(ArrayList<double[]> userData) {
-        double[] lastEntry = userData.getLast();
-        return (int) (lastEntry[3] * 2 / 3);
-    }
-
-    /**
-     * Error trapping function which repeatedly prompts user until they enter a valid input.
-     * This version is overloaded to work on ints, specifically.
-     * @param min Minimum allowed value.
-     * @param max Maximum allowed value.
-     * @return Validated user input.
-     */
     public static int validateInput(int min, int max) {
         Scanner input = new Scanner(System.in);
         boolean valid = false;
@@ -461,13 +439,6 @@ public class Main {
         return res;
     }
 
-    /**
-     * Error trapping function which repeatedly prompts user until they enter a valid input.
-     * This version is overloaded to work on doubles, specifically.
-     * @param min Minimum allowed value.
-     * @param max Maximum allowed value.
-     * @return Validated user input.
-     */
     public static double validateInput(double min, double max) {
         Scanner input = new Scanner(System.in);
         boolean valid = false;
@@ -494,11 +465,6 @@ public class Main {
         return res;
     }
 
-    /**
-     * Error trapping function which repeatedly prompts user until they enter a valid time.
-     * The time must be entered in 24-hour format (e.g. 02:00, 14:56).
-     * @return A decimal value which maps to a certain time. e.g. 10:30 -> 10.5
-     */
     public static double validateTime() {
         Scanner input = new Scanner(System.in);
         double res = 0;
@@ -516,12 +482,6 @@ public class Main {
         }
     }
 
-    /**
-     * Displays one row of data. The row can contain either numbers or times.
-     * @param message A description of what the data is (justified).
-     * @param userData Dynamic array of data.
-     * @param row Row index to display.
-     */
     public static void displayRow(String message, ArrayList<double[]> userData, int row) {
         StringBuilder res = new StringBuilder();
         res.append(message);
@@ -536,13 +496,7 @@ public class Main {
         System.out.println(res);
     }
 
-    /**
-     * A bespoke function which takes a double and returns a String representation that is
-     * exactly 5 characters wide.
-     * @param num Input number, must be >100000.
-     * @return String representation.
-     */
-    public static String round(double num) {
+    public static String round(double num) { // returns number normalized to 5 characters wide.
         if (num >= 10000) {
             return String.valueOf(Math.round(num));
         } else if (num >= 1000) {
@@ -566,8 +520,8 @@ public class Main {
         String res = "";
         res += String.format("%02d", (int) timeNum);
         res += ":";
-        int minutes = (int) ((timeNum - ((int) timeNum)) * 60);
-        res += String.format("%02d", minutes);
+        int mins = (int) ((timeNum - ((int) timeNum)) * 60);
+        res += String.format("%02d", mins);
         return res;
     }
 }
