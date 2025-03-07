@@ -78,7 +78,7 @@ public class Tests {
     }
 
     @Test
-    public void avgFour_and_a_half() {
+    public void avgFour_and_a_half_with_great_variation_in_each_data_point() {
         ArrayList<double[]> input = new ArrayList<>();
         input.add(new double[]{-1, 7, 5, 2, 4, 8, 9, 3, 3, 6, 4.5});
         input.add(new double[]{-1, 2, 4, 7, 5, 1, 0, 6, 6, 3, 4.5});
