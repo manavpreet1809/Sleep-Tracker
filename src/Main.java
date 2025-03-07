@@ -129,7 +129,9 @@ public class Main {
                 sleepDurationFactors(userData);
                 break;
             case 4:
-                averages(userData);
+                ArrayList<double[]> avg = new ArrayList<>();
+                avg.add(calculateAverages(userData));
+                displayData(avg);
                 break;
             case 5:
                 sleepWakeConsistency(userData);
@@ -160,7 +162,15 @@ public class Main {
     private static void sleepDurationFactors(ArrayList<double[]> userData) {
     }
 
-    private static void averages(ArrayList<double[]> userData) {
+    private static double[] calculateAverages(ArrayList<double[]> userData) {
+        double[] avg = new double[userData.getFirst().length];
+        for (double[] log : userData)
+            for (int i = 0; i < log.length; i++)
+                avg[i] += log[i];
+        int numDays = userData.size();
+        for (int i = 0; i < avg.length; i++)
+            avg[i] /= numDays;
+        return avg;
     }
 
     private static void sleepWakeConsistency(ArrayList<double[]> userData) {
