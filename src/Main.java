@@ -211,18 +211,18 @@ public class Main {
             double sleepHours = log[3];
             double cardioMinutes = log[4];
             double roomTemp = log[2];
-            double screenHours = log[6];
+             double screenHours = log[6];
             double waterIntake = log[8];
-            double napMinutes = log[5];
+             double napMinutes = log[5];
 
             if (cardioMinutes >= 60) {
                 if (sleepHours >= 7) cardioHelpedSleep++;
-                else if (sleepHours <= 4) cardioReducedSleep++;
+                 else if (sleepHours <= 4) cardioReducedSleep++;
             }
 
             if (roomTemp <= 18.5) {
                 if (sleepHours >= 7) lowTempHelpedSleep++;
-                else if (sleepHours <= 4) highTempReducedSleep++;
+                 else if (sleepHours <= 4) highTempReducedSleep++;
             } else {
                 highTempReducedSleep++;
             }
@@ -233,21 +233,21 @@ public class Main {
             else if (waterIntake < 2000) lowWaterReducedSleep++;
 
             if (napMinutes <= 30) shortNapsHelpedSleep++;
-            else if (napMinutes > 60) longNapsReducedSleep++;
+             else if (napMinutes > 60) longNapsReducedSleep++;
         }
 
         System.out.println("Factors that improved sleep duration:");
-        System.out.println(" - More than 60 min cardio: " + cardioHelpedSleep);
+         System.out.println(" - More than 60 min cardio: " + cardioHelpedSleep);
         System.out.println(" - Room temp below 18.5°C: " + lowTempHelpedSleep);
-        System.out.println(" - Drinking 2L+ water: " + hydrationHelpedSleep);
-        System.out.println(" - Short naps (<30 min): " + shortNapsHelpedSleep);
+          System.out.println(" - Drinking 2L+ water: " + hydrationHelpedSleep);
+         System.out.println(" - Short naps (<30 min): " + shortNapsHelpedSleep);
 
         System.out.println("Factors that reduced sleep duration:");
-        System.out.println(" - Less than 60 min cardio: " + cardioReducedSleep);
+         System.out.println(" - Less than 60 min cardio: " + cardioReducedSleep);
         System.out.println(" - Room temp above 18.5°C: " + highTempReducedSleep);
-        System.out.println(" - Screen time 4+ hours: " + highScreenTimeReducedSleep);
+         System.out.println(" - Screen time 4+ hours: " + highScreenTimeReducedSleep);
         System.out.println(" - Low water intake: " + lowWaterReducedSleep);
-        System.out.println(" - Long naps (>60 min): " + longNapsReducedSleep);
+         System.out.println(" - Long naps (>60 min): " + longNapsReducedSleep);
     }
 }
     private static double[] calculateAverages(ArrayList<double[]> userData) {
@@ -368,5 +368,38 @@ public class Main {
         int mins = (int) ((timeNum - ((int) timeNum)) * 60);
         res += String.format("%02d", mins);
         return res;
+    }
+
+    public static void sleepWakeConsistency(ArrayList<double[]> userData) {
+        if (userData.isEmpty()) {
+            System.out.println("No logs recorded so far! Please record at least one night's worth of data.");
+            return;
+        }
+
+        double totalBedtimeDifference = 0;
+        double totalWakeTimeDifference = 0;
+        int numberOfNights = userData.size();
+
+        for (int i = 1; i < numberOfNights; i++) {
+            double[] previousNight = userData.get(i - 1);
+            double[] currentNight = userData.get(i);
+
+            double previousSleepTime = previousNight[9];
+            double currentSleepTime = currentNight[9];
+            double previousWakeTime = previousNight[10];
+            double currentWakeTime = currentNight[10];
+
+            totalBedtimeDifference += Math.abs(currentSleepTime - previousSleepTime);
+            totalWakeTimeDifference += Math.abs(currentWakeTime - previousWakeTime);
+        }
+
+        double averageBedtimeDifference = totalBedtimeDifference / (numberOfNights - 1);
+        double averageWakeTimeDifference = totalWakeTimeDifference / (numberOfNights - 1);
+
+        System.out.println("---------------------–-----------------------------");
+        System.out.println("Relative consistency of sleep/wake times:");
+        System.out.println("Average difference in sleep times: " + showTime (averageBedtimeDifference));
+        System.out.println("Average difference in wake times: " + showTime(averageWakeTimeDifference));
+        System.out.println("---------------------–-----------------------------");
     }
 }
