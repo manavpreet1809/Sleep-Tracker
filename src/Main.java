@@ -272,7 +272,8 @@ public class Main {
          System.out.println(" - Long naps (>60 min): " + longNapsReducedSleep);
     }
 }
-    private static double[] calculateAverages(ArrayList<double[]> userData) {
+    public static double[] calculateAverages(ArrayList<double[]> userData) {
+
         double[] avg = new double[userData.getFirst().length];
         for (double[] log : userData)
             for (int i = 0; i < log.length; i++)
