@@ -1,4 +1,7 @@
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class Tests {
@@ -51,6 +54,23 @@ public class Tests {
         String expected = "00:00";
         String actual = Main.showTime(0.00);
         assertEquals(expected, actual);
+    }
+    @Test
+    public void avgZero() {
+        ArrayList<double[]> input = new ArrayList<>();
+        input.add(new double[]{-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+        double[] expected = {-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        double[] actual = Main.calculateAverages(input);
+        assertArrayEquals(expected, actual);
+    }
+    @Test
+    public void avgTwo() {
+        ArrayList<double[]> input = new ArrayList<>();
+        input.add(new double[]{-1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3});
+        input.add(new double[]{-1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
+        double[] expected = {-1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
+        double[] actual = Main.calculateAverages(input);
+        assertArrayEquals(expected, actual);
     }
 }
 
