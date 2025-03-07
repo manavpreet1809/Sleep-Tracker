@@ -287,29 +287,46 @@ public class Main {
                 double napMinutes = log[5];
 
                 if (cardioMinutes >= 60) {
-                    if (sleepHours >= 7) increaseCardio++;
-                    else if (sleepHours <= 4) decreaseCardio++;
+                    if (sleepHours >= 8) {
+                        increaseCardio++;
+                    } else if (sleepHours <= 5) {
+                        decreaseCardio++;
+                    }
                 }
-
                 if (roomTemp <= 18.5) {
-                    if (sleepHours >= 7) increaseTemp++;
-                    else if (sleepHours <= 4) decreaseTemp++;
-                } else {
-                    decreaseTemp++;
+                    if (sleepHours >= 8) {
+                        increaseTemp++;
+                    } else if (sleepHours <= 5) {
+                        decreaseTemp++;
+                    }
                 }
-
-                if (screenHours >= 4 && sleepHours <= 4) decreaseScreenTime++;
-
-                if (waterIntake >= 2000 && sleepHours >= 7) increaseWater++;
-                else if (waterIntake < 2000) decreaseWater++;
-
-                if (napMinutes <= 30) increaseNap++;
-                else if (napMinutes > 60) decreaseNap++;
+                if (screenHours <= 4) {
+                    if (sleepHours >= 8) {
+                        increaseScreenTime++;
+                    } else if (sleepHours <= 5) {
+                        decreaseScreenTime++;
+                    }
+                }
+                if (waterIntake >= 2000) {
+                    if (sleepHours >= 8) {
+                        increaseWater++;
+                    } else if (sleepHours <= 5) {
+                        decreaseWater++;
+                    }
+                }
+                if (napMinutes <= 30) {
+                    if (sleepHours >= 8) {
+                        increaseNap++;
+                    } else if (sleepHours <= 5) {
+                        decreaseNap++;
+                    }
+                }
             }
 
             System.out.println("Factors that improved sleep duration:");
             System.out.println(" - More than 60 min cardio: " + increaseCardio);
             System.out.println(" - Room temp below 18.5°C: " + increaseTemp);
+            System.out.println(" - Screen time less than 4 hours: " + increaseScreenTime);
             System.out.println(" - Drinking 2L+ water: " + increaseWater);
             System.out.println(" - Short naps (<30 min): " + increaseNap);
 
