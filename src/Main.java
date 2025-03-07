@@ -194,10 +194,10 @@ public class Main {
         for (double[] log : userData) { //Sleep quality always starts at index 1
             double sleepQuality = log[1];
             double cardio = log[4];
-            double temperature = log[5];
+            double temperature = log[2];
             double screenTime = log[6];
-            double water = log[7];
-            double nap_duration = log[8];
+            double water = log[8];
+            double nap_duration = log[5];
             if (cardio >= 60) {
                 if (sleepQuality >= 7.5) {
                     cardioUpCount++; //7.5 out of 10 sleep quality indicates a solid rest
