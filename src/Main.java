@@ -174,80 +174,80 @@ public class Main {
             double nap_duration = log[5];
             double sleep_duration = log[3];
             if (cardio >= 60) {
-                if (sleepQuality >= 7.5) {
+                if (sleepQuality >= 5) {
                     cardioUpCount++; //7.5 out of 10 sleep quality indicates a solid rest
-                } else if (sleepQuality <= 3.5) {
+                } else if (sleepQuality < 5) {
                     cardioDownCount++; //3.5 out of 10 sleep quality indicates a restless night
                 }
             } else if (cardio < 60) {
-                if (sleepQuality >= 7.5) {
+                if (sleepQuality >= 5) {
                     cardioUpCount++;
-                } else if (sleepQuality <= 3.5) {
+                } else if (sleepQuality < 5) {
                     cardioDownCount++; //Ends here for cardio
                 }
             }
             if (temperature <= 18.5) {
-                if (sleepQuality >= 7.5) {
+                if (sleepQuality >= 5) {
                     tempUpCount++;
-                } else if (sleepQuality <= 3.5) {
+                } else if (sleepQuality < 5) {
                     tempDownCount++;
                 }
             } else if (temperature > 18.5) {
-                if (sleepQuality >= 7.5) {
+                if (sleepQuality >= 5) {
                     tempUpCount++;
-                } else if (sleepQuality <= 3.5) {
+                } else if (sleepQuality < 5) {
                     tempDownCount++;
                 }
             }
             if (screenTime <= 4) {
-                if (sleepQuality >= 7.5) {
+                if (sleepQuality >= 5) {
                     screenTimeUpCount++;
-                } else if (sleepQuality <= 3.5) {
+                } else if (sleepQuality < 5) {
                     screenTimeDownCount++;
                 }
             } else if (screenTime > 4) {
-                if (sleepQuality >= 7.5) {
+                if (sleepQuality >= 5) {
                     screenTimeUpCount++;
-                } else if (sleepQuality <= 3.5) {
+                } else if (sleepQuality < 5) {
                     screenTimeDownCount++;
                 }
             }
             if (water >= 2000) {
-                if (sleepQuality >= 7.5) {
+                if (sleepQuality >= 5) {
                     waterUpCount++;
-                } else if (sleepQuality <= 3.5) {
+                } else if (sleepQuality < 5) {
                     waterDownCount++;
                 }
             } else if (water < 2000) {
-                if (sleepQuality >= 7.5) {
+                if (sleepQuality >= 5) {
                     waterUpCount++;
-                } else if (sleepQuality <= 3.5) {
+                } else if (sleepQuality < 5) {
                     waterDownCount++;
                 }
             }
             if (nap_duration <= 30) {
-                if (sleepQuality >= 7.5) {
+                if (sleepQuality >= 5) {
                     napUpCount++;
-                } else if (sleepQuality <= 3.5) {
+                } else if (sleepQuality < 5) {
                     napDownCount++;
                 }
             } else if (nap_duration > 30) {
-                if (sleepQuality >= 7.5) {
+                if (sleepQuality >= 5) {
                     napUpCount++;
-                } else if (sleepQuality <= 3.5) {
+                } else if (sleepQuality < 5) {
                     napDownCount++;
                 }
             }
             if (sleep_duration >= 8) {
-                if (sleepQuality >= 7.5) {
+                if (sleepQuality >= 5) {
                     sleep_durationUpCount++;
-                } else if (sleepQuality <= 3.5) {
+                } else if (sleepQuality < 5) {
                     sleep_durationDownCount++;
                 }
             } else if (sleep_duration < 8) {
-                if (sleepQuality >= 7.5) {
+                if (sleepQuality >= 5) {
                     sleep_durationUpCount++;
-                } else if (sleepQuality <= 3.5) {
+                } else if (sleepQuality < 5) {
                     sleep_durationDownCount++;
                 }
             }
