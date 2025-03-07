@@ -6,10 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class Tests {
     @Test
-    public void testRecordArrayWithMockedUserInput() {
-    }
-
-    @Test
     public void oneDigitRound() {
         String expected = "2.000";
         String actual = Main.round(2);
@@ -78,7 +74,7 @@ public class Tests {
     }
 
     @Test
-    public void avgFour_and_a_half_with_great_variation_in_each_data_point() {
+    public void avgFourAndAHalfWithGreatVariationInEachDataPoint() {
         ArrayList<double[]> input = new ArrayList<>();
         input.add(new double[]{-1, 7, 5, 2, 4, 8, 9, 3, 3, 6, 4.5});
         input.add(new double[]{-1, 2, 4, 7, 5, 1, 0, 6, 6, 3, 4.5});
@@ -88,7 +84,7 @@ public class Tests {
     }
 
     @Test
-    public void Test_sleep_duration_factorsIncreasing() {
+    public void testSleepDurationFactorsIncreasing() {
         ArrayList<double[]> userData = new ArrayList<>();
         userData.add(new double[]{-1, 9, 19, 8.5, 69, 0, 3, 216, 4750, 23.75, 7.51});
         userData.add(new double[]{-1, 1, 14, 0.5, 8, 0, 3, 216, 20, 7.5, 8.0});
@@ -99,7 +95,7 @@ public class Tests {
     }
 
     @Test
-    public void Test_sleep_duration_factorsDecreasing() {
+    public void testSleepDurationFactorsDecreasing() {
         ArrayList<double[]> userData = new ArrayList<>();
         userData.add(new double[]{-1, 2.7, 23, 1, 0, 180, 12, 216, 10, 4.75, 7.45});
         Main.sleepDurationFactors(userData);
@@ -127,6 +123,24 @@ public class Tests {
         ArrayList<double[]> userData = new ArrayList<>();
         userData.add(new double[]{-1, 3, 20, 5, 30, 60, 5, 24, 1000, 23, 7});
         Main.sleepQualityFactors(userData);
-        
+    }
+
+    @Test
+    public void sixSleepCycles() {
+        ArrayList<double[]> userData = new ArrayList<>();
+        userData.add(new double[]{-1, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0});
+        int expected = 6;
+        int actual = Main.sleepCycles(userData);
+        assertEquals(expected, actual);
+    }
+    @Test
+    public void lastNightSleepCycles() {
+        ArrayList<double[]> userData = new ArrayList<>();
+        userData.add(new double[]{-1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0});
+        int expected = 6;
+        int actual = Main.sleepCycles(userData);
+        assertEquals(expected, actual);
     }
 }
