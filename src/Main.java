@@ -180,9 +180,9 @@ public class Main {
             double sleep_duration = log[3];
             if (cardio >= 60) {
                 if (sleepQuality >= 5) {
-                    cardioUpCount++; //7.5 out of 10 sleep quality indicates a solid rest
+                    cardioUpCount++; //5 out of 10 sleep quality indicates a solid rest
                 } else if (sleepQuality < 5) {
-                    cardioDownCount++; //3.5 out of 10 sleep quality indicates a restless night
+                    cardioDownCount++; //below 5 out of 10 sleep quality indicates a restless night
                 }
             } else if (cardio < 60) {
                 if (sleepQuality >= 5) {
