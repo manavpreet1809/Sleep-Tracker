@@ -91,7 +91,11 @@ public class Tests {
     public void Test_sleep_duration_factorsIncreasing() {
         ArrayList<double[]> userData = new ArrayList<>();
         userData.add(new double[]{-1, 9, 19, 8.5, 69, 0, 3, 216, 4750, 23.75, 7.51});
-        Main.sleepDurationFactors(userData);
+        userData.add(new double[]{-1, 1, 14, 0.5, 8, 0, 3, 216, 20, 7.5, 8.0});
+        userData.add(new double[]{-1, 9, 19, 8.5, 69, 0, 3, 216, 4750, 23.75, 7.51});
+        Main.sleepDurationFactors(userData); //There should be 3 nights worth of data based on having
+        //3 logs entered so far
+        assertEquals(3, userData.size());
     }
 
     @Test
