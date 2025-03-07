@@ -16,7 +16,7 @@ public class Main {
             System.out.println("\t3) Exit program");
             System.out.println("---------------------–-----------------------------");
 
-            int choice = validateInput(1,3);
+            int choice = validateInput(1, 3);
 
             switch (choice) {
                 case 1:
@@ -116,7 +116,7 @@ public class Main {
         System.out.println("6) Exit.");
         System.out.println("---------------------–-----------------------------");
 
-        int choice = validateInput(1,6);
+        int choice = validateInput(1, 6);
 
         switch (choice) {
             case 1:
@@ -195,15 +195,19 @@ public class Main {
             }
         }
     }
-    private static void sleepDurationFactors(ArrayList<double[]> userData) {
-    } {
-        int increaseCardio = 0, decreaseCardio = 0;
-        int increaseTemp = 0, decreaseTemp = 0;
-        int increaseScreenTime = 0, decreaseScreenTime = 0;
-        int increaseWater = 0, decreaseWater = 0;
-        int increaseNap = 0, decreaseNap = 0;
 
-        for (double[] log : UserData) {
+    private static void sleepDurationFactors(ArrayList<double[]> userData) {
+
+
+    {
+        int cardioHelpedSleep = 0, cardioReducedSleep = 0;
+        int lowTempHelpedSleep = 0, highTempReducedSleep= 0;
+        int screenTimeHelpedSleep = 0, highScreenTimeReducedSleep = 0;
+        int hydrationHelpedSleep = 0, lowWaterReducedSleep = 0;
+        int shortNapsHelpedSleep = 0, longNapsReducedSleep = 0;
+
+        for (double[] log : userData) {
+
             double sleepHours = log[3];
             double cardioMinutes = log[4];
             double roomTemp = log[2];
@@ -212,40 +216,40 @@ public class Main {
             double napMinutes = log[5];
 
             if (cardioMinutes >= 60) {
-                if (sleepHours >= 7) increaseCardio++;
-                else if (sleepHours <= 4) decreaseCardio++;
+                if (sleepHours >= 7) cardioHelpedSleep++;
+                else if (sleepHours <= 4) cardioReducedSleep++;
             }
 
             if (roomTemp <= 18.5) {
-                if (sleepHours >= 7) increaseTemp++;
-                else if (sleepHours <= 4) decreaseTemp++;
+                if (sleepHours >= 7) lowTempHelpedSleep++;
+                else if (sleepHours <= 4) highTempReducedSleep++;
             } else {
-                decreaseTemp++;
+                highTempReducedSleep++;
             }
 
-            if (screenHours >= 4 && sleepHours <= 4) decreaseScreenTime++;
+            if (screenHours >= 4 && sleepHours <= 4) highScreenTimeReducedSleep++;
 
-            if (waterIntake >= 2000 && sleepHours >= 7) increaseWater++;
-            else if (waterIntake < 2000) decreaseWater++;
+            if (waterIntake >= 2000 && sleepHours >= 7) hydrationHelpedSleep++;
+            else if (waterIntake < 2000) lowWaterReducedSleep++;
 
-            if (napMinutes <= 30) increaseNap++;
-            else if (napMinutes > 60) decreaseNap++;
+            if (napMinutes <= 30) shortNapsHelpedSleep++;
+            else if (napMinutes > 60) longNapsReducedSleep++;
         }
 
         System.out.println("Factors that improved sleep duration:");
-        System.out.println(" - More than 60 min cardio: " + increaseCardio);
-        System.out.println(" - Room temp below 18.5°C: " + increaseTemp);
-        System.out.println(" - Drinking 2L+ water: " + increaseWater);
-        System.out.println(" - Short naps (<30 min): " + increaseNap);
+        System.out.println(" - More than 60 min cardio: " + cardioHelpedSleep);
+        System.out.println(" - Room temp below 18.5°C: " + lowTempHelpedSleep);
+        System.out.println(" - Drinking 2L+ water: " + hydrationHelpedSleep);
+        System.out.println(" - Short naps (<30 min): " + shortNapsHelpedSleep);
 
         System.out.println("Factors that reduced sleep duration:");
-        System.out.println(" - Less than 60 min cardio: " + decreaseCardio);
-        System.out.println(" - Room temp above 18.5°C: " + decreaseTemp);
-        System.out.println(" - Screen time 4+ hours: " + decreaseScreenTime);
-        System.out.println(" - Low water intake: " + decreaseWater);
-        System.out.println(" - Long naps (>60 min): " + decreaseNap);
+        System.out.println(" - Less than 60 min cardio: " + cardioReducedSleep);
+        System.out.println(" - Room temp above 18.5°C: " + highTempReducedSleep);
+        System.out.println(" - Screen time 4+ hours: " + highScreenTimeReducedSleep);
+        System.out.println(" - Low water intake: " + lowWaterReducedSleep);
+        System.out.println(" - Long naps (>60 min): " + longNapsReducedSleep);
     }
-
+}
     private static double[] calculateAverages(ArrayList<double[]> userData) {
         double[] avg = new double[userData.getFirst().length];
         for (double[] log : userData)
@@ -257,8 +261,7 @@ public class Main {
         return avg;
     }
 
-    private static void sleepWakeConsistency(ArrayList<double[]> userData) {
-    }
+
 
 
     public static int validateInput(int min, int max) {
