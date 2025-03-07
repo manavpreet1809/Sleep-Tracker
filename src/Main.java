@@ -199,39 +199,39 @@ public class Main {
                     tempDownCount++;
                 }
             }
-            if (screenTime <= 12) {
+            if (screenTime <= 4) {
                 if (sleepQuality >= 7.5) {
                     screenTimeUpCount++;
                 } else if (sleepQuality <= 3.5) {
                     screenTimeDownCount++;
                 }
-            } else if (screenTime > 12) {
+            } else if (screenTime > 4) {
                 if (sleepQuality >= 7.5) {
                     screenTimeUpCount++;
                 } else if (sleepQuality <= 3.5) {
                     screenTimeDownCount++;
                 }
             }
-            if (water <= 6000) {
+            if (water >= 2000) {
                 if (sleepQuality >= 7.5) {
                     waterUpCount++;
                 } else if (sleepQuality <= 3.5) {
                     waterDownCount++;
                 }
-            } else if (water > 6000) {
+            } else if (water < 2000) {
                 if (sleepQuality >= 7.5) {
                     waterUpCount++;
                 } else if (sleepQuality <= 3.5) {
                     waterDownCount++;
                 }
             }
-            if (nap_duration <= 90) {
+            if (nap_duration <= 30) {
                 if (sleepQuality >= 7.5) {
                     napUpCount++;
                 } else if (sleepQuality <= 3.5) {
                     napDownCount++;
                 }
-            } else if (nap_duration > 90) {
+            } else if (nap_duration > 30) {
                 if (sleepQuality >= 7.5) {
                     napUpCount++;
                 } else if (sleepQuality <= 3.5) {
@@ -252,11 +252,28 @@ public class Main {
                 }
             }
         }
+        System.out.println("Factors that improved sleep quality:");
+        System.out.println(" - More than 60 min cardio: " + cardioUpCount);
+        System.out.println(" - Room temp below 18.5°C: " + tempUpCount);
+        System.out.println(" - Screen time less than 4 hours: " + screenTimeUpCount);
+        System.out.println(" - Drinking 2L+ water: " + waterUpCount);
+        System.out.println(" - Short naps (<30 min): " + napUpCount);
+        System.out.println(" - Enough sleep (>8 hours): " + sleep_durationUpCount);
+
+        System.out.println("Factors that reduced sleep quality:");
+        System.out.println(" - Less than 60 min cardio: " + cardioDownCount);
+        System.out.println(" - Room temp above 18.5°C: " + tempDownCount);
+        System.out.println(" - Screen time 4+ hours: " + screenTimeDownCount);
+        System.out.println(" - Low water intake: " + waterDownCount);
+        System.out.println(" - Long naps (>30 min): " + napDownCount);
+        System.out.println(" - Insufficient sleep (<8 hours): " + sleep_durationDownCount);
+
     }
     private static void sleepDurationFactors(ArrayList<double[]> userData) {
-    }
+}
 
-    private static double[] calculateAverages(ArrayList<double[]> userData) {
+
+private static double[] calculateAverages(ArrayList<double[]> userData) {
         double[] avg = new double[userData.getFirst().length];
         for (double[] log : userData)
             for (int i = 0; i < log.length; i++)
