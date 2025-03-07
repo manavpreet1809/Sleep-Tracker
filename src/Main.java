@@ -32,6 +32,12 @@ public class Main {
         }
     }
 
+    /**
+     * Records a new sleep log based on user input of the sleep-related variables.
+     *
+     * @return A double array which has the user's recorded sleep data.
+     */
+
     public static double[] record() {
         double[] res = new double[11]; // 0th index is kept blank for readability.
         boolean run = true;
@@ -100,6 +106,12 @@ public class Main {
         return res;
     }
 
+    /**
+     * Analyze the recorded sleep data based on user's desired preferences.
+     *
+     * @param userData The list of user's recorded sleep logs to be analyzed.
+     */
+
     public static void analyze(ArrayList<double[]> userData) {
         if (userData.isEmpty()) {
             System.out.println("No logs recorded so far! Please record at least one night's worth of data.");
@@ -141,6 +153,12 @@ public class Main {
         }
     }
 
+    /**
+     * Displays all the recorded sleep data in a structured and readable format.
+     *
+     * @param userData The list of user's recorded sleep logs to be displayed.
+     */
+
     public static void displayData(ArrayList<double[]> userData) {
         System.out.println("---------------------–-----------------------------");
         displayRow("Sleep quality (1-10):\t", userData, 1);
@@ -155,6 +173,12 @@ public class Main {
         displayRow("Sleep time (24hr):\t\t", userData, 10);
         System.out.println("---------------------–-----------------------------");
     }
+
+    /**
+     * Analyzes and displays the factors that positively or negatively affect sleep quality based on user's recorded sleep data.
+     *
+     * @param userData The list of user's recorded sleep logs,each entry is a double array containing sleep-related variables.
+     */
 
     public static void sleepQualityFactors(ArrayList<double[]> userData) {
         int cardioUpCount = 0, cardioDownCount = 0;
@@ -270,6 +294,12 @@ public class Main {
 
     }
 
+    /**
+     * Analyzes and displays the factors that affect sleep duration based on the recorded sleep data.
+     *
+     * @param userData The list of user's recorded sleep logs, where each entry is a double array containing sleep related variables.
+     */
+
     public static void sleepDurationFactors(ArrayList<double[]> userData) {
         {
 
@@ -370,6 +400,12 @@ public class Main {
         }
     }
 
+    /** Calculates the average values for each variable in the recorded sleep data.
+     *
+     * @param userData The list of user's recorded sleep logs.
+     * @return A double array containing the average values for each variable.
+     */
+
     public static double[] calculateAverages(ArrayList<double[]> userData) {
         double[] avg = new double[userData.getFirst().length];
         for (double[] log : userData)
@@ -380,6 +416,12 @@ public class Main {
             avg[i] /= numDays;
         return avg;
     }
+
+    /**
+     * Analyzes and displays the consistency of sleep and wake times based on recorded sleep data.
+     *
+     * @param userData The list of recorded sleep logs.
+     */
 
     private static void sleepWakeConsistency(ArrayList<double[]> userData) {
         if (userData.isEmpty()) {
@@ -413,6 +455,14 @@ public class Main {
         System.out.println("---------------------–-----------------------------");
     }
 
+    /**
+     * Validates user input to ensure that it is an integer value within the specified range.
+     *
+     * @param min The minimum valid value.
+     * @param max The maximum valid value.
+     * @return The validated integer input received from the user.
+     */
+
     public static int validateInput(int min, int max) {
         Scanner input = new Scanner(System.in);
         boolean valid = false;
@@ -438,6 +488,14 @@ public class Main {
         }
         return res;
     }
+
+    /**
+     * Validates user input to ensure it is a double within the specified range.
+     *
+     * @param min The minimum valid value.
+     * @param max The maximum valid value.
+     * @return The validated double input from the user.
+     */
 
     public static double validateInput(double min, double max) {
         Scanner input = new Scanner(System.in);
@@ -465,6 +523,12 @@ public class Main {
         return res;
     }
 
+    /**
+     * Validates the user input to ensure that time entered is in valid 24-hour format.
+     *
+     * @return The validated time input from the user that is converted to a double to represent hours.
+     */
+
     public static double validateTime() {
         Scanner input = new Scanner(System.in);
         double res = 0;
@@ -482,6 +546,14 @@ public class Main {
         }
     }
 
+    /**
+     * Display a row of data from the user's recorded sleep logs.
+     *
+     * @param message The message to display before the data.
+     * @param userData The list of recorded sleep logs.
+     * @param row The index of the data to display.
+     */
+
     public static void displayRow(String message, ArrayList<double[]> userData, int row) {
         StringBuilder res = new StringBuilder();
         res.append(message);
@@ -495,6 +567,13 @@ public class Main {
         }
         System.out.println(res);
     }
+
+    /**
+     * Rounds a number to a specified format and returns it as a string.
+     *
+     * @param num The number to round.
+     * @return The rounded number as a string.
+     */
 
     public static String round(double num) { // returns number normalized to 5 characters wide.
         if (num >= 10000) {
