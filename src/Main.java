@@ -270,7 +270,7 @@ public class Main {
 
     }
 
-    private static void sleepDurationFactors(ArrayList<double[]> userData) {
+    public static void sleepDurationFactors(ArrayList<double[]> userData) {
         {
 
             int increaseCardio = 0, decreaseCardio = 0;
@@ -370,7 +370,7 @@ public class Main {
         }
     }
 
-    private static double[] calculateAverages(ArrayList<double[]> userData) {
+    public static double[] calculateAverages(ArrayList<double[]> userData) {
         double[] avg = new double[userData.getFirst().length];
         for (double[] log : userData)
             for (int i = 0; i < log.length; i++)

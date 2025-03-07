@@ -87,6 +87,20 @@ public class Tests {
         assertArrayEquals(expected, actual);
     }
 
+    @Test
+    public void Test_sleep_duration_factorsIncreasing() {
+        ArrayList<double[]> userData = new ArrayList<>();
+        userData.add(new double[]{-1, 9, 19, 8.5, 69, 0, 3, 216, 4750, 23.75, 7.51});
+        Main.sleepDurationFactors(userData);
+    }
+
+    @Test
+    public void Test_sleep_duration_factorsDecreasing() {
+        ArrayList<double[]> userData = new ArrayList<>();
+        userData.add(new double[]{-1, 2.7, 23, 1, 0, 180, 12, 216, 10, 4.75, 7.45});
+        Main.sleepDurationFactors(userData);
+    }
+
 
     @Test
     public void testCalculateAveragesMultipleEntries() {
