@@ -146,8 +146,8 @@ public class Main {
         displayRow("Sleep quality (1-10):\t", userData, 1);
         displayRow("Room temperature (°C):\t", userData, 2);
         displayRow("Sleep duration (hrs):\t", userData, 3);
-        displayRow("Cardio duration (mins):\t", userData, 4);
-        displayRow("Napping duration (mins):", userData, 5);
+        displayRow("Cardio duration (minutes):\t", userData, 4);
+        displayRow("Napping duration (minutes):", userData, 5);
         displayRow("Screen time (hrs):\t\t", userData, 6);
         displayRow("Mattress age (months):\t", userData, 7);
         displayRow("Water intake (mL):\t\t", userData, 8);
@@ -520,8 +520,8 @@ public class Main {
         String res = "";
         res += String.format("%02d", (int) timeNum);
         res += ":";
-        int mins = (int) ((timeNum - ((int) timeNum)) * 60);
-        res += String.format("%02d", mins);
+        int minutes = (int) ((timeNum - ((int) timeNum)) * 60);
+        res += String.format("%02d", minutes);
         return res;
     }
 }
