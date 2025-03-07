@@ -193,45 +193,8 @@ public class Main {
             } else if (temperature > 18.5) {
                 tempDownCount++;
             }
-            if (screenTime >= 4) {
-                if (sleepQuality >= 7.5) {
-                    screenTimeUpCount++;
-                } else if (sleepQuality <= 3.5) {
-                    screenTimeDownCount++;
-                }
-            }
-            if (water >= 2000) {
-                if (sleepQuality >= 7.5) {
-                    waterUpCount++;
-                } else if (sleepQuality <= 3.5) {
-                    waterDownCount++;
-                }
-            }
-
-            if (nap_duration <= 30) {
-                if (sleepQuality >= 7.5) {
-                    napUpCount++;
-                } else if (sleepQuality <= 3.5) {
-                    napDownCount++;
-                }
-            }
         }
-        System.out.println("Factors that improved sleep quality:");
-        System.out.println(" - More than 60 min cardio: " + cardioUpCount);
-        System.out.println(" - Room temp below 18.5°C: " + tempUpCount);
-        System.out.println(" - Screen time less than 4 hours: " + screenTimeUpCount);
-        System.out.println(" - Drinking 2L+ water: " + waterUpCount);
-        System.out.println(" - Short naps (<30 min): " + napUpCount);
-
-        System.out.println("Factors that reduced sleep quality:");
-        System.out.println(" - Less than 60 min cardio: " + cardioDownCount);
-        System.out.println(" - Room temp above 18.5°C: " + tempDownCount);
-        System.out.println(" - Screen time 4+ hours: " + screenTimeDownCount);
-        System.out.println(" - Low water intake: " + waterDownCount);
-        System.out.println(" - Long naps (>30 min): " + napDownCount);
     }
-
-
     private static void sleepDurationFactors(ArrayList<double[]> userData) {
 
 
