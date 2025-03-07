@@ -113,10 +113,11 @@ public class Main {
         System.out.println("3) Show factors affecting sleep duration.");
         System.out.println("4) Show averages of recorded data.");
         System.out.println("5) Show relative consistency of sleep/wake times.");
-        System.out.println("6) Exit.");
+        System.out.println("6) Show last night's sleep duration in sleep cycles.");
+        System.out.println("7) Exit.");
         System.out.println("---------------------–-----------------------------");
 
-        int choice = validateInput(1, 6);
+        int choice = validateInput(1, 7);
 
         switch (choice) {
             case 1:
@@ -137,6 +138,10 @@ public class Main {
                 sleepWakeConsistency(userData);
                 break;
             case 6:
+                int sleepCycles = sleepCycles(userData);
+                System.out.printf("Last night, you slept for %d sleep cycles.%n", sleepCycles);
+                break;
+            default:
                 break;
         }
     }
@@ -411,6 +416,11 @@ public class Main {
         System.out.println("Average difference in sleep times: " + showTime(averageBedtimeDifference));
         System.out.println("Average difference in wake times: " + showTime(averageWakeTimeDifference));
         System.out.println("---------------------–-----------------------------");
+    }
+
+    public static int sleepCycles(ArrayList<double[]> userData) {
+        double[] lastEntry = userData.getLast();
+        return (int) (lastEntry[3] * 2 / 3);
     }
 
     public static int validateInput(int min, int max) {
