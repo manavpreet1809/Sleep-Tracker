@@ -418,6 +418,11 @@ public class Main {
         System.out.println("---------------------–-----------------------------");
     }
 
+    /**
+     * Multiplies last sleep duration by 2/3 and truncates to get whole number of sleep cycles.
+     * @param userData User data dynamic array.
+     * @return Number of sleep cycles.
+     */
     public static int sleepCycles(ArrayList<double[]> userData) {
         double[] lastEntry = userData.getLast();
         return (int) (lastEntry[3] * 2 / 3);
