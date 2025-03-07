@@ -88,16 +88,27 @@ public class Tests {
     }
 
 
+    @Test
+    public void testCalculateAveragesMultipleEntries() {
+        ArrayList<double[]> userData = new ArrayList<>();
+        userData.add(new double[]{-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11});
+        userData.add(new double[]{-1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11});
+        double[] result = Main.calculateAverages(userData);
+        assertArrayEquals(new double[]{-1, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11}, result);
+    }
 
+    @Test
+    public void testSleepQualityFactorsImproving() {
+        ArrayList<double[]> userData = new ArrayList<>();
+        userData.add(new double[]{-1, 8, 18, 8, 60, 20, 3, 12, 2000, 22, 6});
+        Main.sleepQualityFactors(userData);
+    }
 
-
-
-@Test
-public void testCalculateAveragesMultipleEntries() {
-    ArrayList<double[]> userData = new ArrayList<>();
-    userData.add(new double[]{-1,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11});
-    userData.add(new double[] { -1,2, 3, 4, 5, 6, 7, 8, 9, 10, 11,11});
-    double[] result = Main.calculateAverages(userData);
-    assertArrayEquals(new double[]{-1,1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11},result);
+    @Test
+    public void testSleepQualityFactorsReducing() {
+        ArrayList<double[]> userData = new ArrayList<>();
+        userData.add(new double[]{-1, 3, 20, 5, 30, 60, 5, 24, 1000, 23, 7});
+        Main.sleepQualityFactors(userData);
+        
     }
 }
