@@ -43,18 +43,21 @@ public class Tests {
         String actual = Main.round(10000.00);
         assertEquals(expected, actual);
     }
+
     @Test
     public void showTimeValid() {
         String expected = "22:30";
         String actual = Main.showTime(22.5);
         assertEquals(expected, actual);
     }
+
     @Test
     public void showTimeMidnight() {
         String expected = "00:00";
         String actual = Main.showTime(0.00);
         assertEquals(expected, actual);
     }
+
     @Test
     public void avgZero() {
         ArrayList<double[]> input = new ArrayList<>();
@@ -63,6 +66,7 @@ public class Tests {
         double[] actual = Main.calculateAverages(input);
         assertArrayEquals(expected, actual);
     }
+
     @Test
     public void avgTwo() {
         ArrayList<double[]> input = new ArrayList<>();
@@ -72,6 +76,7 @@ public class Tests {
         double[] actual = Main.calculateAverages(input);
         assertArrayEquals(expected, actual);
     }
+
     @Test
     public void avgFour_and_a_half() {
         ArrayList<double[]> input = new ArrayList<>();
@@ -81,5 +86,18 @@ public class Tests {
         double[] actual = Main.calculateAverages(input);
         assertArrayEquals(expected, actual);
     }
-}
 
+
+
+
+
+
+@Test
+public void testCalculateAveragesMultipleEntries() {
+    ArrayList<double[]> userData = new ArrayList<>();
+    userData.add(new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11});
+    userData.add(new double[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12});
+    double[] result = Main.calculateAverages(userData);
+    assertArrayEquals(new double[]{1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5},result);
+    }
+}
