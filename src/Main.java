@@ -293,8 +293,20 @@ public class Main {
                     } else if (sleepHours <= 5) {
                         decreaseCardio++;
                     }
+                } else if (cardioMinutes < 60) {
+                    if (sleepHours >= 8) {
+                        increaseCardio++;
+                    } else if (sleepHours <= 5) {
+                        decreaseCardio++;
+                    }
                 }
                 if (roomTemp <= 18.5) {
+                    if (sleepHours >= 8) {
+                        increaseTemp++;
+                    } else if (sleepHours <= 5) {
+                        decreaseTemp++;
+                    }
+                } else if (roomTemp > 18.5) {
                     if (sleepHours >= 8) {
                         increaseTemp++;
                     } else if (sleepHours <= 5) {
@@ -307,6 +319,12 @@ public class Main {
                     } else if (sleepHours <= 5) {
                         decreaseScreenTime++;
                     }
+                } else if (screenHours > 4) {
+                    if (sleepHours >= 8) {
+                        increaseScreenTime++;
+                    } else if (sleepHours <= 5) {
+                        decreaseScreenTime++;
+                    }
                 }
                 if (waterIntake >= 2000) {
                     if (sleepHours >= 8) {
@@ -314,8 +332,20 @@ public class Main {
                     } else if (sleepHours <= 5) {
                         decreaseWater++;
                     }
+                } else if (waterIntake < 2000) {
+                    if (sleepHours >= 8) {
+                        increaseWater++;
+                    } else if (sleepHours <= 5) {
+                        decreaseWater++;
+                    }
                 }
                 if (napMinutes <= 30) {
+                    if (sleepHours >= 8) {
+                        increaseNap++;
+                    } else if (sleepHours <= 5) {
+                        decreaseNap++;
+                    }
+                } else if (napMinutes > 30) {
                     if (sleepHours >= 8) {
                         increaseNap++;
                     } else if (sleepHours <= 5) {
