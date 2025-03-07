@@ -428,6 +428,13 @@ public class Main {
         return (int) (lastEntry[3] * 2 / 3);
     }
 
+    /**
+     * Error trapping function which repeatedly prompts user until they enter a valid input.
+     * This version is overloaded to work on ints, specifically.
+     * @param min Minimum allowed value.
+     * @param max Maximum allowed value.
+     * @return Validated user input.
+     */
     public static int validateInput(int min, int max) {
         Scanner input = new Scanner(System.in);
         boolean valid = false;
@@ -454,6 +461,13 @@ public class Main {
         return res;
     }
 
+    /**
+     * Error trapping function which repeatedly prompts user until they enter a valid input.
+     * This version is overloaded to work on doubles, specifically.
+     * @param min Minimum allowed value.
+     * @param max Maximum allowed value.
+     * @return Validated user input.
+     */
     public static double validateInput(double min, double max) {
         Scanner input = new Scanner(System.in);
         boolean valid = false;
@@ -480,6 +494,11 @@ public class Main {
         return res;
     }
 
+    /**
+     * Error trapping function which repeatedly prompts user until they enter a valid time.
+     * The time must be entered in 24-hour format (e.g. 02:00, 14:56).
+     * @return A decimal value which maps to a certain time. e.g. 10:30 -> 10.5
+     */
     public static double validateTime() {
         Scanner input = new Scanner(System.in);
         double res = 0;
@@ -497,6 +516,12 @@ public class Main {
         }
     }
 
+    /**
+     * Displays one row of data. The row can contain either numbers or times.
+     * @param message A description of what the data is (justified).
+     * @param userData Dynamic array of data.
+     * @param row Row index to display.
+     */
     public static void displayRow(String message, ArrayList<double[]> userData, int row) {
         StringBuilder res = new StringBuilder();
         res.append(message);
@@ -511,7 +536,13 @@ public class Main {
         System.out.println(res);
     }
 
-    public static String round(double num) { // returns number normalized to 5 characters wide.
+    /**
+     * A bespoke function which takes a double and returns a String representation that is
+     * exactly 5 characters wide.
+     * @param num Input number, must be >100000.
+     * @return String representation.
+     */
+    public static String round(double num) {
         if (num >= 10000) {
             return String.valueOf(Math.round(num));
         } else if (num >= 1000) {
