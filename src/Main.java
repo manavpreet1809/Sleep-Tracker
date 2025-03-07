@@ -156,7 +156,7 @@ public class Main {
         System.out.println("---------------------–-----------------------------");
     }
 
-    private static void sleepQualityFactors(ArrayList<double[]> userData) {
+    public static void sleepQualityFactors(ArrayList<double[]> userData) {
         int cardioUpCount = 0, cardioDownCount = 0;
         int tempUpCount = 0, tempDownCount = 0;
         int screenTimeUpCount = 0, screenTimeDownCount = 0;
@@ -238,13 +238,13 @@ public class Main {
                     napDownCount++;
                 }
             }
-            if (sleep_duration <= 8) {
+            if (sleep_duration >= 8) {
                 if (sleepQuality >= 7.5) {
                     sleep_durationUpCount++;
                 } else if (sleepQuality <= 3.5) {
                     sleep_durationDownCount++;
                 }
-            } else if (sleep_duration > 8) {
+            } else if (sleep_duration < 8) {
                 if (sleepQuality >= 7.5) {
                     sleep_durationUpCount++;
                 } else if (sleepQuality <= 3.5) {
