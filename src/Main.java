@@ -295,65 +295,65 @@ public class Main {
                 if (cardioMinutes >= 60) {
                     if (sleepHours >= 8) {
                         increaseCardio++;
-                    } else if (sleepHours <= 5) {
+                    } else if (sleepHours < 8) {
                         decreaseCardio++;
                     }
                 } else if (cardioMinutes < 60) {
                     if (sleepHours >= 8) {
                         increaseCardio++;
-                    } else if (sleepHours <= 5) {
+                    } else if (sleepHours < 8) {
                         decreaseCardio++;
                     }
                 }
                 if (roomTemp <= 18.5) {
                     if (sleepHours >= 8) {
                         increaseTemp++;
-                    } else if (sleepHours <= 5) {
+                    } else if (sleepHours < 8) {
                         decreaseTemp++;
                     }
                 } else if (roomTemp > 18.5) {
                     if (sleepHours >= 8) {
                         increaseTemp++;
-                    } else if (sleepHours <= 5) {
+                    } else if (sleepHours < 8) {
                         decreaseTemp++;
                     }
                 }
                 if (screenHours <= 4) {
                     if (sleepHours >= 8) {
                         increaseScreenTime++;
-                    } else if (sleepHours <= 5) {
+                    } else if (sleepHours < 8) {
                         decreaseScreenTime++;
                     }
                 } else if (screenHours > 4) {
                     if (sleepHours >= 8) {
                         increaseScreenTime++;
-                    } else if (sleepHours <= 5) {
+                    } else if (sleepHours < 8) {
                         decreaseScreenTime++;
                     }
                 }
                 if (waterIntake >= 2000) {
                     if (sleepHours >= 8) {
                         increaseWater++;
-                    } else if (sleepHours <= 5) {
+                    } else if (sleepHours < 8) {
                         decreaseWater++;
                     }
                 } else if (waterIntake < 2000) {
                     if (sleepHours >= 8) {
                         increaseWater++;
-                    } else if (sleepHours <= 5) {
+                    } else if (sleepHours < 8) {
                         decreaseWater++;
                     }
                 }
                 if (napMinutes <= 30) {
                     if (sleepHours >= 8) {
                         increaseNap++;
-                    } else if (sleepHours <= 5) {
+                    } else if (sleepHours < 8) {
                         decreaseNap++;
                     }
                 } else if (napMinutes > 30) {
                     if (sleepHours >= 8) {
                         increaseNap++;
-                    } else if (sleepHours <= 5) {
+                    } else if (sleepHours < 8) {
                         decreaseNap++;
                     }
                 }
