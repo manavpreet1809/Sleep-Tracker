@@ -86,10 +86,10 @@ public class Main {
                     res[8] = validateInput(0, 12000);
                     break;
                 case 9:
-                    System.out.println("Enter the time you went to bed (Next you will enter the time you woke up, enter both values in 24-hour-format, enter 22.50 (if 10:30PM) or 6.25 (if 6:15AM)");
-                    res[9] = validateInput(0.0, 24.0);
-                    System.out.println("Enter the time you woke up (Enter in 24-hour-format like last time, enter 22.50 (if 10:30PM) or 11.6 (if 11:36PM)");
-                    res[10] = validateInput(0.0, 24.0);
+                    System.out.println("Enter the time you went to bed in 24-hour format. (e.g. 02:00, 23:00, 23:59)");
+                    res[9] = validateTime();
+                    System.out.println("Enter the time you woke up. (e.g. 06:00, 08:38, 11:00)");
+                    res[10] = validateTime();
                     break;
                 case 10:
                     System.out.println("Congratulations, you completed your log for today!");
@@ -116,7 +116,7 @@ public class Main {
         System.out.println("6) Exit.");
         System.out.println("---------------------–-----------------------------");
 
-        int choice = validateInput(1,8);
+        int choice = validateInput(1,6);
 
         switch (choice) {
             case 1:
@@ -229,12 +229,33 @@ public class Main {
         return res;
     }
 
+    public static double validateTime() {
+        Scanner input = new Scanner(System.in);
+        double res = 0;
+
+        while (true) {
+            try {
+                String strTime = input.next();
+                res += Integer.parseInt(strTime.substring(0, 2));
+                res += Double.parseDouble(strTime.substring(3, 5)) / 60;
+                return res;
+            } catch (InputMismatchException | NumberFormatException | StringIndexOutOfBoundsException e) {
+                System.out.println("Please enter a valid time in 24 hour format. (e.g. 02:00, 14:00, 22:59)");
+                res = 0;
+            }
+        }
+    }
+
     public static void displayRow(String message, ArrayList<double[]> userData, int row) {
         StringBuilder res = new StringBuilder();
         res.append(message);
         res.append("\t");
-        for(double[] night : userData) {
-            res.append(round(night[row])).append("\t");
+        if (9 <= row && row <= 10) {
+            for(double[] night : userData)
+                res.append(showTime(night[row])).append("\t");
+        } else {
+            for(double[] night : userData)
+                res.append(round(night[row])).append("\t");
         }
         System.out.println(res);
     }
@@ -251,5 +272,14 @@ public class Main {
         } else {
             return String.format("%.3f", num);
         }
+    }
+
+    public static String showTime(double timeNum) {
+        String res = "";
+        res += String.format("%02d", (int) timeNum);
+        res += ":";
+        int mins = (int) ((timeNum - ((int) timeNum)) * 60);
+        res += String.format("%02d", mins);
+        return res;
     }
 }
