@@ -196,6 +196,54 @@ public class Main {
         }
     }
     private static void sleepDurationFactors(ArrayList<double[]> userData) {
+    } {
+        int increaseCardio = 0, decreaseCardio = 0;
+        int increaseTemp = 0, decreaseTemp = 0;
+        int increaseScreenTime = 0, decreaseScreenTime = 0;
+        int increaseWater = 0, decreaseWater = 0;
+        int increaseNap = 0, decreaseNap = 0;
+
+        for (double[] log : UserData) {
+            double sleepHours = log[3];
+            double cardioMinutes = log[4];
+            double roomTemp = log[2];
+            double screenHours = log[6];
+            double waterIntake = log[8];
+            double napMinutes = log[5];
+
+            if (cardioMinutes >= 60) {
+                if (sleepHours >= 7) increaseCardio++;
+                else if (sleepHours <= 4) decreaseCardio++;
+            }
+
+            if (roomTemp <= 18.5) {
+                if (sleepHours >= 7) increaseTemp++;
+                else if (sleepHours <= 4) decreaseTemp++;
+            } else {
+                decreaseTemp++;
+            }
+
+            if (screenHours >= 4 && sleepHours <= 4) decreaseScreenTime++;
+
+            if (waterIntake >= 2000 && sleepHours >= 7) increaseWater++;
+            else if (waterIntake < 2000) decreaseWater++;
+
+            if (napMinutes <= 30) increaseNap++;
+            else if (napMinutes > 60) decreaseNap++;
+        }
+
+        System.out.println("Factors that improved sleep duration:");
+        System.out.println(" - More than 60 min cardio: " + increaseCardio);
+        System.out.println(" - Room temp below 18.5°C: " + increaseTemp);
+        System.out.println(" - Drinking 2L+ water: " + increaseWater);
+        System.out.println(" - Short naps (<30 min): " + increaseNap);
+
+        System.out.println("Factors that reduced sleep duration:");
+        System.out.println(" - Less than 60 min cardio: " + decreaseCardio);
+        System.out.println(" - Room temp above 18.5°C: " + decreaseTemp);
+        System.out.println(" - Screen time 4+ hours: " + decreaseScreenTime);
+        System.out.println(" - Low water intake: " + decreaseWater);
+        System.out.println(" - Long naps (>60 min): " + decreaseNap);
     }
 
     private static double[] calculateAverages(ArrayList<double[]> userData) {
