@@ -32,14 +32,14 @@ public class Main {
         }
     }
 
+    /**
+     * Records a new sleep log based on user input of the sleep-related variables.
+     *
+     * @return A double array which has the user's recorded sleep data.
+     */
     public static double[] record() {
         double[] res = new double[11]; // 0th index is kept blank for readability.
         boolean run = true;
-        /**
-         * Records a new sleep log based on user input of the sleep-related variables.
-         *
-         * @return A double array which has the user's recorded sleep data.
-         */
         while (run) {
             System.out.println("---------------------–-----------------------------");
             System.out.println("\tYou may enter any number of variables that you would like to log for this night.");
