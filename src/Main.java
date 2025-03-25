@@ -144,7 +144,7 @@ public class Main {
                 displayData(avg);
                 break;
             case 5:
-                sleepWakeConsistency(userData);
+                printSleepWakeConsistency(userData);
                 break;
             case 6:
                 int sleepCycles = sleepCycles(userData);
@@ -415,40 +415,44 @@ public class Main {
     }
     /**
      * Analyzes and displays the consistency of sleep and wake times based on recorded sleep data.
+     * Uses sample variance calculation.
      *
      * @param userData The list of recorded sleep logs.
      */
-
-    private static void sleepWakeConsistency(ArrayList<double[]> userData) {
-        if (userData.isEmpty()) {
-            System.out.println("No logs recorded so far! Please record at least one night's worth of data.");
-            return;
-        }
-        double totalBedtimeDifference = 0;
-        double totalWakeTimeDifference = 0;
-        int numberOfNights = userData.size();
-
-        for (int i = 1; i < numberOfNights; i++) {
-            double[] previousNight = userData.get(i - 1);
-            double[] currentNight = userData.get(i);
-
-            double previousSleepTime = previousNight[9];
-            double currentSleepTime = currentNight[9];
-            double previousWakeTime = previousNight[10];
-            double currentWakeTime = currentNight[10];
-
-            totalBedtimeDifference += Math.abs(currentSleepTime - previousSleepTime);
-            totalWakeTimeDifference += Math.abs(currentWakeTime - previousWakeTime);
+    private static void printSleepWakeConsistency(ArrayList<double[]> userData) {
+        ArrayList<double[]> copy = new ArrayList<>();
+        for (double[] log : userData) {
+            copy.add(log.clone());
+            if (copy.getLast()[9] < 12) {
+                copy.getLast()[9] += 24;
+            }
         }
 
-        double averageBedtimeDifference = totalBedtimeDifference / (numberOfNights - 1);
-        double averageWakeTimeDifference = totalWakeTimeDifference / (numberOfNights - 1);
+        double sleepVariance = sampleVariance(copy, 9);
+        double wakeVariance = sampleVariance(copy, 10);
+        if (sleepVariance > 10) {
+            System.out.println("Your sleep times are highly variable.");
+        } else {
+            System.out.println("Your sleep times are consistent!");
+        } if (wakeVariance > 10) {
+            System.out.println("Your wake times are highly variable.");
+        } else {
+            System.out.println("Your wake times are consistent!");
+        }
+    }
 
-        System.out.println("---------------------–-----------------------------");
-        System.out.println("Relative consistency of sleep/wake times:");
-        System.out.println("Average difference in sleep times: " + showTime(averageBedtimeDifference));
-        System.out.println("Average difference in wake times: " + showTime(averageWakeTimeDifference));
-        System.out.println("---------------------–-----------------------------");
+    /**
+     * Calculates expected value of squared deviation from the mean using a known mathematical formula.
+     * @param dataset User data.
+     * @param row Row to calculate variance on.
+     * @return Squared deviation.
+     */
+    private static double sampleVariance(ArrayList<double[]> dataset, int row) {
+        double avg = calculateAverages(dataset)[row];
+        double sum = 0;
+        for (double[] log : dataset)
+            sum += Math.pow(avg - log[row], 2);
+        return sum / (dataset.size() - 1);
     }
 
     /**
@@ -463,7 +467,7 @@ public class Main {
 
     /**
      * Error trapping function which repeatedly prompts user until they enter a valid input.
-     * This version is overloaded to work on ints, specifically.
+     * This version is overloaded to work on integers, specifically.
      * @param min Minimum allowed value.
      * @param max Maximum allowed value.
      * @return Validated user input.
