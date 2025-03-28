@@ -211,7 +211,7 @@ public class Menu {
         if (9 <= row && row <= 10) {
             for(double[] night : userData) {
                 Time t = new Time(night[row]);
-                res.append(t.getTimeString()).append("\t");
+                res.append(t).append("\t");
             }
         } else {
             for(double[] night : userData)
