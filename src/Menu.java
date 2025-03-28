@@ -203,8 +203,10 @@ public class Menu {
         res.append(message);
         res.append("\t");
         if (9 <= row && row <= 10) {
-            for(double[] night : userData)
-                res.append(Main.showTime(night[row])).append("\t");
+            for(double[] night : userData) {
+                Time t = new Time(night[row]);
+                res.append(t.getTimeString()).append("\t");
+            }
         } else {
             for(double[] night : userData)
                 res.append(Main.round(night[row])).append("\t");

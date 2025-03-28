@@ -44,14 +44,16 @@ public class Tests {
     @Test
     public void showTimeValid() {
         String expected = "22:30";
-        String actual = Main.showTime(22.5);
+        Time t = new Time(22.5);
+        String actual = t.getTimeString();
         assertEquals(expected, actual);
     }
 
     @Test
     public void showTimeMidnight() {
         String expected = "00:00";
-        String actual = Main.showTime(0.00);
+        Time t = new Time(0.00);
+        String actual = t.getTimeString();
         assertEquals(expected, actual);
     }
 

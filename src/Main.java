@@ -61,21 +61,6 @@ public class Main {
     }
 
     /**
-     * Takes a number representing time in "decimal format" and returns a string with the time in
-     * classic 24 hr format.
-     * @param timeNum decimal number representing a time (used internally)
-     * @return time in 24 hr format
-     */
-    public static String showTime(double timeNum) {
-        String res = "";
-        res += String.format("%02d", (int) timeNum);
-        res += ":";
-        int minutes = (int) ((timeNum - ((int) timeNum)) * 60);
-        res += String.format("%02d", minutes);
-        return res;
-    }
-
-    /**
      * A bespoke function which takes a double and returns a String representation that is
      * exactly 5 characters wide.
      * @param num Input number, must be >100000.
