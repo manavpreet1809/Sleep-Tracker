@@ -135,11 +135,12 @@ public class Menu {
         System.out.println("4) Show averages of recorded data.");
         System.out.println("5) Show relative consistency of sleep/wake times.");
         System.out.println("6) Show last night's sleep duration in sleep cycles.");
-        System.out.println("7) Exit.");
+        System.out.println("7) Show the factor that affects sleep quality the most.");
+        System.out.println("8) Exit.");
         System.out.println("---------------------–-----------------------------");
 
         NumValidator nv = new NumValidator();
-        int choice = (int) nv.validate(1, 7);
+        int choice = (int) nv.validate(1, 8);
 
         switch (choice) {
             case 1:
@@ -163,6 +164,8 @@ public class Menu {
                 int sleepCycles = User.sleepCycles(user.getUserData());
                 System.out.printf("Last night, you slept for %d sleep cycles.%n", sleepCycles);
                 break;
+            case 7:
+
             default:
                 break;
         }
