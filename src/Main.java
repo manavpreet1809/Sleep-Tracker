@@ -1,8 +1,14 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
+    static String PATH = "save/data.csv";
+
     public static void main(String[] args) {
         boolean run = true;
         ArrayList<double[]> userData = new ArrayList<>();
@@ -13,10 +19,11 @@ public class Main {
             System.out.println("\tPlease choose whether you would like to:");
             System.out.println("\t1) Record a new log");
             System.out.println("\t2) Analyze trends");
-            System.out.println("\t3) Exit program");
+            System.out.println("\t3) Save logs so far to a file.");
+            System.out.println("\t4) Load saved logs.");
             System.out.println("---------------------–-----------------------------");
 
-            int choice = validateInput(1, 3);
+            int choice = validateInput(1, 5);
 
             switch (choice) {
                 case 1:
@@ -26,9 +33,66 @@ public class Main {
                     analyze(userData);
                     break;
                 case 3:
+                    save(userData);
+                    break;
+                case 4:
+                    try {
+                        userData = load();
+                    } catch (Exception e) {
+                        System.out.println("Failed to load sleep data! Make sure you have saved at least once.");
+                    }
+                    break;
+                default:
                     run = false;
                     break;
             }
+        }
+    }
+
+    /**
+     * Loads user data from a .csv file.
+     * Watch out! This method may throw FileNotFound exception!
+     * @return Loaded sleep logs.
+     */
+    private static ArrayList<double[]> load() throws FileNotFoundException {
+        File f = new File(PATH);
+        ArrayList<double[]> res = new ArrayList<>();
+        Scanner input = new Scanner(f);
+        input.nextLine(); // skip header.
+        while (input.hasNextLine()) {
+            String line = input.nextLine();
+            String[] splitLine = line.split(",");
+            double[] numLine = new double[splitLine.length];
+            for (int i = 0; i < splitLine.length; i++) {
+                numLine[i] = Double.parseDouble(splitLine[i]);
+            }
+            res.add(numLine);
+        }
+        return res;
+    }
+
+    /**
+     * Saves user data to a .csv file.
+     * @param userData User's sleep logs.
+     */
+    private static void save(ArrayList<double[]> userData) {
+        File f = new File(PATH);
+        try {
+            FileWriter fw = new FileWriter(f);
+            // header
+            fw.append("(empty),Sleep quality,Room temperature,Sleep duration,Time cardio,Time napping,Time screen,Mattress age,Water intake,Sleep time,Wake time\n");
+            for (double[] log : userData) {
+                for (double i : log) {
+                    for (char c : String.valueOf(i).toCharArray()) {
+                        fw.append(c);
+                    }
+                    fw.append(",");
+                }
+                fw.append("\n");
+            }
+            fw.close();
+        } catch (IOException e) {
+            System.out.println("Failed to write to the file.");
         }
     }
 
@@ -165,7 +229,7 @@ public class Main {
         displayRow("Sleep quality (1-10):\t", userData, 1);
         displayRow("Room temperature (°C):\t", userData, 2);
         displayRow("Sleep duration (hrs):\t", userData, 3);
-        displayRow("Cardio duration (minutes):\t", userData, 4);
+        displayRow("Cardio duration (minutes):", userData, 4);
         displayRow("Napping duration (minutes):", userData, 5);
         displayRow("Screen time (hrs):\t\t", userData, 6);
         displayRow("Mattress age (months):\t", userData, 7);
@@ -583,7 +647,7 @@ public class Main {
         if (num >= 10000) {
             return String.valueOf(Math.round(num));
         } else if (num >= 1000) {
-            return " " + Math.round(num);
+            return "" + Math.round(num);
         } else if (num >= 100) {
             return String.format("%.1f", num);
         } else if (num >= 10) {
@@ -607,4 +671,6 @@ public class Main {
         res += String.format("%02d", minutes);
         return res;
     }
+
+
 }
