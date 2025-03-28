@@ -74,6 +74,25 @@ public class User {
     }
 
     /**
+     * Calculates the standard deviation using another known mathematical formula
+     * @param dataset User data
+     * @param row the row to calculate standard deviation on, up the users choice!
+     * @return standard deviation
+     */
+    public static double standardDeviation(ArrayList<double[]> dataset, int row) {
+        double count = dataset.size();
+        double sum = 0;
+        double avg = calculateAverages(dataset)[row];
+        for (double[] log : dataset){
+            sum += log[row];}
+        double variancesum = 0;
+        for (double[] log : dataset){
+            variancesum += Math.pow(sum - avg, 2);}
+        double variance = variancesum / count;
+        return Math.sqrt(variance);
+    }
+
+    /**
      * Analyzes and displays the factors that positively or negatively affect sleep quality based on user's recorded sleep data.
      *
      * @param userData The list of user's recorded sleep logs,each entry is a double array containing sleep-related variables.
