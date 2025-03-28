@@ -222,8 +222,45 @@ public class Tests {
         userData.add(new double[]{-1, 0, 14, 7, 0, 0, 0, 0, 0, 0});
         userData.add(new double[]{-1, 0, 24, 7, 0, 0, 0, 0, 0, 0});
         userData.add(new double[]{-1, 0, 11, 7, 0, 0, 0, 0, 0, 0});
-        double expected = 6;
-        double actual = (User.standardDeviation(userData,2));
+        double expected = 6.0;
+        double actual = Math.round(User.standardDeviation(userData,2));
+        assertEquals(expected, actual, 0.001);
+    }
+    @Test
+    public void standard_deviation_many_entries_to_verify_its_validity() {
+        ArrayList<double[]> userData = new ArrayList<>();
+        userData.add(new double[]{-1, 0, 14, 7, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, 24, 7, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, 11, 7, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, 69, 7, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, 26, 7, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, 47, 7, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, 19, 7, 0, 0, 0, 0, 0, 0});
+        double expected = 19.0;
+        double actual = Math.round(User.standardDeviation(userData,2));
+        assertEquals(expected, actual, 0.001);
+    }
+    @Test
+    public void standard_deviation_negative_numbers() {
+        ArrayList<double[]> userData = new ArrayList<>();
+        userData.add(new double[]{-1, 0, -12, 7, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, -2, 7, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, -8, 7, 0, 0, 0, 0, 0, 0});
+        double expected = 4.0;
+        double actual = Math.round(User.standardDeviation(userData,2));
+        assertEquals(expected, actual, 0.001);
+    }
+    @Test
+    public void standard_deviation_decimals() {
+        ArrayList<double[]> userData = new ArrayList<>();
+        userData.add(new double[]{-1, 0, 25.56, 7, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, 24.24, 7, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, 17.65, 7, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, 107.11, 7, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, 75.25, 7, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, 69.71, 7, 0, 0, 0, 0, 0, 0});
+        double expected = 33;
+        double actual = Math.round(User.standardDeviation(userData,2));
         assertEquals(expected, actual, 0.001);
     }
     @Test
