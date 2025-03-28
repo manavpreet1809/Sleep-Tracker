@@ -133,6 +133,7 @@ public class Tests {
         int actual = User.sleepCycles(userData);
         assertEquals(expected, actual);
     }
+
     @Test
     public void lastNightSleepCycles() {
         ArrayList<double[]> userData = new ArrayList<>();
@@ -143,6 +144,7 @@ public class Tests {
         int actual = User.sleepCycles(userData);
         assertEquals(expected, actual);
     }
+
     @Test
     public void lastNightSleepCycles_for_7_and_a_half_hours_of_sleep() {
         ArrayList<double[]> userData = new ArrayList<>();
@@ -164,5 +166,15 @@ public class Tests {
         double expected = 9.17;
         double actual = User.sampleVariance(userData, 1);
         assertEquals(expected, actual);
+    }
+
+
+    @Test
+    public void sampleVarianceSingleEntry() {
+        ArrayList<double[]> userData = new ArrayList<>();
+        userData.add(new double[]{0, 5.0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+        double expected = 0.0;
+        double actual = User.sampleVariance(userData, 1);
+        assertEquals(expected, actual, 0.001);
     }
 }
