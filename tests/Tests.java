@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -177,4 +178,12 @@ public class Tests {
         double actual = User.sampleVariance(userData, 1);
         assertEquals(expected, actual, 0.001);
     }
+
+
+@Test
+public void validateStandardTime() {
+    System.setIn(new ByteArrayInputStream("14:30\n".getBytes()));
+    double expected = 14.5;
+    double actual = new TimeValidator().validate(0, 24);
+    assertEquals(expected, actual, 0.001);
 }
