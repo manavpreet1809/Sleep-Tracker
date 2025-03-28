@@ -24,6 +24,10 @@ public class User {
         double[] lastEntry = userData.getLast();
         return (int) (lastEntry[3] * 2 / 3);
     }
+    public static int REM_Duration(ArrayList<double[]> userData) {
+        double[] lastEntry = userData.getLast();
+        return (int) (((lastEntry[3] * 2 / 3) * 30));
+    }
 
     /**
      * Analyzes and displays the factors that affect sleep duration based on the recorded sleep data.

@@ -135,7 +135,7 @@ public class Menu {
         System.out.println("4) Show averages of recorded data.");
         System.out.println("5) Show relative consistency of sleep/wake times.");
         System.out.println("6) Show last night's sleep duration in sleep cycles.");
-        System.out.println("7) Show the factor that affects sleep quality the most.");
+        System.out.println("7) Show last night's sleep efficiency.");
         System.out.println("8) Exit.");
         System.out.println("---------------------–-----------------------------");
 
@@ -165,7 +165,8 @@ public class Menu {
                 System.out.printf("Last night, you slept for %d sleep cycles.%n", sleepCycles);
                 break;
             case 7:
-
+                int efficient = User.REM_Duration(user.getUserData());
+                System.out.println("Last night, your Rapid Eye Movement duration was.%n:" + efficient);
             default:
                 break;
         }
