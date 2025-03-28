@@ -203,30 +203,31 @@ public class Tests {
     }
 
 
+    @Test
+    void testEquals() {
+        Time t1 = new Time(8.0);  // 08:00
+        Time t2 = new Time("08:00");
+        Time t3 = new Time(8.5);  // 08:30
 
-@Test
-void testEquals() {
-    Time t1 = new Time(8.0);  // 08:00
-    Time t2 = new Time("08:00");
-    Time t3 = new Time(8.5);  // 08:30
+        assertEquals(t1, t2);
+        assertNotEquals(t1, t3);
+    }
 
-    assertEquals(t1, t2);
-    assertNotEquals(t1, t3);
-}
+    @Test
+    void testCompareTo() {
+        Time t1 = new Time(7.0);  // 07:00
+        Time t2 = new Time("07:30");
+        Time t3 = new Time(8.0);  // 08:00
 
-@Test
-void testCompareTo() {
-    Time t1 = new Time(7.0);  // 07:00
-    Time t2 = new Time("07:30");
-    Time t3 = new Time(8.0);  // 08:00
-
-    assertTrue(t1.compareTo(t2) < 0);  // 07:00 < 07:30
-    assertTrue(t2.compareTo(t3) < 0);  // 07:30 < 08:00
-    assertEquals(0, t1.compareTo(new Time(7.0))); // Equal times
-}
+        assertTrue(t1.compareTo(t2) < 0);  // 07:00 < 07:30
+        assertTrue(t2.compareTo(t3) < 0);  // 07:30 < 08:00
+        assertEquals(0, t1.compareTo(new Time(7.0))); // Equal times
+    }
 
     @Test
     void testNumValidator_ValidInput() {
-        NumValidator validator = new NumValidator(new Scanner("5\n"));
+        NumValidator validator = new NumValidator();
+        System.setIn(new ByteArrayInputStream("5\n".getBytes()));
         assertEquals(5, validator.validate(1, 10));
     }
+}
