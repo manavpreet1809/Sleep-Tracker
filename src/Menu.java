@@ -141,7 +141,8 @@ public class Menu {
         System.out.println("5) Show relative consistency of sleep/wake times.");
         System.out.println("6) Show last night's sleep duration in sleep cycles.");
         System.out.println("7) Show last night's REM duration.");
-        System.out.println("8) Exit.");
+        System.out.println("8) Show standard deviation of sleep duration.");
+        System.out.println("9) Exit.");
         System.out.println("---------------------–-----------------------------");
 
         NumValidator nv = new NumValidator();
@@ -172,6 +173,9 @@ public class Menu {
             case 7:
                 int efficient = User.REM_Duration(user.getUserData());
                 System.out.printf("Last night, your Rapid Eye Movement was about: %d minutes.%n", efficient);
+            case 8:
+                double stdeviation = User.standardDeviation(user.getUserData(), Factor.SLEEP_DURATION.getArrayIndex());
+                System.out.println("The standard deviation of your sleep duration is " + stdeviation + " hrs.");
             default:
                 break;
         }
