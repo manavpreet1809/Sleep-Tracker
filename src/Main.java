@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args) {
         boolean run = true;
-        ArrayList<double[]> userData = new ArrayList<>();
+        User user = new User(new ArrayList<>());
 
         while (run) {
             System.out.println("---------------------–-----------------------------");
@@ -21,23 +21,24 @@ public class Main {
             System.out.println("\t2) Analyze trends");
             System.out.println("\t3) Save logs so far to a file.");
             System.out.println("\t4) Load saved logs.");
+            System.out.println("\t5) Exit the program.");
             System.out.println("---------------------–-----------------------------");
 
             int choice = validateInput(1, 5);
 
             switch (choice) {
                 case 1:
-                    userData.add(record());
+                    user.addRow(record());
                     break;
                 case 2:
-                    analyze(userData);
+                    analyze(user);
                     break;
                 case 3:
-                    save(userData);
+                    save(user.getUserData());
                     break;
                 case 4:
                     try {
-                        userData = load();
+                        user.setUserData(load());
                     } catch (Exception e) {
                         System.out.println("Failed to load sleep data! Make sure you have saved at least once.");
                     }
@@ -170,11 +171,10 @@ public class Main {
 
     /**
      * Analyze the recorded sleep data based on user's desired preferences.
-     *
-     * @param userData The list of user's recorded sleep logs to be analyzed.
+     * @param user User object to analyze.
      */
-    public static void analyze(ArrayList<double[]> userData) {
-        if (userData.isEmpty()) {
+    public static void analyze(User user) {
+        if (user.getUserData().isEmpty()) {
             System.out.println("No logs recorded so far! Please record at least one night's worth of data.");
             return;
         }
@@ -194,24 +194,24 @@ public class Main {
 
         switch (choice) {
             case 1:
-                displayData(userData);
+                displayData(user.getUserData());
                 break;
             case 2:
-                sleepQualityFactors(userData);
+                sleepQualityFactors(user.getUserData());
                 break;
             case 3:
-                sleepDurationFactors(userData);
+                sleepDurationFactors(user.getUserData());
                 break;
             case 4:
                 ArrayList<double[]> avg = new ArrayList<>();
-                avg.add(calculateAverages(userData));
+                avg.add(User.calculateAverages(user.getUserData()));
                 displayData(avg);
                 break;
             case 5:
-                printSleepWakeConsistency(userData);
+                printSleepWakeConsistency(user.getUserData());
                 break;
             case 6:
-                int sleepCycles = sleepCycles(userData);
+                int sleepCycles = user.sleepCycles(user.getUserData());
                 System.out.printf("Last night, you slept for %d sleep cycles.%n", sleepCycles);
                 break;
             default:
@@ -462,21 +462,7 @@ public class Main {
             System.out.println(" - Long naps (>60 min): " + decreaseNap);
         }
     }
-    /**
-     * Analyzes and displays the factors that affect sleep duration based on the recorded sleep data.
-     *
-     * @param userData The list of user's recorded sleep logs, where each entry is a double array containing sleep related variables.
-     */
-    public static double[] calculateAverages(ArrayList<double[]> userData) {
-        double[] avg = new double[userData.getFirst().length];
-        for (double[] log : userData)
-            for (int i = 0; i < log.length; i++)
-                avg[i] += log[i];
-        int numDays = userData.size();
-        for (int i = 0; i < avg.length; i++)
-            avg[i] /= numDays;
-        return avg;
-    }
+
     /**
      * Analyzes and displays the consistency of sleep and wake times based on recorded sleep data.
      * Uses sample variance calculation.
@@ -492,8 +478,8 @@ public class Main {
             }
         }
 
-        double sleepVariance = sampleVariance(copy, 9);
-        double wakeVariance = sampleVariance(copy, 10);
+        double sleepVariance = User.sampleVariance(copy, 9);
+        double wakeVariance = User.sampleVariance(copy, 10);
         if (sleepVariance > 10) {
             System.out.println("Your sleep times are highly variable.");
         } else {
@@ -505,29 +491,7 @@ public class Main {
         }
     }
 
-    /**
-     * Calculates expected value of squared deviation from the mean using a known mathematical formula.
-     * @param dataset User data.
-     * @param row Row to calculate variance on.
-     * @return Squared deviation.
-     */
-    private static double sampleVariance(ArrayList<double[]> dataset, int row) {
-        double avg = calculateAverages(dataset)[row];
-        double sum = 0;
-        for (double[] log : dataset)
-            sum += Math.pow(avg - log[row], 2);
-        return sum / (dataset.size() - 1);
-    }
 
-    /**
-     * Multiplies last sleep duration by 2/3 and truncates to get whole number of sleep cycles.
-     * @param userData User data dynamic array.
-     * @return Number of sleep cycles.
-     */
-    public static int sleepCycles(ArrayList<double[]> userData) {
-        double[] lastEntry = userData.getLast();
-        return (int) (lastEntry[3] * 2 / 3);
-    }
 
     /**
      * Error trapping function which repeatedly prompts user until they enter a valid input.

@@ -59,7 +59,7 @@ public class Tests {
         ArrayList<double[]> input = new ArrayList<>();
         input.add(new double[]{-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
         double[] expected = {-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        double[] actual = Main.calculateAverages(input);
+        double[] actual = User.calculateAverages(input);
         assertArrayEquals(expected, actual);
     }
 
@@ -69,7 +69,7 @@ public class Tests {
         input.add(new double[]{-1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3});
         input.add(new double[]{-1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
         double[] expected = {-1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
-        double[] actual = Main.calculateAverages(input);
+        double[] actual = User.calculateAverages(input);
         assertArrayEquals(expected, actual);
     }
 
@@ -79,7 +79,7 @@ public class Tests {
         input.add(new double[]{-1, 7, 5, 2, 4, 8, 9, 3, 3, 6, 4.5});
         input.add(new double[]{-1, 2, 4, 7, 5, 1, 0, 6, 6, 3, 4.5});
         double[] expected = {-1, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5};
-        double[] actual = Main.calculateAverages(input);
+        double[] actual = User.calculateAverages(input);
         assertArrayEquals(expected, actual);
     }
 
@@ -107,7 +107,7 @@ public class Tests {
         ArrayList<double[]> userData = new ArrayList<>();
         userData.add(new double[]{-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11});
         userData.add(new double[]{-1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11});
-        double[] result = Main.calculateAverages(userData);
+        double[] result = User.calculateAverages(userData);
         assertArrayEquals(new double[]{-1, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11}, result);
     }
 
@@ -130,7 +130,7 @@ public class Tests {
         ArrayList<double[]> userData = new ArrayList<>();
         userData.add(new double[]{-1, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0});
         int expected = 6;
-        int actual = Main.sleepCycles(userData);
+        int actual = User.sleepCycles(userData);
         assertEquals(expected, actual);
     }
     @Test
@@ -140,7 +140,7 @@ public class Tests {
         userData.add(new double[]{-1, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0});
         userData.add(new double[]{-1, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0});
         int expected = 6;
-        int actual = Main.sleepCycles(userData);
+        int actual = User.sleepCycles(userData);
         assertEquals(expected, actual);
     }
 
