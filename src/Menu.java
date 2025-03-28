@@ -140,7 +140,7 @@ public class Menu {
         System.out.println("4) Show averages of recorded data.");
         System.out.println("5) Show relative consistency of sleep/wake times.");
         System.out.println("6) Show last night's sleep duration in sleep cycles.");
-        System.out.println("7) Show last night's sleep efficiency.");
+        System.out.println("7) Show last night's REM duration.");
         System.out.println("8) Exit.");
         System.out.println("---------------------–-----------------------------");
 

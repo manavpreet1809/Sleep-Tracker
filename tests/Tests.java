@@ -259,8 +259,8 @@ public class Tests {
         userData.add(new double[]{-1, 0, 107.11, 7, 0, 0, 0, 0, 0, 0});
         userData.add(new double[]{-1, 0, 75.25, 7, 0, 0, 0, 0, 0, 0});
         userData.add(new double[]{-1, 0, 69.71, 7, 0, 0, 0, 0, 0, 0});
-        double expected = 33;
-        double actual = Math.round(User.standardDeviation(userData,2));
+        double expected = 33.0;
+        double actual = Math.round((User.standardDeviation(userData,2)));
         assertEquals(expected, actual, 0.001);
     }
     @Test
