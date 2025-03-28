@@ -239,7 +239,8 @@ public class Tests {
 
     @Test
     void testNumValidator_ValidInput() {
-        NumValidator validator = new NumValidator(new Scanner("5\n"));
+        System.setIn(new ByteArrayInputStream("5\n".getBytes()));
+        NumValidator validator = new NumValidator();
         assertEquals(5, validator.validate(1, 10));
     }
 }
