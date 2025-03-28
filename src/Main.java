@@ -647,7 +647,7 @@ public class Main {
         if (num >= 10000) {
             return String.valueOf(Math.round(num));
         } else if (num >= 1000) {
-            return "" + Math.round(num);
+            return " " + Math.round(num);
         } else if (num >= 100) {
             return String.format("%.1f", num);
         } else if (num >= 10) {
