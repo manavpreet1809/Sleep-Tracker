@@ -2,6 +2,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -223,4 +224,9 @@ void testCompareTo() {
     assertTrue(t2.compareTo(t3) < 0);  // 07:30 < 08:00
     assertEquals(0, t1.compareTo(new Time(7.0))); // Equal times
 }
-}
+
+    @Test
+    void testNumValidator_ValidInput() {
+        NumValidator validator = new NumValidator(new Scanner("5\n"));
+        assertEquals(5, validator.validate(1, 10));
+    }

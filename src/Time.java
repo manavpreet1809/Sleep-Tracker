@@ -1,5 +1,6 @@
 public class Time {
     double timeNum;
+    private Time t2;
 
     public String getTimeString() {
         return timeString;
@@ -25,5 +26,9 @@ public class Time {
         int minutes = (int) ((timeNum - ((int) timeNum)) * 60);
         res += String.format("%02d", minutes);
         return res;
+    }
+
+    public int compareTo(Time t2) {
+        this.t2 = t2;
     }
 }
