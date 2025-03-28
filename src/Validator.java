@@ -6,6 +6,6 @@ public interface Validator {
      * @param max Maximum allowed value
      * @return Validated input.
      */
-    double validate(double min, double max) throws Exception;
+    double validate(double min, double max);
 
 }
