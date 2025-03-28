@@ -1,16 +1,24 @@
-public class Time {
+public class Time implements Comparable<Time>{
     double timeNum;
-    private Time t2;
+    String timeString;
 
     public String getTimeString() {
-        return timeString;
+        return this.timeString;
     }
 
-    String timeString;
+    public double getTimeNum() {
+        return this.timeNum;
+    }
+
 
     public Time(double timeNum) {
         this.timeNum = timeNum;
         timeString = showTime(timeNum);
+    }
+
+    public Time(String timeString) {
+        this.timeString = timeString;
+        this.timeNum = toTimeNum(timeString);
     }
 
     /**
@@ -28,7 +36,27 @@ public class Time {
         return res;
     }
 
-    public int compareTo(Time t2) {
-        this.t2 = t2;
+    public double toTimeNum(String strTime) {
+        double res = 0;
+        res += Integer.parseInt(strTime.substring(0, 2));
+        res += Double.parseDouble(strTime.substring(3, 5)) / 60;
+        return res;
+    }
+
+    @Override
+    public int compareTo(Time other) {
+        return Double.compare(this.timeNum, other.getTimeNum());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true; // pointer equality
+        }
+        if (!(obj instanceof Time)) { // pattern variable
+            return false; // wrong type
+        }
+
+        return this.getTimeNum() == ((Time) obj).getTimeNum();
     }
 }
