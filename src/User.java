@@ -24,6 +24,12 @@ public class User {
         double[] lastEntry = userData.getLast();
         return (int) (lastEntry[3] * 2 / 3);
     }
+
+    /**
+     * Uses the number of sleep cycles and multiplies that number by 30 minutes to get the total duration
+     * of rapid eye movement.
+     * @return Duration of rapid eye movement
+     */
     public static int REM_Duration(ArrayList<double[]> userData) {
         double[] lastEntry = userData.getLast();
         return (int) (((lastEntry[3] * 2 / 3) * 30));
