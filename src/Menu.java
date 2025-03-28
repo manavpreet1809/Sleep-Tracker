@@ -171,7 +171,7 @@ public class Menu {
                 break;
             case 7:
                 int efficient = User.REM_Duration(user.getUserData());
-                System.out.println("Last night, your Rapid Eye Movement was about %d minutes.%n");
+                System.out.printf("Last night, your Rapid Eye Movement was about: %d.%n", efficient);
             default:
                 break;
         }
