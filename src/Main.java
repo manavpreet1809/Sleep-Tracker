@@ -10,6 +10,13 @@ public class Main {
 
     public static void main(String[] args) {
         User user = new User(new ArrayList<>());
+        if (args.length != 0 && args[0].equals("load")){
+            try {
+                user = load();
+            } catch (FileNotFoundException e) {
+                System.out.println("File failed to load!");
+            }
+        }
         Menu.displayMenu(user);
     }
 

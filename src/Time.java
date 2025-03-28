@@ -59,4 +59,9 @@ public class Time implements Comparable<Time>{
 
         return this.getTimeNum() == ((Time) obj).getTimeNum();
     }
+
+    @Override
+    public String toString() {
+        return this.timeString;
+    }
 }

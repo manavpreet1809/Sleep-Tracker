@@ -1,4 +1,3 @@
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class Menu {
@@ -38,7 +37,6 @@ public class Menu {
                         }
                     } catch (Exception e) {
                         System.out.println("Failed to load sleep data! Make sure you have saved at least once.");
-                        e.printStackTrace();
                     }
                     break;
                 default:
