@@ -159,9 +159,6 @@ public class Tests {
         assertEquals(expected, actual);
     }
 
-    // TODO: sampleVariance() tests
-    // TODO: read() tests
-    // TODO: load() tests
     @Test
     public void sampleVariance() {
         ArrayList<double[]> userData = new ArrayList<>();
