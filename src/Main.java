@@ -18,9 +18,9 @@ public class Main {
      * Watch out! This method may throw FileNotFound exception!
      * @return Loaded sleep logs.
      */
-    public static ArrayList<double[]> load() throws FileNotFoundException {
+    public static User load() throws FileNotFoundException {
         File f = new File(PATH);
-        ArrayList<double[]> res = new ArrayList<>();
+        ArrayList<double[]> data = new ArrayList<>();
         Scanner input = new Scanner(f);
         input.nextLine(); // skip header.
         while (input.hasNextLine()) {
@@ -30,9 +30,9 @@ public class Main {
             for (int i = 0; i < splitLine.length; i++) {
                 numLine[i] = Double.parseDouble(splitLine[i]);
             }
-            res.add(numLine);
+            data.add(numLine);
         }
-        return res;
+        return new User(data);
     }
 
     /**

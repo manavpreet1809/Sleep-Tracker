@@ -299,6 +299,9 @@ public class User {
         if (!(obj instanceof User user)) { // pattern variable
             return false; // wrong type
         }
+        if (this.userData.size() != user.getUserData().size()) {
+            return false;
+        }
         for (int i = 0; i < this.userData.size(); i++) {
             double[] curr1 = this.userData.get(i);
             double[] curr2 = user.getUserData().get(i);

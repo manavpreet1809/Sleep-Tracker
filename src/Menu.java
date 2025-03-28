@@ -1,3 +1,4 @@
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class Menu {
@@ -29,9 +30,15 @@ public class Menu {
                     break;
                 case 4:
                     try {
-                        user.setUserData(Main.load());
+                        User loaded = Main.load();
+                        if (loaded.equals(user)) {
+                            System.out.println("File already loaded!"); // using equals here
+                        } else {
+                            user = loaded;
+                        }
                     } catch (Exception e) {
                         System.out.println("Failed to load sleep data! Make sure you have saved at least once.");
+                        e.printStackTrace();
                     }
                     break;
                 default:
