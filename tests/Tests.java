@@ -217,6 +217,16 @@ public class Tests {
         assertEquals(expected, actual);
     }
     @Test
+    public void standard_deviation() {
+        ArrayList<double[]> userData = new ArrayList<>();
+        userData.add(new double[]{-1, 0, 14, 7, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, 24, 7, 0, 0, 0, 0, 0, 0});
+        userData.add(new double[]{-1, 0, 11, 7, 0, 0, 0, 0, 0, 0});
+        double expected = 6;
+        double actual = (User.standardDeviation(userData,2));
+        assertEquals(expected, actual, 0.001);
+    }
+    @Test
     void testEquals() {
         Time t1 = new Time(8.0);  // 08:00
         Time t2 = new Time("08:00");

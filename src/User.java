@@ -87,7 +87,7 @@ public class User {
             sum += log[row];}
         double variancesum = 0;
         for (double[] log : dataset){
-            variancesum += Math.pow(sum - avg, 2);}
+            variancesum += Math.pow(log[row] - avg, 2);}
         double variance = variancesum / count;
         return Math.sqrt(variance);
     }
