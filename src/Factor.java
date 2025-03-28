@@ -35,7 +35,7 @@ public enum Factor {
      * Returns the corresponding index position for this factor in data arrays.
      * Matches the 1-based indexing used in the original implementation.
      */
-    public int getDataIndex() {
+    public int getArrayIndex() {
         return this.ordinal() + 1;
     }
 
