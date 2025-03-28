@@ -180,10 +180,19 @@ public class Tests {
     }
 
 
-@Test
-public void validateStandardTime() {
-    System.setIn(new ByteArrayInputStream("14:30\n".getBytes()));
-    double expected = 14.5;
-    double actual = new TimeValidator().validate(0, 24);
-    assertEquals(expected, actual, 0.001);
+    @Test
+    public void validateStandardTime() {
+        System.setIn(new ByteArrayInputStream("14:30\n".getBytes()));
+        double expected = 14.5;
+        double actual = new TimeValidator().validate(0, 24);
+        assertEquals(expected, actual, 0.001);
+    }
+
+    @Test
+    public void validateStandardTime_Midnight() {
+        System.setIn(new ByteArrayInputStream("00:00\n".getBytes()));
+        double expected = 0.0;
+        double actual = new TimeValidator().validate(0, 24);
+        assertEquals(expected, actual, 0.001);
+    }
 }
