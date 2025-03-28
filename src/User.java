@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class User {
     private ArrayList<double[]> userData;
@@ -284,5 +285,22 @@ public class User {
             System.out.println(" - Low water intake: " + decreaseWater);
             System.out.println(" - Long naps (>60 min): " + decreaseNap);
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true; // pointer equality
+        }
+        if (!(obj instanceof User user)) { // pattern variable
+            return false; // wrong type
+        }
+        for (int i = 0; i < this.userData.size(); i++) {
+            double[] curr1 = this.userData.get(i);
+            double[] curr2 = user.getUserData().get(i);
+            if (!Arrays.equals(curr1, curr2))
+                return false;
+        }
+        return true;
     }
 }
