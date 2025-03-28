@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    static String PATH = "save/data.csv";
+    final static String PATH = "save/data.csv";
 
     public static void main(String[] args) {
         User user = new User(new ArrayList<>());
