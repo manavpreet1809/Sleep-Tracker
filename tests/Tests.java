@@ -201,8 +201,22 @@ public class Tests {
         double actual = new TimeValidator().validate(0, 24);
         assertEquals(expected, actual, 0.001);
     }
-
-
+    @Test
+    public void Rapid_eye_movement() {
+        ArrayList<double[]> userData = new ArrayList<>();
+        userData.add(new double[]{-1, 0, 0, 7.5, 0, 0, 0, 0, 0, 0});
+        double expected = 150.0;
+        double actual = User.REM_Duration(userData);
+        assertEquals(expected, actual);
+    }
+    @Test
+    public void Rapid_eye_movement_for_11_hours_of_sleep() {
+        ArrayList<double[]> userData = new ArrayList<>();
+        userData.add(new double[]{-1, 0, 0, 11, 0, 0, 0, 0, 0, 0});
+        double expected = 220.0;
+        double actual = User.REM_Duration(userData);
+        assertEquals(expected, actual);
+    }
     @Test
     void testEquals() {
         Time t1 = new Time(8.0);  // 08:00
@@ -226,8 +240,7 @@ public class Tests {
 
     @Test
     void testNumValidator_ValidInput() {
-        NumValidator validator = new NumValidator();
-        System.setIn(new ByteArrayInputStream("5\n".getBytes()));
+        NumValidator validator = new NumValidator(new Scanner("5\n"));
         assertEquals(5, validator.validate(1, 10));
     }
 }
