@@ -89,7 +89,7 @@ public class Tests {
         userData.add(new double[]{-1, 9, 19, 8.5, 69, 0, 3, 216, 4750, 23.75, 7.51});
         userData.add(new double[]{-1, 1, 14, 0.5, 8, 0, 3, 216, 20, 7.5, 8.0});
         userData.add(new double[]{-1, 9, 19, 8.5, 69, 0, 3, 216, 4750, 23.75, 7.51});
-        Main.sleepDurationFactors(userData); //There should be 3 nights worth of data based on having
+        User.sleepDurationFactors(userData); //There should be 3 nights worth of data based on having
         //3 logs entered so far
         assertEquals(3, userData.size());
     }
@@ -98,7 +98,7 @@ public class Tests {
     public void testSleepDurationFactorsDecreasing() {
         ArrayList<double[]> userData = new ArrayList<>();
         userData.add(new double[]{-1, 2.7, 23, 1, 0, 180, 12, 216, 10, 4.75, 7.45});
-        Main.sleepDurationFactors(userData);
+        User.sleepDurationFactors(userData);
     }
 
 
@@ -115,14 +115,14 @@ public class Tests {
     public void testSleepQualityFactorsImproving() {
         ArrayList<double[]> userData = new ArrayList<>();
         userData.add(new double[]{-1, 8, 18, 8, 60, 20, 3, 12, 2000, 22, 6});
-        Main.sleepQualityFactors(userData);
+        User.sleepQualityFactors(userData);
     }
 
     @Test
     public void testSleepQualityFactorsReducing() {
         ArrayList<double[]> userData = new ArrayList<>();
         userData.add(new double[]{-1, 3, 20, 5, 30, 60, 5, 24, 1000, 23, 7});
-        Main.sleepQualityFactors(userData);
+        User.sleepQualityFactors(userData);
     }
 
     @Test
