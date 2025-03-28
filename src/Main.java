@@ -211,7 +211,7 @@ public class Main {
                 printSleepWakeConsistency(user.getUserData());
                 break;
             case 6:
-                int sleepCycles = user.sleepCycles(user.getUserData());
+                int sleepCycles = User.sleepCycles(user.getUserData());
                 System.out.printf("Last night, you slept for %d sleep cycles.%n", sleepCycles);
                 break;
             default:
