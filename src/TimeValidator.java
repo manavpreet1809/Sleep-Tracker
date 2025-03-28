@@ -9,7 +9,7 @@ public class TimeValidator implements Validator {
      * @return A decimal value which maps to a certain time. e.g. 10:30 -> 10.5
      */
     @Override
-    public double validate(double min, double max) {
+    public double validateStream(double min, double max) {
         Scanner input = new Scanner(System.in);
         double res = 0;
 
@@ -32,5 +32,16 @@ public class TimeValidator implements Validator {
                 res = 0;
             }
         }
+    }
+
+    @Override
+    public boolean validateVariable(Object o, double min, double max) {
+        if (!(o instanceof String)) {
+            return false;
+        }
+        double timeNum = 0;
+        timeNum += Integer.parseInt(((String) o).substring(0, 2));
+        timeNum += Double.parseDouble(((String) o).substring(3, 5)) / 60;
+        return timeNum >= min && timeNum <= max;
     }
 }

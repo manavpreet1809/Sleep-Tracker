@@ -189,7 +189,7 @@ public class Tests {
     public void validateStandardTime() {
         System.setIn(new ByteArrayInputStream("14:30\n".getBytes()));
         double expected = 14.5;
-        double actual = new TimeValidator().validate(0, 24);
+        double actual = new TimeValidator().validateStream(0, 24);
         assertEquals(expected, actual, 0.001);
     }
 
@@ -197,7 +197,7 @@ public class Tests {
     public void validateStandardTime_Midnight() {
         System.setIn(new ByteArrayInputStream("00:00\n".getBytes()));
         double expected = 0.0;
-        double actual = new TimeValidator().validate(0, 24);
+        double actual = new TimeValidator().validateStream(0, 24);
         assertEquals(expected, actual, 0.001);
     }
     @Test
@@ -241,6 +241,6 @@ public class Tests {
     void testNumValidator_ValidInput() {
         System.setIn(new ByteArrayInputStream("5\n".getBytes()));
         NumValidator validator = new NumValidator();
-        assertEquals(5, validator.validate(1, 10));
+        assertEquals(5, validator.validateStream(1, 10));
     }
 }

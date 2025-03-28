@@ -8,7 +8,7 @@ public class NumValidator implements Validator {
      * @return Validated user input.
      */
     @Override
-    public double validate(double min, double max) {
+    public double validateStream(double min, double max) {
         Scanner input = new Scanner(System.in);
         boolean valid = false;
         int res = 0;
@@ -32,5 +32,13 @@ public class NumValidator implements Validator {
             }
         }
         return res;
+    }
+
+    @Override
+    public boolean validateVariable(Object o, double min, double max) {
+        if (!(o instanceof Double)) {
+            return false;
+        }
+        return (Double) o >= min && (Double) o <= max;
     }
 }

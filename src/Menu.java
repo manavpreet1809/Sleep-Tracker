@@ -15,7 +15,7 @@ public class Menu {
             System.out.println("---------------------–-----------------------------");
 
             NumValidator nv = new NumValidator();
-            int choice = (int) nv.validate(1, 5);
+            int choice = (int) nv.validateStream(1, 5);
 
             switch (choice) {
                 case 1:
@@ -73,45 +73,45 @@ public class Menu {
             NumValidator nv = new NumValidator();
             TimeValidator tv = new TimeValidator();
 
-            int variable_chosen = (int) nv.validate(1, 10);
+            int variable_chosen = (int) nv.validateStream(1, 10);
             switch (variable_chosen) {
                 case 1: //Each variable is stored into res[] (indexes 1-10), to 2 decimal places
                     System.out.println("Enter your sleep quality from a scale of 1-10 (1=Restless, 10=Highly restorative):");
-                    res[Factor.SLEEP_QUALITY.getArrayIndex()] = (int) nv.validate(1, 10);
+                    res[Factor.SLEEP_QUALITY.getArrayIndex()] = (int) nv.validateStream(1, 10);
                     break;
                 case 2:
                     System.out.println("Enter your room temperature in °C (Valid input range is 10.0-30.0):");
-                    res[Factor.ROOM_TEMPERATURE.getArrayIndex()] = nv.validate(10.0, 30.0);
+                    res[Factor.ROOM_TEMPERATURE.getArrayIndex()] = nv.validateStream(10.0, 30.0);
                     break;
                 case 3:
                     System.out.println("Enter your sleep duration in hours (Valid input range is 0-24):");
-                    res[Factor.SLEEP_DURATION.getArrayIndex()] = nv.validate(0, 24); //User cannot sleep more than 24 hours per day
+                    res[Factor.SLEEP_DURATION.getArrayIndex()] = nv.validateStream(0, 24); //User cannot sleep more than 24 hours per day
                     break;
                 case 4:
                     System.out.println("Enter the amount of time you spent on doing cardio today in minutes (Valid input range is 0-1380):");
-                    res[Factor.CARDIO_DURATION.getArrayIndex()] = nv.validate(0, 1380);
+                    res[Factor.CARDIO_DURATION.getArrayIndex()] = nv.validateStream(0, 1380);
                     break;
                 case 5:
                     System.out.println("Enter the amount of time you spent napping today in minutes (Valid input range is 0-180):");
-                    res[Factor.NAPPING_DURATION.getArrayIndex()] = nv.validate(0, 180); //3 hrs is the longest to be considered a nap
+                    res[Factor.NAPPING_DURATION.getArrayIndex()] = nv.validateStream(0, 180); //3 hrs is the longest to be considered a nap
                     break;
                 case 6:
                     System.out.println("Enter your screen time today in hours (Valid input range is 0-24):");
-                    res[Factor.SCREEN_TIME.getArrayIndex()] = nv.validate(0, 24);
+                    res[Factor.SCREEN_TIME.getArrayIndex()] = nv.validateStream(0, 24);
                     break;
                 case 7:
                     System.out.println("Enter the age of your mattress in months just ONCE (Valid input range is 0-1560):");
-                    res[Factor.MATTRESS_AGE.getArrayIndex()] = nv.validate(0, 1560);
+                    res[Factor.MATTRESS_AGE.getArrayIndex()] = nv.validateStream(0, 1560);
                     break;
                 case 8:
                     System.out.println("What is your water intake? Enter in mL (Valid input range is 0-12000):");
-                    res[Factor.WATER_INTAKE.getArrayIndex()] = nv.validate(0, 12000);
+                    res[Factor.WATER_INTAKE.getArrayIndex()] = nv.validateStream(0, 12000);
                     break;
                 case 9:
                     System.out.println("Enter the time you went to bed in 24-hour format. (e.g. 02:00, 23:00, 23:59)");
-                    res[Factor.SLEEP_TIME.getArrayIndex()] = tv.validate(0,24);
+                    res[Factor.SLEEP_TIME.getArrayIndex()] = tv.validateStream(0,24);
                     System.out.println("Enter the time you woke up. (e.g. 06:00, 08:38, 11:00)");
-                    res[Factor.WAKE_TIME.getArrayIndex()] = tv.validate(0,24);
+                    res[Factor.WAKE_TIME.getArrayIndex()] = tv.validateStream(0,24);
                     break;
                 case 10:
                     System.out.println("Congratulations, you completed your log for today!");
@@ -145,7 +145,7 @@ public class Menu {
         System.out.println("---------------------–-----------------------------");
 
         NumValidator nv = new NumValidator();
-        int choice = (int) nv.validate(1, 8);
+        int choice = (int) nv.validateStream(1, 8);
 
         switch (choice) {
             case 1:

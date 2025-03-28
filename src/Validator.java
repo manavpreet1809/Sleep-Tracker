@@ -1,4 +1,5 @@
 public interface Validator {
+
     /**
      * Error trapping function which repeatedly prompts user until they enter a valid input.
      *
@@ -6,6 +7,7 @@ public interface Validator {
      * @param max Maximum allowed value
      * @return Validated input.
      */
-    double validate(double min, double max);
+    double validateStream(double min, double max);
 
+    boolean validateVariable(Object o, double min, double max);
 }
