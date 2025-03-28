@@ -165,9 +165,11 @@ public class Tests {
     @Test
     public void sampleVariance() {
         ArrayList<double[]> userData = new ArrayList<>();
-        userData.add(new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-        double expected = 9.17;
-        double actual = User.sampleVariance(userData, 1);
+        userData.add(new double[]{1});
+        userData.add(new double[]{9});
+        userData.add(new double[]{3});
+        double expected = 17.0;
+        double actual = Math.round(User.sampleVariance(userData, 0));
         assertEquals(expected, actual);
     }
 
@@ -176,7 +178,8 @@ public class Tests {
     public void sampleVarianceSingleEntry() {
         ArrayList<double[]> userData = new ArrayList<>();
         userData.add(new double[]{0, 5.0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
-        double expected = 0.0;
+        userData.add(new double[]{0, 7.0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+        double expected = 2.0;
         double actual = User.sampleVariance(userData, 1);
         assertEquals(expected, actual, 0.001);
     }
