@@ -1,3 +1,5 @@
+package SleepTracker;
+
 public class Time implements Comparable<Time>{
     double timeNum;
     String timeString;

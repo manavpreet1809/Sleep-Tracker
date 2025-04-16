@@ -1,4 +1,4 @@
-
+package SleepTracker;
 
 /**
  * Enum representing different sleep-related factors that can be tracked and analyzed.

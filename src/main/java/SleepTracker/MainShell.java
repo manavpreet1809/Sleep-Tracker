@@ -1,3 +1,5 @@
+package SleepTracker;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -5,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main {
+public class MainShell {
     final static String PATH = "save/data.csv";
 
     public static void main(String[] args) {

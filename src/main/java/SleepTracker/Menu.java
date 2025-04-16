@@ -1,3 +1,5 @@
+package SleepTracker;
+
 import java.util.ArrayList;
 
 public class Menu {
@@ -25,11 +27,11 @@ public class Menu {
                     analyze(user);
                     break;
                 case 3:
-                    Main.save(user.getUserData());
+                    MainShell.save(user.getUserData());
                     break;
                 case 4:
                     try {
-                        User loaded = Main.load();
+                        User loaded = MainShell.load();
                         if (loaded.equals(user)) {
                             System.out.println("File already loaded!"); // using equals here
                         } else {
@@ -219,7 +221,7 @@ public class Menu {
             }
         } else {
             for(double[] night : userData)
-                res.append(Main.round(night[row])).append("\t");
+                res.append(MainShell.round(night[row])).append("\t");
         }
         System.out.println(res);
     }

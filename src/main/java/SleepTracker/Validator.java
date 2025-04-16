@@ -1,3 +1,5 @@
+package SleepTracker;
+
 public interface Validator {
 
     /**

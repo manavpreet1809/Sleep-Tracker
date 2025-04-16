@@ -27,3 +27,5 @@ replay_pid*
 # IDE specific, generally good practice to add
 .idea/
 
+/target/
+/.idea/
