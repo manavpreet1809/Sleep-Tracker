@@ -11,7 +11,7 @@ public class SleepTrackerApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(SleepTrackerApplication.class.getResource("SleepTrackerMainController.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1500, 900);
+        Scene scene = new Scene(fxmlLoader.load(), 1200, 400);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
