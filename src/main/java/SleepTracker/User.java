@@ -53,10 +53,10 @@ public class User {
         double sleepDuration = lastEntry[Factor.SLEEP_DURATION.getArrayIndex()];
         double sleepQuality = lastEntry[Factor.SLEEP_QUALITY.getArrayIndex()];
 
-        // Base calculation: average cycle is 90 minutes (1.5 hours)
+        // Base calculation: average cycle is 90 minutes
         double cycleLength = 1.5;
 
-        // Adjust cycle length based on sleep quality (higher quality = more efficient cycles)
+        // Adjust cycle length based on sleep quality
         if (sleepQuality >= 7) {
             cycleLength = 1.4; // Shorter, more efficient cycles
         } else if (sleepQuality <= 3) {
@@ -66,20 +66,20 @@ public class User {
         // Calculate number of sleep cycles
         int completeCycles = (int)(sleepDuration / cycleLength);
 
-        // Calculate REM sleep (typically 20-25% of total sleep in healthy adults)
+        // Calculate REM sleep
         // Quality affects REM percentage
         double remPercentage = 0.2 + (sleepQuality / 50); // Ranges from 0.2 to 0.4
         double remDuration = sleepDuration * remPercentage;
 
-        // Calculate deep sleep (typically 10-20% of total sleep)
-        double deepSleepPercentage = 0.1 + (sleepQuality / 100); // Ranges from 0.1 to 0.2
+        // Calculate deep sleep
+        double deepSleepPercentage = 0.1 + (sleepQuality / 100);
         double deepSleepDuration = sleepDuration * deepSleepPercentage;
 
         return new SleepCycleInfo(
                 completeCycles,
-                remDuration * 60, // Convert to minutes
-                deepSleepDuration * 60, // Convert to minutes
-                cycleLength * 60 // Convert to minutes
+                remDuration * 60,
+                deepSleepDuration * 60,
+                cycleLength * 60
         );
     }
 
@@ -130,37 +130,39 @@ public class User {
     }
 
     /**
-     * Calculates a weighted moving average giving more importance to recent data.
+     * Calculates weighted average of a sleep factor, giving more importance to recent nights.
      *
-     * @param userData The sleep data to analyze
-     * @param factor The Factor enum to calculate the weighted average for
-     * @param daysToConsider Number of recent days to include, or 0 for all days
-     * @return The weighted average value
+     * @param sleepData User's sleep logs
+     * @param factor Which factor to average
+     * @param recentDays How many recent days to include (0 = all data)
+     * @return Weighted average value
      */
-    public static double weightedMovingAverage(ArrayList<double[]> userData, Factor factor, int daysToConsider) {
-        int row = factor.getArrayIndex();
-        int dataSize = userData.size();
+    public static double weightedMovingAverage(ArrayList<double[]> sleepData, Factor factor, int recentDays) {
+        int idx = factor.getArrayIndex();
+        int totalNights = sleepData.size();
 
-        // If no data or invalid factor, return 0
-        if (dataSize == 0) return 0;
+        if (totalNights == 0)
+            return 0;  // No data to analyze view
 
-        // Limit days to consider if specified
-        int startIndex = (daysToConsider > 0 && daysToConsider < dataSize)
-                ? dataSize - daysToConsider
-                : 0;
-
-        double sum = 0;
-        double weightSum = 0;
-
-        for (int i = startIndex; i < dataSize; i++) {
-            // Calculate weight: more recent data gets higher weight
-            // Linear weight function: (i + 1 - startIndex) / total
-            double weight = (double)(i + 1 - startIndex) / (dataSize - startIndex);
-            sum += userData.get(i)[row] * weight;
-            weightSum += weight;
+        // Figure out which day to start from
+        int firstDay = 0;
+        if (recentDays > 0 && recentDays < totalNights) {
+            firstDay = totalNights - recentDays;
         }
 
-        return weightSum > 0 ? sum / weightSum : 0;
+        double weightedSum = 0;
+        double totalWeight = 0;
+
+        // Loop through the days we're considering
+        for (int i = firstDay; i < totalNights; i++) {
+            double weight = (double)(i + 1 - firstDay) / (totalNights - firstDay);
+
+            weightedSum += sleepData.get(i)[idx] * weight;
+            totalWeight += weight;
+        }
+
+        // Avoid division by zero
+        return totalWeight > 0 ? weightedSum / totalWeight : 0;
     }
 
     /**
@@ -679,135 +681,119 @@ public class User {
     }
 
     /**
-     * Predicts sleep quality based on previous data using a simple regression model.
+     * Predicts the sleep quality for tonight using trends from past data.
+     * Uses a basic linear regression approach with weighted factors.
      *
-     * @param userData The sleep data history
-     * @param currentFactors The factors for the night to predict
-     * @return Predicted sleep quality (1-10 scale)
+     * @param userData Recorded sleep data
+     * @param currentFactors Values for tonight's conditions
+     * @return Predicted sleep quality on a scale from 1 to 10
      */
     public static double predictSleepQuality(ArrayList<double[]> userData, double[] currentFactors) {
         if (userData.size() < 5) {
-            // Not enough data for reliable prediction
+            // Need at least 5 entries for a reliable prediction
             return -1;
         }
 
-        // Initialize coefficients to measure impact of each factor
-        double[] coefficients = calculateFactorCoefficients(userData);
-
-        // Start with baseline (average sleep quality)
-        double baseQuality = calculateAverages(userData)[Factor.SLEEP_QUALITY.getArrayIndex()];
-
-        // Adjust baseline using coefficients and current factors
-        double predictedQuality = baseQuality;
-
-        // Apply each coefficient to the difference between current factor and average
+        // Calculate average values across all logs
         double[] averages = calculateAverages(userData);
+         double[] coefficients = calculateFactorCoefficients(userData);
 
-        // Apply factor impacts
+        // Start from the average sleep quality
+        double predicted = averages[Factor.SLEEP_QUALITY.getArrayIndex()];
+
+        // Adjust prediction based on differences from the average
         for (Factor factor : new Factor[] {
                 Factor.ROOM_TEMPERATURE,
-                Factor.SLEEP_DURATION,
+                  Factor.SLEEP_DURATION,
                 Factor.CARDIO_DURATION,
                 Factor.NAPPING_DURATION,
-                Factor.SCREEN_TIME,
+                  Factor.SCREEN_TIME,
                 Factor.WATER_INTAKE
         }) {
-            int idx = factor.getArrayIndex();
-            double avgValue = averages[idx];
-            double currentValue = currentFactors[idx];
-            double impact = coefficients[idx] * (currentValue - avgValue);
-            predictedQuality += impact;
+            int i = factor.getArrayIndex();
+                double delta = currentFactors[i] - averages[i];
+            predicted += coefficients[i] * delta;
         }
 
-        // Ensure prediction is within valid range (1-10)
-        predictedQuality = Math.max(1, Math.min(10, predictedQuality));
-
-        return predictedQuality;
+        // Keep prediction within range 1–10
+        return Math.max(1, Math.min(10, predicted));
     }
 
+    private static double[] calculateFactorCoefficients(ArrayList<double[]> userData) {
+    }
     /**
-     * Calculates correlation coefficients between each factor and sleep quality
+     * Determines how strongly each factor affects sleep quality using correlation.
+     * Converts correlation into a scale factor for prediction.
      *
-     * @param userData The sleep data to analyze
-     * @return Array of coefficients for each factor
+     * @param userData Recorded sleep logs
+     * @return Coefficient array showing factor importance
      */
     private static double[] calculateFactorCoefficients(ArrayList<double[]> userData) {
-        int qualityIdx = Factor.SLEEP_QUALITY.getArrayIndex();
-        double[] coefficients = new double[11]; // Match data array size
+        double[] coefficients = new double[11];
+        int qualityIndex = Factor.SLEEP_QUALITY.getArrayIndex();
 
-        // For each factor, calculate correlation coefficient with sleep quality
         for (Factor factor : Factor.values()) {
-            int factorIdx = factor.getArrayIndex();
+            int i = factor.getArrayIndex();
 
             // Skip sleep quality itself
-            if (factorIdx == qualityIdx) continue;
+            if (i == qualityIndex) continue;
 
-            // Calculate correlation (simplified)
-            double correlation = calculateCorrelation(userData, factorIdx, qualityIdx);
+            double correlation = calculateCorrelation(userData, i, qualityIndex);
 
-            // Convert correlation to coefficient (empirically determined scale factors)
+            // Assign scale based on expected impact direction and magnitude
             switch (factor) {
-                case ROOM_TEMPERATURE:
-                    // Negative correlation - lower temp often means better sleep
-                    coefficients[factorIdx] = correlation * -0.2;
-                    break;
+                   case ROOM_TEMPERATURE:
+                    coefficients[i] = correlation * -0.2; break;
                 case SLEEP_DURATION:
-                    // Positive correlation - more sleep often means better quality
-                    coefficients[factorIdx] = correlation * 0.5;
-                    break;
+                    coefficients[i] = correlation * 0.5; break;
                 case CARDIO_DURATION:
-                    // Positive correlation up to a point
-                    coefficients[factorIdx] = correlation * 0.01;
-                    break;
-                case NAPPING_DURATION:
-                    // Negative correlation - more napping can disrupt night sleep
-                    coefficients[factorIdx] = correlation * -0.005;
-                    break;
+                    coefficients[i] = correlation * 0.01; break;
+                   case NAPPING_DURATION:
+                    coefficients[i] = correlation * -0.005; break;
                 case SCREEN_TIME:
-                    // Negative correlation - more screen time often means worse sleep
-                    coefficients[factorIdx] = correlation * -0.3;
-                    break;
+                    coefficients[i] = correlation * -0.3; break;
                 case WATER_INTAKE:
-                    // Positive correlation up to a point, then negative (bathroom trips)
-                    coefficients[factorIdx] = correlation * 0.0005;
-                    break;
+                    coefficients[i] = correlation * 0.0005; break;
                 default:
-                    coefficients[factorIdx] = 0;
+                    coefficients[i] = 0; break;
             }
         }
 
         return coefficients;
     }
 
-    /**
-     * Calculates Pearson correlation coefficient between two variables in the dataset
-     *
-     * @param userData The sleep data to analyze
-     * @param factorIdx Index of the first variable
-     * @param qualityIdx Index of the second variable (typically sleep quality)
-     * @return Correlation coefficient (-1 to 1)
-     */
-    private static double calculateCorrelation(ArrayList<double[]> userData, int factorIdx, int qualityIdx) {
-        double sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0;
-        int n = userData.size();
 
-        // Calculate sums for correlation formula
-        for (double[] entry : userData) {
-            double x = entry[factorIdx];
-            double y = entry[qualityIdx];
+    /**
+     * Calculates how much two variables are linearly related (Pearson correlation).
+     *
+     * @param data All sleep logs
+     * @param xIndex Index of the independent variable
+     * @param yIndex Index of the dependent variable (usually sleep quality)
+     * @return Correlation value from -1 (inverse) to 1 (direct), or 0 (no relation)
+     */
+    private static double calculateCorrelation(ArrayList<double[]> data, int xIndex, int yIndex) {
+        int n = data.size();
+        double sumX = 0, sumY = 0, sumXY = 0;
+        double sumX2 = 0, sumY2 = 0;
+
+        for (double[] entry : data) {
+               double x = entry[xIndex];
 
             sumX += x;
+            double y;
             sumY += y;
+
             sumXY += x * y;
             sumX2 += x * x;
+
+
+
             sumY2 += y * y;
         }
 
-        // Calculate Pearson correlation coefficient
         double numerator = n * sumXY - sumX * sumY;
         double denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
 
         if (denominator == 0) return 0;
         return numerator / denominator;
     }
-}
