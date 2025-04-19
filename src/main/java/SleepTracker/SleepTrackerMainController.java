@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.event.*;
 import javafx.fxml.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
@@ -93,7 +94,13 @@ public class SleepTrackerMainController {
     @FXML
     void AnalyzeScreen(ActionEvent event) {
         borderPane.setCenter(null);
+        SplitPane splitPane = new SplitPane();
+        splitPane.setOrientation(Orientation.HORIZONTAL);
         GridPane analyze_options = new GridPane();
+        splitPane.getItems().add(analyze_options);
+        TextArea textArea = new TextArea("Data can go here (as a string for now, I guess.)");
+        splitPane.getItems().add(textArea);
+
         analyze_options.setHgap(10);
         analyze_options.setVgap(10);
         analyze_options.setPadding(new Insets(20));
@@ -143,7 +150,7 @@ public class SleepTrackerMainController {
         Exit.setText("Exit");
         analyze_options.add(Exit, 1, 8);
 
-        borderPane.setCenter(analyze_options);
+        borderPane.setCenter(splitPane);
     }
 
     private Button getSubmitButton(GridPane recordPanel) {
