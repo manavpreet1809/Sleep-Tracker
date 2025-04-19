@@ -101,7 +101,7 @@ public class SleepTrackerMainController {
         GridPane analyze_options = new GridPane();
         splitPane.getItems().add(analyze_options);
         TextArea textArea = new TextArea();
-        textArea.setFont(new Font("Monospace", 12));
+        textArea.setFont(new Font("Monospace", 20));
 
         splitPane.getItems().add(textArea);
         textArea.setEditable(false);
@@ -113,27 +113,33 @@ public class SleepTrackerMainController {
         analyze_options.add(new Label("Show recorded data so far: "), 0, 0);
         Button Show_data = new Button();
         Show_data.setText("Display data");
-        Show_data.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData())));
+        Show_data.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData(), Menu::displayData)));
         analyze_options.add(Show_data, 1, 0);
 
         analyze_options.add(new Label("Show factors affecting sleep quality: "), 0, 1);
         Button Show_factors = new Button();
         Show_factors.setText("Display factors");
+        Show_factors.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData(), User::sleepQualityFactors)));
         analyze_options.add(Show_factors, 1, 1);
 
         analyze_options.add(new Label("Show factors affecting sleep duration: "), 0, 2);
         Button Show_sleep = new Button();
         Show_sleep.setText("Display sleep Duration");
+        Show_sleep.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData(), User::sleepDurationFactors)));
         analyze_options.add(Show_sleep, 1, 2);
 
         analyze_options.add(new Label("Show averages of recorded data: "), 0, 3);
         Button Show_averages = new Button();
         Show_averages.setText("Display averages");
+        ArrayList<double[]> avg = new ArrayList<>();
+        avg.add(User.calculateAverages(user.getUserData()));
+        Show_averages.setOnAction(_ -> textArea.setText(Menu.dataString(avg, Menu::displayData)));
         analyze_options.add(Show_averages, 1, 3);
 
         analyze_options.add(new Label("Show relative consistency of sleep/wake times: "), 0, 4);
         Button Show_relative_consistency = new Button();
         Show_relative_consistency.setText("Display relative consistency");
+        Show_relative_consistency.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData(), Menu::printSleepWakeConsistency)));
         analyze_options.add(Show_relative_consistency, 1, 4);
 
         analyze_options.add(new Label("Show last night's # of sleep cycles: "), 0, 5);

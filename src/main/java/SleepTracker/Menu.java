@@ -211,12 +211,12 @@ public class Menu {
      *
      * @param userData The list of user's recorded sleep logs to be analyzed.
      */
-    public static String dataString(ArrayList<double[]> userData) {
+    public static String dataString(ArrayList<double[]> userData, Impure func) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(baos);
         PrintStream old = System.out;
         System.setOut(ps);
-        displayData(userData);
+        func.impureFunction(userData);
         System.out.flush();
         System.setOut(old);
         return baos.toString();
@@ -250,7 +250,7 @@ public class Menu {
      *
      * @param userData The list of recorded sleep logs.
      */
-    private static void printSleepWakeConsistency(ArrayList<double[]> userData) {
+    public static void printSleepWakeConsistency(ArrayList<double[]> userData) {
         ArrayList<double[]> copy = new ArrayList<>();
         for (double[] log : userData) {
             copy.add(log.clone());
