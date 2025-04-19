@@ -33,16 +33,15 @@ public class Time implements Comparable<Time>{
         String res = "";
         res += String.format("%02d", (int) timeNum);
         res += ":";
-        int minutes = (int) ((timeNum - ((int) timeNum)) * 60);
+        int minutes = (int) Math.round((timeNum - ((int) timeNum)) * 60);
         res += String.format("%02d", minutes);
         return res;
     }
 
     public double toTimeNum(String strTime) {
-        double res = 0;
-        res += Integer.parseInt(strTime.substring(0, 2));
-        res += Double.parseDouble(strTime.substring(3, 5)) / 60;
-        return res;
+        int hours = Integer.parseInt(strTime.substring(0, 2));
+        int minutes = Integer.parseInt(strTime.substring(3, 5));
+        return hours + minutes / 60.0;
     }
 
     @Override
