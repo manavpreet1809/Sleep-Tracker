@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.*;
@@ -103,6 +104,7 @@ public class SleepTrackerMainController {
         textArea.setFont(new Font("Monospace", 12));
 
         splitPane.getItems().add(textArea);
+        textArea.setEditable(false);
 
         analyze_options.setHgap(10);
         analyze_options.setVgap(10);
