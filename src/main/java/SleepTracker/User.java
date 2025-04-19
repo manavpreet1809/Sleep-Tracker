@@ -130,37 +130,39 @@ public class User {
     }
 
     /**
-     * Calculates a weighted moving average giving more importance to recent data.
+     * Calculates weighted average of a sleep factor, giving more importance to recent nights.
      *
-     * @param userData The sleep data to analyze
-     * @param factor The Factor enum to calculate the weighted average for
-     * @param daysToConsider Number of recent days to include, or 0 for all days
-     * @return The weighted average value
+     * @param sleepData User's sleep logs
+     * @param factor Which factor to average
+     * @param recentDays How many recent days to include (0 = all data)
+     * @return Weighted average value
      */
-    public static double weightedMovingAverage(ArrayList<double[]> userData, Factor factor, int daysToConsider) {
-        int row = factor.getArrayIndex();
-        int dataSize = userData.size();
+    public static double weightedMovingAverage(ArrayList<double[]> sleepData, Factor factor, int recentDays) {
+        int idx = factor.getArrayIndex();
+        int totalNights = sleepData.size();
 
-        // If no data or invalid factor, return 0
-        if (dataSize == 0) return 0;
+        if (totalNights == 0)
+            return 0;  // No data to analyze view
 
-        // Limit days to consider if specified
-        int startIndex = (daysToConsider > 0 && daysToConsider < dataSize)
-                ? dataSize - daysToConsider
-                : 0;
-
-        double sum = 0;
-        double weightSum = 0;
-
-        for (int i = startIndex; i < dataSize; i++) {
-            // Calculate weight: more recent data gets higher weight
-            // Linear weight function: (i + 1 - startIndex) / total
-            double weight = (double)(i + 1 - startIndex) / (dataSize - startIndex);
-            sum += userData.get(i)[row] * weight;
-            weightSum += weight;
+        // Figure out which day to start from
+        int firstDay = 0;
+        if (recentDays > 0 && recentDays < totalNights) {
+            firstDay = totalNights - recentDays;
         }
 
-        return weightSum > 0 ? sum / weightSum : 0;
+        double weightedSum = 0;
+        double totalWeight = 0;
+
+        // Loop through the days we're considering
+        for (int i = firstDay; i < totalNights; i++) {
+            double weight = (double)(i + 1 - firstDay) / (totalNights - firstDay);
+
+            weightedSum += sleepData.get(i)[idx] * weight;
+            totalWeight += weight;
+        }
+
+        // Avoid division by zero
+        return totalWeight > 0 ? weightedSum / totalWeight : 0;
     }
 
     /**
