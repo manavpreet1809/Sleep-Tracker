@@ -195,7 +195,7 @@ public class SleepTrackerMainController {
 
     private boolean isValidInput(TextField field, double min, double max) {
         try {
-            String input = field.getText();
+            String input = field.getText().trim();
             if (input.contains(":")) {
                 Time time = new Time(input);
                 double timeNum = time.getTimeNum();
@@ -241,13 +241,20 @@ public class SleepTrackerMainController {
                     if (!(n instanceof TextField)){
                         continue;
                     }
-                    res[count] = Double.parseDouble(((TextField) n).getText());
+                    String input = ((TextField) n).getText().trim();
+                    double value;
+                    if (input.contains(":")) {
+                        value = new Time(input).getTimeNum();
+                    } else {
+                        value = Double.parseDouble(input);
+                    }
+                    res[count] = value;
                     count++;
                 }
                 if (user == null) {
                     user = new User(new ArrayList<>());
-                    user.addRow(res);
                 }
+                user.addRow(res);
             }
         });
         return submitButton;

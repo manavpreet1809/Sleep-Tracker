@@ -749,9 +749,6 @@ public class User {
         return Math.max(1, Math.min(10, predicted));
     }
 
-    private static double[] calculateFactorCoefficients(ArrayList<double[]> userData) {
-    }
-
     /**
      * Determines how strongly each factor affects sleep quality using correlation.
      * Converts correlation into a scale factor for prediction.
@@ -816,9 +813,9 @@ public class User {
 
         for (double[] entry : data) {
             double x = entry[xIndex];
+            double y = entry[yIndex];
 
             sumX += x;
-            double y;
             sumY += y;
 
             sumXY += x * y;
