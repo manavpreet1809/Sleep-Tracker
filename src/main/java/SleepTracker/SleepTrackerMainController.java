@@ -119,6 +119,7 @@ public class SleepTrackerMainController {
         analyze_options.add(new Label("Show factors affecting sleep quality: "), 0, 1);
         Button Show_factors = new Button();
         Show_factors.setText("Display factors");
+        Show_factors.setOnAction(_ -> textArea.setText(User.sleepQualityFactors(user.getUserData())));
         analyze_options.add(Show_factors, 1, 1);
 
         analyze_options.add(new Label("Show factors affecting sleep duration: "), 0, 2);

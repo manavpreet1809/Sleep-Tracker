@@ -99,7 +99,8 @@ public class User {
      *
      * @param userData The list of user's recorded sleep logs,each entry is a double array containing sleep-related variables.
      */
-    public static void sleepQualityFactors(ArrayList<double[]> userData) {
+    public static String sleepQualityFactors(ArrayList<double[]> userData) {
+        StringBuilder sb = new StringBuilder();
         int cardioUpCount = 0, cardioDownCount = 0;
         int tempUpCount = 0, tempDownCount = 0;
         int screenTimeUpCount = 0, screenTimeDownCount = 0;
@@ -195,7 +196,7 @@ public class User {
                 }
             }
         }
-        System.out.println("Factors that improved sleep quality:");
+        sb.append("Factors that improved sleep quality:");
         System.out.println(" - More than 60 min cardio: " + cardioUpCount);
         System.out.println(" - Room temp below 18.5°C: " + tempUpCount);
         System.out.println(" - Screen time less than 4 hours: " + screenTimeUpCount);
@@ -210,7 +211,7 @@ public class User {
         System.out.println(" - Low water intake: " + waterDownCount);
         System.out.println(" - Long naps (>30 min): " + napDownCount);
         System.out.println(" - Insufficient sleep (<8 hours): " + sleep_durationDownCount);
-
+        return sb.toString();
     }
 
     /**
@@ -218,7 +219,8 @@ public class User {
      *
      * @param userData The list of user's recorded sleep logs, where each entry is a double array containing sleep related variables.
      */
-    public static void sleepDurationFactors(ArrayList<double[]> userData) {
+    public static String sleepDurationFactors(ArrayList<double[]> userData) {
+        StringBuilder sb = new StringBuilder();
         {
 
             int increaseCardio = 0, decreaseCardio = 0;
@@ -316,6 +318,7 @@ public class User {
             System.out.println(" - Low water intake: " + decreaseWater);
             System.out.println(" - Long naps (>60 min): " + decreaseNap);
         }
+        return sb.toString();
     }
 
     @Override
