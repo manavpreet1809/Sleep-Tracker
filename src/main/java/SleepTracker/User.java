@@ -186,6 +186,163 @@ public class User {
     }
 
     /**
+     * Analyzes sleep consistency by calculating normalized variance scores.
+     * Returns a consistency score from 0-100 where higher is more consistent.
+     *
+     * @param userData The sleep data to analyze
+     * @return SleepConsistencyReport with scores for different consistency metrics
+     */
+    public static SleepConsistencyReport analyzeSleepConsistency(ArrayList<double[]> userData) {
+        if (userData.size() < 3) {
+            return new SleepConsistencyReport(); // Return default report for insufficient data
+        }
+
+        // Create normalized copies of data for time values that cross midnight
+        ArrayList<double[]> normalizedData = new ArrayList<>();
+        for (double[] log : userData) {
+            double[] normalizedLog = log.clone();
+
+            // Normalize sleep time (if after 12pm, it's likely afternoon nap not nighttime sleep)
+            if (normalizedLog[Factor.SLEEP_TIME.getArrayIndex()] < 12) {
+                normalizedLog[Factor.SLEEP_TIME.getArrayIndex()] += 24;
+            }
+
+            // Similarly normalize wake time if needed
+            if (normalizedLog[Factor.WAKE_TIME.getArrayIndex()] < 12) {
+                normalizedLog[Factor.WAKE_TIME.getArrayIndex()] += 24;
+            }
+
+            normalizedData.add(normalizedLog);
+        }
+
+        // Calculate variances
+        double sleepTimeVariance = sampleVariance(normalizedData, Factor.SLEEP_TIME.getArrayIndex());
+        double wakeTimeVariance = sampleVariance(normalizedData, Factor.WAKE_TIME.getArrayIndex());
+        double durationVariance = sampleVariance(userData, Factor.SLEEP_DURATION.getArrayIndex());
+
+        // Calculate consistency scores (0-100 scale, lower variance = higher consistency)
+        // Sleep time: variance > 4 hours² is bad, < 0.25 hours² is excellent
+        int sleepTimeScore = calculateConsistencyScore(sleepTimeVariance, 0.25, 4.0);
+
+        // Wake time: variance > 4 hours² is bad, < 0.25 hours² is excellent
+        int wakeTimeScore = calculateConsistencyScore(wakeTimeVariance, 0.25, 4.0);
+
+        // Duration: variance > 6 hours² is bad, < 0.5 hours² is excellent
+        int durationScore = calculateConsistencyScore(durationVariance, 0.5, 6.0);
+
+        // Overall score is weighted average
+        int overallScore = (int)((sleepTimeScore * 0.4) + (wakeTimeScore * 0.4) + (durationScore * 0.2));
+
+        return new SleepConsistencyReport(
+                sleepTimeScore,
+                wakeTimeScore,
+                durationScore,
+                overallScore,
+                sleepTimeVariance,
+                wakeTimeVariance,
+                durationVariance
+        );
+    }
+
+    /**
+     * Calculates a consistency score based on variance.
+     *
+     * @param variance The calculated variance
+     * @param excellentThreshold Variance below this is considered excellent (100 score)
+     * @param poorThreshold Variance above this is considered poor (0 score)
+     * @return Consistency score from 0-100
+     */
+    private static int calculateConsistencyScore(double variance, double excellentThreshold, double poorThreshold) {
+        if (variance <= excellentThreshold) return 100;
+        if (variance >= poorThreshold) return 0;
+
+        // Linear mapping from variance to score
+        return 100 - (int)((variance - excellentThreshold) / (poorThreshold - excellentThreshold) * 100);
+    }
+
+    /**
+     * Class to hold sleep consistency analysis results
+     */
+    public static class SleepConsistencyReport {
+        private final int sleepTimeConsistency;
+        private final int wakeTimeConsistency;
+        private final int durationConsistency;
+        private final int overallConsistency;
+        private final double sleepTimeVariance;
+        private final double wakeTimeVariance;
+        private final double durationVariance;
+
+        // Default constructor for insufficient data
+        public SleepConsistencyReport() {
+            this(0, 0, 0, 0, 0, 0, 0);
+        }
+
+        public SleepConsistencyReport(
+                int sleepTimeConsistency,
+                int wakeTimeConsistency,
+                int durationConsistency,
+                int overallConsistency,
+                double sleepTimeVariance,
+                double wakeTimeVariance,
+                double durationVariance) {
+
+                    this.sleepTimeConsistency = sleepTimeConsistency;
+
+                 this.wakeTimeConsistency = wakeTimeConsistency;
+
+                this.durationConsistency = durationConsistency;
+
+                    this.overallConsistency = overallConsistency;
+
+             this.sleepTimeVariance = sleepTimeVariance;
+
+                    this.wakeTimeVariance = wakeTimeVariance;
+
+                  this.durationVariance = durationVariance;
+        }
+
+        // Getters
+        public int getSleepTimeConsistency()
+        { return sleepTimeConsistency; }
+        public int getWakeTimeConsistency()
+        { return wakeTimeConsistency; }
+        public int getDurationConsistency()
+        { return durationConsistency; }
+        public int getOverallConsistency()
+        { return overallConsistency; }
+        public double getSleepTimeVariance()
+        { return sleepTimeVariance; }
+        public double getWakeTimeVariance()
+        { return wakeTimeVariance; }
+        public double getDurationVariance()
+        { return durationVariance; }
+
+        public String getConsistencyRating() {
+            if (overallConsistency >= 90) return "Excellent";
+            if (overallConsistency >= 75) return "Very Good";
+            if (overallConsistency >= 60) return "Good";
+            if (overallConsistency >= 40) return "Fair";
+            if (overallConsistency >= 20) return "Poor";
+            return "Very Poor";
+        }
+
+        @Override
+        public String toString() {
+            return String.format(
+                    "Sleep Consistency Report:\n" +
+                            "Overall Consistency: %d/100 (%s)\n" +
+                            "Sleep Time Consistency: %d/100\n" +
+                            "Wake Time Consistency: %d/100\n" +
+                            "Sleep Duration Consistency: %d/100",
+                    overallConsistency, getConsistencyRating(),
+                    sleepTimeConsistency,
+                    wakeTimeConsistency,
+                    durationConsistency
+            );
+        }
+    }
+
+    /**
      * Calculates the standard deviation using another known mathematical formula
      * @param dataset User data
      * @param row the row to calculate standard deviation on, up the users choice!
