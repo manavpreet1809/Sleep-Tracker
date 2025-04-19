@@ -241,7 +241,6 @@ public class SleepTrackerMainController {
                     if (!(n instanceof TextField)){
                         continue;
                     }
-                    // TODO: merge with num validator (pretty easy change but not too important rn)
                     res[count] = Double.parseDouble(((TextField) n).getText());
                     count++;
                 }
