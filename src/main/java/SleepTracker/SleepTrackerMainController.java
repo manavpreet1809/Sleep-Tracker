@@ -101,7 +101,6 @@ public class SleepTrackerMainController {
         GridPane analyze_options = new GridPane();
         splitPane.getItems().add(analyze_options);
         TextArea textArea = new TextArea();
-        textArea.setFont(new Font("Monospace", 12));
 
         splitPane.getItems().add(textArea);
         textArea.setEditable(false);
@@ -113,49 +112,55 @@ public class SleepTrackerMainController {
         analyze_options.add(new Label("Show recorded data so far: "), 0, 0);
         Button Show_data = new Button();
         Show_data.setText("Display data");
-        Show_data.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData())));
+        Show_data.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData(), Menu::displayData)));
         analyze_options.add(Show_data, 1, 0);
 
         analyze_options.add(new Label("Show factors affecting sleep quality: "), 0, 1);
         Button Show_factors = new Button();
         Show_factors.setText("Display factors");
-        Show_factors.setOnAction(_ -> textArea.setText(User.sleepQualityFactors(user.getUserData())));
+        Show_factors.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData(), User::sleepQualityFactors)));
         analyze_options.add(Show_factors, 1, 1);
 
         analyze_options.add(new Label("Show factors affecting sleep duration: "), 0, 2);
         Button Show_sleep = new Button();
         Show_sleep.setText("Display sleep Duration");
+        Show_sleep.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData(), User::sleepDurationFactors)));
         analyze_options.add(Show_sleep, 1, 2);
 
         analyze_options.add(new Label("Show averages of recorded data: "), 0, 3);
         Button Show_averages = new Button();
         Show_averages.setText("Display averages");
+        ArrayList<double[]> avg = new ArrayList<>();
+        avg.add(User.calculateAverages(user.getUserData()));
+        Show_averages.setOnAction(_ -> textArea.setText(Menu.dataString(avg, Menu::displayData)));
         analyze_options.add(Show_averages, 1, 3);
 
         analyze_options.add(new Label("Show relative consistency of sleep/wake times: "), 0, 4);
         Button Show_relative_consistency = new Button();
         Show_relative_consistency.setText("Display relative consistency");
+        Show_relative_consistency.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData(), Menu::printSleepWakeConsistency)));
         analyze_options.add(Show_relative_consistency, 1, 4);
 
         analyze_options.add(new Label("Show last night's # of sleep cycles: "), 0, 5);
         Button Show_last_night = new Button();
         Show_last_night.setText("Display sleep cycles");
+        int sleepCycles = User.sleepCycles(user.getUserData());
+        Show_last_night.setOnAction(_ -> textArea.setText(String.format("Last night, you slept for %d sleep cycles.%n", sleepCycles)));
         analyze_options.add(Show_last_night, 1, 5);
 
         analyze_options.add(new Label("Show last night's REM duration: "), 0, 6);
         Button Show_REM = new Button();
         Show_REM.setText("Display REM");
+        int efficient = User.REM_Duration(user.getUserData());
+        Show_REM.setOnAction(_ -> textArea.setText(String.format("Last night, your Rapid Eye Movement was about: %d minutes.%n", efficient)));
         analyze_options.add(Show_REM, 1, 6);
 
         analyze_options.add(new Label("Show SD of sleep duration: "), 0, 7);
         Button Show_SD = new Button();
         Show_SD.setText("Display SD");
+        double stdeviation = User.standardDeviation(user.getUserData(), Factor.SLEEP_DURATION.getArrayIndex());
+        Show_SD.setOnAction(_ -> textArea.setText(String.format("The standard deviation of your sleep duration is " + stdeviation + " hrs.")));
         analyze_options.add(Show_SD, 1, 7);
-
-        analyze_options.add(new Label("Exit: "), 0, 8);
-        Button Exit = new Button();
-        Exit.setText("Exit");
-        analyze_options.add(Exit, 1, 8);
 
         borderPane.setCenter(splitPane);
     }

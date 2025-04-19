@@ -24,7 +24,7 @@ public class User {
      */
     public static int sleepCycles(ArrayList<double[]> userData) {
         double[] lastEntry = userData.getLast();
-        return (int) (lastEntry[3] * 2 / 3);
+        return (int) (lastEntry[3] / 1.5);
     }
 
     /**
@@ -35,6 +35,82 @@ public class User {
     public static int REM_Duration(ArrayList<double[]> userData) {
         double[] lastEntry = userData.getLast();
         return (int) (((lastEntry[3] * 2 / 3) * 30));
+    }
+
+    /**
+     * Enhanced sleep cycle analysis that accounts for sleep quality and interruptions.
+     * Standard sleep cycles are 90-110 minutes, but quality affects the calculation.
+     *
+     * @param userData The sleep data to analyze
+     * @return SleepCycleInfo object containing detailed sleep cycle information
+     */
+    public static SleepCycleInfo analyzeSleepCycles(ArrayList<double[]> userData) {
+        if (userData.isEmpty()) {
+            return new SleepCycleInfo(0, 0, 0, 0);
+        }
+
+        double[] lastEntry = userData.getLast();
+        double sleepDuration = lastEntry[Factor.SLEEP_DURATION.getArrayIndex()];
+        double sleepQuality = lastEntry[Factor.SLEEP_QUALITY.getArrayIndex()];
+
+        // Base calculation: average cycle is 90 minutes (1.5 hours)
+        double cycleLength = 1.5;
+
+        // Adjust cycle length based on sleep quality (higher quality = more efficient cycles)
+        if (sleepQuality >= 7) {
+            cycleLength = 1.4; // Shorter, more efficient cycles
+        } else if (sleepQuality <= 3) {
+            cycleLength = 1.7; // Longer, less efficient cycles
+        }
+
+        // Calculate number of sleep cycles
+        int completeCycles = (int)(sleepDuration / cycleLength);
+
+        // Calculate REM sleep (typically 20-25% of total sleep in healthy adults)
+        // Quality affects REM percentage
+        double remPercentage = 0.2 + (sleepQuality / 50); // Ranges from 0.2 to 0.4
+        double remDuration = sleepDuration * remPercentage;
+
+        // Calculate deep sleep (typically 10-20% of total sleep)
+        double deepSleepPercentage = 0.1 + (sleepQuality / 100); // Ranges from 0.1 to 0.2
+        double deepSleepDuration = sleepDuration * deepSleepPercentage;
+
+        return new SleepCycleInfo(
+                completeCycles,
+                remDuration * 60, // Convert to minutes
+                deepSleepDuration * 60, // Convert to minutes
+                cycleLength * 60 // Convert to minutes
+        );
+    }
+
+    /**
+     * Class to hold detailed sleep cycle information
+     */
+    public static class SleepCycleInfo {
+        private final int numberOfCycles;
+        private final double remMinutes;
+        private final double deepSleepMinutes;
+        private final double averageCycleMinutes;
+
+        public SleepCycleInfo(int numberOfCycles, double remMinutes, double deepSleepMinutes, double averageCycleMinutes) {
+            this.numberOfCycles = numberOfCycles;
+            this.remMinutes = remMinutes;
+            this.deepSleepMinutes = deepSleepMinutes;
+            this.averageCycleMinutes = averageCycleMinutes;
+        }
+
+        public int getNumberOfCycles() { return numberOfCycles; }
+        public double getRemMinutes() { return remMinutes; }
+        public double getDeepSleepMinutes() { return deepSleepMinutes; }
+        public double getAverageCycleMinutes() { return averageCycleMinutes; }
+
+        @Override
+        public String toString() {
+            return String.format(
+                    "Sleep Cycles: %d\nREM Sleep: %.1f minutes\nDeep Sleep: %.1f minutes\nAverage Cycle Length: %.1f minutes",
+                    numberOfCycles, remMinutes, deepSleepMinutes, averageCycleMinutes
+            );
+        }
     }
 
     /**
@@ -51,6 +127,40 @@ public class User {
         for (int i = 0; i < avg.length; i++)
             avg[i] /= numDays;
         return avg;
+    }
+
+    /**
+     * Calculates a weighted moving average giving more importance to recent data.
+     *
+     * @param userData The sleep data to analyze
+     * @param factor The Factor enum to calculate the weighted average for
+     * @param daysToConsider Number of recent days to include, or 0 for all days
+     * @return The weighted average value
+     */
+    public static double weightedMovingAverage(ArrayList<double[]> userData, Factor factor, int daysToConsider) {
+        int row = factor.getArrayIndex();
+        int dataSize = userData.size();
+
+        // If no data or invalid factor, return 0
+        if (dataSize == 0) return 0;
+
+        // Limit days to consider if specified
+        int startIndex = (daysToConsider > 0 && daysToConsider < dataSize)
+                ? dataSize - daysToConsider
+                : 0;
+
+        double sum = 0;
+        double weightSum = 0;
+
+        for (int i = startIndex; i < dataSize; i++) {
+            // Calculate weight: more recent data gets higher weight
+            // Linear weight function: (i + 1 - startIndex) / total
+            double weight = (double)(i + 1 - startIndex) / (dataSize - startIndex);
+            sum += userData.get(i)[row] * weight;
+            weightSum += weight;
+        }
+
+        return weightSum > 0 ? sum / weightSum : 0;
     }
 
     /**
@@ -76,6 +186,163 @@ public class User {
     }
 
     /**
+     * Analyzes sleep consistency by calculating normalized variance scores.
+     * Returns a consistency score from 0-100 where higher is more consistent.
+     *
+     * @param userData The sleep data to analyze
+     * @return SleepConsistencyReport with scores for different consistency metrics
+     */
+    public static SleepConsistencyReport analyzeSleepConsistency(ArrayList<double[]> userData) {
+        if (userData.size() < 3) {
+            return new SleepConsistencyReport(); // Return default report for insufficient data
+        }
+
+        // Create normalized copies of data for time values that cross midnight
+        ArrayList<double[]> normalizedData = new ArrayList<>();
+        for (double[] log : userData) {
+            double[] normalizedLog = log.clone();
+
+            // Normalize sleep time (if after 12pm, it's likely afternoon nap not nighttime sleep)
+            if (normalizedLog[Factor.SLEEP_TIME.getArrayIndex()] < 12) {
+                normalizedLog[Factor.SLEEP_TIME.getArrayIndex()] += 24;
+            }
+
+            // Similarly normalize wake time if needed
+            if (normalizedLog[Factor.WAKE_TIME.getArrayIndex()] < 12) {
+                normalizedLog[Factor.WAKE_TIME.getArrayIndex()] += 24;
+            }
+
+            normalizedData.add(normalizedLog);
+        }
+
+        // Calculate variances
+        double sleepTimeVariance = sampleVariance(normalizedData, Factor.SLEEP_TIME.getArrayIndex());
+        double wakeTimeVariance = sampleVariance(normalizedData, Factor.WAKE_TIME.getArrayIndex());
+        double durationVariance = sampleVariance(userData, Factor.SLEEP_DURATION.getArrayIndex());
+
+        // Calculate consistency scores (0-100 scale, lower variance = higher consistency)
+        // Sleep time: variance > 4 hours² is bad, < 0.25 hours² is excellent
+        int sleepTimeScore = calculateConsistencyScore(sleepTimeVariance, 0.25, 4.0);
+
+        // Wake time: variance > 4 hours² is bad, < 0.25 hours² is excellent
+        int wakeTimeScore = calculateConsistencyScore(wakeTimeVariance, 0.25, 4.0);
+
+        // Duration: variance > 6 hours² is bad, < 0.5 hours² is excellent
+        int durationScore = calculateConsistencyScore(durationVariance, 0.5, 6.0);
+
+        // Overall score is weighted average
+        int overallScore = (int)((sleepTimeScore * 0.4) + (wakeTimeScore * 0.4) + (durationScore * 0.2));
+
+        return new SleepConsistencyReport(
+                sleepTimeScore,
+                wakeTimeScore,
+                durationScore,
+                overallScore,
+                sleepTimeVariance,
+                wakeTimeVariance,
+                durationVariance
+        );
+    }
+
+    /**
+     * Calculates a consistency score based on variance.
+     *
+     * @param variance The calculated variance
+     * @param excellentThreshold Variance below this is considered excellent (100 score)
+     * @param poorThreshold Variance above this is considered poor (0 score)
+     * @return Consistency score from 0-100
+     */
+    private static int calculateConsistencyScore(double variance, double excellentThreshold, double poorThreshold) {
+        if (variance <= excellentThreshold) return 100;
+        if (variance >= poorThreshold) return 0;
+
+        // Linear mapping from variance to score
+        return 100 - (int)((variance - excellentThreshold) / (poorThreshold - excellentThreshold) * 100);
+    }
+
+    /**
+     * Class to hold sleep consistency analysis results
+     */
+    public static class SleepConsistencyReport {
+        private final int sleepTimeConsistency;
+        private final int wakeTimeConsistency;
+        private final int durationConsistency;
+        private final int overallConsistency;
+        private final double sleepTimeVariance;
+        private final double wakeTimeVariance;
+        private final double durationVariance;
+
+        // Default constructor for insufficient data
+        public SleepConsistencyReport() {
+            this(0, 0, 0, 0, 0, 0, 0);
+        }
+
+        public SleepConsistencyReport(
+                int sleepTimeConsistency,
+                int wakeTimeConsistency,
+                int durationConsistency,
+                int overallConsistency,
+                double sleepTimeVariance,
+                double wakeTimeVariance,
+                double durationVariance) {
+
+                    this.sleepTimeConsistency = sleepTimeConsistency;
+
+                 this.wakeTimeConsistency = wakeTimeConsistency;
+
+                this.durationConsistency = durationConsistency;
+
+                    this.overallConsistency = overallConsistency;
+
+             this.sleepTimeVariance = sleepTimeVariance;
+
+                    this.wakeTimeVariance = wakeTimeVariance;
+
+                  this.durationVariance = durationVariance;
+        }
+
+        // Getters
+        public int getSleepTimeConsistency()
+        { return sleepTimeConsistency; }
+        public int getWakeTimeConsistency()
+        { return wakeTimeConsistency; }
+        public int getDurationConsistency()
+        { return durationConsistency; }
+        public int getOverallConsistency()
+        { return overallConsistency; }
+        public double getSleepTimeVariance()
+        { return sleepTimeVariance; }
+        public double getWakeTimeVariance()
+        { return wakeTimeVariance; }
+        public double getDurationVariance()
+        { return durationVariance; }
+
+        public String getConsistencyRating() {
+            if (overallConsistency >= 90) return "Excellent";
+            if (overallConsistency >= 75) return "Very Good";
+            if (overallConsistency >= 60) return "Good";
+            if (overallConsistency >= 40) return "Fair";
+            if (overallConsistency >= 20) return "Poor";
+            return "Very Poor";
+        }
+
+        @Override
+        public String toString() {
+            return String.format(
+                    "Sleep Consistency Report:\n" +
+                            "Overall Consistency: %d/100 (%s)\n" +
+                            "Sleep Time Consistency: %d/100\n" +
+                            "Wake Time Consistency: %d/100\n" +
+                            "Sleep Duration Consistency: %d/100",
+                    overallConsistency, getConsistencyRating(),
+                    sleepTimeConsistency,
+                    wakeTimeConsistency,
+                    durationConsistency
+            );
+        }
+    }
+
+    /**
      * Calculates the standard deviation using another known mathematical formula
      * @param dataset User data
      * @param row the row to calculate standard deviation on, up the users choice!
@@ -91,6 +358,67 @@ public class User {
         for (double[] log : dataset){
             variancesum += Math.pow(log[row] - avg, 2);}
         double variance = variancesum / count;
+        return Math.sqrt(variance);
+    }
+
+    /**
+     * Calculates the standard deviation for a specific factor across all sleep logs.
+     * Enhanced to handle different types of standard deviations and extreme values.
+     *
+     * @param dataset The sleep data to analyze
+     * @param factor The Factor enum to calculate standard deviation for
+     * @param excludeOutliers Whether to exclude statistical outliers from calculation
+     * @return The standard deviation value
+     */
+    public static double enhancedStandardDeviation(ArrayList<double[]> dataset, Factor factor, boolean excludeOutliers) {
+        int row = factor.getArrayIndex();
+        double count = dataset.size();
+        if (count <= 1) return 0;
+
+        // Calculate the average first
+        double avg = calculateAverages(dataset)[row];
+
+        // Collect all values and optionally filter outliers
+        ArrayList<Double> values = new ArrayList<>();
+        for (double[] log : dataset) {
+            values.add(log[row]);
+        }
+
+        // Optionally remove outliers (values more than 2 standard deviations from mean)
+        if (excludeOutliers && count > 3) {
+            // Calculate initial standard deviation to identify outliers
+            double initialVariance = 0;
+            for (Double value : values) {
+                initialVariance += Math.pow(value - avg, 2);
+            }
+            double initialStdDev = Math.sqrt(initialVariance / count);
+
+            // Filter values to exclude outliers
+            ArrayList<Double> filteredValues = new ArrayList<>();
+            double filteredSum = 0;
+            for (Double value : values) {
+                if (Math.abs(value - avg) <= 2 * initialStdDev) {
+                    filteredValues.add(value);
+                    filteredSum += value;
+                }
+            }
+
+            // Recalculate average without outliers
+            if (!filteredValues.isEmpty()) {
+                values = filteredValues;
+                avg = filteredSum / filteredValues.size();
+                count = filteredValues.size();
+            }
+        }
+
+        // Calculate final variance and standard deviation
+        double varianceSum = 0;
+        for (Double value : values) {
+            varianceSum += Math.pow(value - avg, 2);
+        }
+
+        // Use n-1 for sample standard deviation (Bessel's correction)
+        double variance = varianceSum / (count - 1);
         return Math.sqrt(variance);
     }
 
@@ -339,5 +667,138 @@ public class User {
                 return false;
         }
         return true;
+    }
+
+    /**
+     * Predicts sleep quality based on previous data using a simple regression model.
+     *
+     * @param userData The sleep data history
+     * @param currentFactors The factors for the night to predict
+     * @return Predicted sleep quality (1-10 scale)
+     */
+    public static double predictSleepQuality(ArrayList<double[]> userData, double[] currentFactors) {
+        if (userData.size() < 5) {
+            // Not enough data for reliable prediction
+            return -1;
+        }
+
+        // Initialize coefficients to measure impact of each factor
+        double[] coefficients = calculateFactorCoefficients(userData);
+
+        // Start with baseline (average sleep quality)
+        double baseQuality = calculateAverages(userData)[Factor.SLEEP_QUALITY.getArrayIndex()];
+
+        // Adjust baseline using coefficients and current factors
+        double predictedQuality = baseQuality;
+
+        // Apply each coefficient to the difference between current factor and average
+        double[] averages = calculateAverages(userData);
+
+        // Apply factor impacts
+        for (Factor factor : new Factor[] {
+                Factor.ROOM_TEMPERATURE,
+                Factor.SLEEP_DURATION,
+                Factor.CARDIO_DURATION,
+                Factor.NAPPING_DURATION,
+                Factor.SCREEN_TIME,
+                Factor.WATER_INTAKE
+        }) {
+            int idx = factor.getArrayIndex();
+            double avgValue = averages[idx];
+            double currentValue = currentFactors[idx];
+            double impact = coefficients[idx] * (currentValue - avgValue);
+            predictedQuality += impact;
+        }
+
+        // Ensure prediction is within valid range (1-10)
+        predictedQuality = Math.max(1, Math.min(10, predictedQuality));
+
+        return predictedQuality;
+    }
+
+    /**
+     * Calculates correlation coefficients between each factor and sleep quality
+     *
+     * @param userData The sleep data to analyze
+     * @return Array of coefficients for each factor
+     */
+    private static double[] calculateFactorCoefficients(ArrayList<double[]> userData) {
+        int qualityIdx = Factor.SLEEP_QUALITY.getArrayIndex();
+        double[] coefficients = new double[11]; // Match data array size
+
+        // For each factor, calculate correlation coefficient with sleep quality
+        for (Factor factor : Factor.values()) {
+            int factorIdx = factor.getArrayIndex();
+
+            // Skip sleep quality itself
+            if (factorIdx == qualityIdx) continue;
+
+            // Calculate correlation (simplified)
+            double correlation = calculateCorrelation(userData, factorIdx, qualityIdx);
+
+            // Convert correlation to coefficient (empirically determined scale factors)
+            switch (factor) {
+                case ROOM_TEMPERATURE:
+                    // Negative correlation - lower temp often means better sleep
+                    coefficients[factorIdx] = correlation * -0.2;
+                    break;
+                case SLEEP_DURATION:
+                    // Positive correlation - more sleep often means better quality
+                    coefficients[factorIdx] = correlation * 0.5;
+                    break;
+                case CARDIO_DURATION:
+                    // Positive correlation up to a point
+                    coefficients[factorIdx] = correlation * 0.01;
+                    break;
+                case NAPPING_DURATION:
+                    // Negative correlation - more napping can disrupt night sleep
+                    coefficients[factorIdx] = correlation * -0.005;
+                    break;
+                case SCREEN_TIME:
+                    // Negative correlation - more screen time often means worse sleep
+                    coefficients[factorIdx] = correlation * -0.3;
+                    break;
+                case WATER_INTAKE:
+                    // Positive correlation up to a point, then negative (bathroom trips)
+                    coefficients[factorIdx] = correlation * 0.0005;
+                    break;
+                default:
+                    coefficients[factorIdx] = 0;
+            }
+        }
+
+        return coefficients;
+    }
+
+    /**
+     * Calculates Pearson correlation coefficient between two variables in the dataset
+     *
+     * @param userData The sleep data to analyze
+     * @param factorIdx Index of the first variable
+     * @param qualityIdx Index of the second variable (typically sleep quality)
+     * @return Correlation coefficient (-1 to 1)
+     */
+    private static double calculateCorrelation(ArrayList<double[]> userData, int factorIdx, int qualityIdx) {
+        double sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0;
+        int n = userData.size();
+
+        // Calculate sums for correlation formula
+        for (double[] entry : userData) {
+            double x = entry[factorIdx];
+            double y = entry[qualityIdx];
+
+            sumX += x;
+            sumY += y;
+            sumXY += x * y;
+            sumX2 += x * x;
+            sumY2 += y * y;
+        }
+
+        // Calculate Pearson correlation coefficient
+        double numerator = n * sumXY - sumX * sumY;
+        double denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+
+        if (denominator == 0) return 0;
+        return numerator / denominator;
     }
 }
