@@ -1,5 +1,6 @@
 package SleepTracker;
 
+import com.sun.tools.javac.Main;
 import javafx.fxml.FXML;
 import javafx.event.*;
 import javafx.fxml.*;
@@ -114,6 +115,18 @@ public class SleepTrackerMainController {
             }
         });
         return submitButton;
+    }
+
+    void save() {
+        MainShell.save(user.getUserData());
+    }
+
+    void load() {
+        try {
+            user = MainShell.load();
+        } catch (Exception _) {
+            // TODO: should also show status
+        }
     }
 
 }
