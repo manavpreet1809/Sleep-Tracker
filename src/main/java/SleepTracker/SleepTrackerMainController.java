@@ -84,6 +84,13 @@ public class SleepTrackerMainController {
         TextField wakeTime = new TextField();
         recordPanel.add(wakeTime, 1, 9);
 
+        Button submitButton = getSubmitButton(recordPanel);
+        recordPanel.add(submitButton, 1,10);
+
+        borderPane.setCenter(recordPanel);
+    }
+
+    private Button getSubmitButton(GridPane recordPanel) {
         Button submitButton = new Button("Submit!");
         submitButton.setMinWidth(100);
 
@@ -106,11 +113,7 @@ public class SleepTrackerMainController {
                 }
             }
         });
-
-
-        recordPanel.add(submitButton, 1,10);
-
-        borderPane.setCenter(recordPanel);
+        return submitButton;
     }
 
 }
