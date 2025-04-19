@@ -24,7 +24,7 @@ public class User {
      */
     public static int sleepCycles(ArrayList<double[]> userData) {
         double[] lastEntry = userData.getLast();
-        return (int) (lastEntry[3] * 2 / 3);
+        return (int) (lastEntry[3] / 1.5);
     }
 
     /**
