@@ -91,6 +91,62 @@ public class SleepTrackerMainController {
         borderPane.setCenter(recordPanel);
     }
 
+    @FXML
+    void AnalyzeScreen(ActionEvent event) {
+        borderPane.setCenter(null);
+        GridPane analyze_options = new GridPane();
+        analyze_options.setHgap(10);
+        analyze_options.setVgap(10);
+        analyze_options.setPadding(new Insets(20));
+        //Options are listed below
+        analyze_options.add(new Label("Show recorded data so far: "), 0, 0);
+        Button Show_data = new Button();
+        Show_data.setText("Display data");
+        analyze_options.add(Show_data, 1, 0);
+
+        analyze_options.add(new Label("Show factors affecting sleep quality: "), 0, 1);
+        Button Show_factors = new Button();
+        Show_factors.setText("Display factors");
+        analyze_options.add(Show_factors, 1, 1);
+
+        analyze_options.add(new Label("Show factors affecting sleep duration: "), 0, 2);
+        Button Show_sleep = new Button();
+        Show_sleep.setText("Display sleep Duration");
+        analyze_options.add(Show_sleep, 1, 2);
+
+        analyze_options.add(new Label("Show averages of recorded data: "), 0, 3);
+        Button Show_averages = new Button();
+        Show_averages.setText("Display averages");
+        analyze_options.add(Show_averages, 1, 3);
+
+        analyze_options.add(new Label("Show relative consistency of sleep/wake times: "), 0, 4);
+        Button Show_relative_consistency = new Button();
+        Show_relative_consistency.setText("Display relative consistency");
+        analyze_options.add(Show_relative_consistency, 1, 4);
+
+        analyze_options.add(new Label("Show last night's # of sleep cycles: "), 0, 5);
+        Button Show_last_night = new Button();
+        Show_last_night.setText("Display sleep cycles");
+        analyze_options.add(Show_last_night, 1, 5);
+
+        analyze_options.add(new Label("Show last night's REM duration: "), 0, 6);
+        Button Show_REM = new Button();
+        Show_REM.setText("Display REM");
+        analyze_options.add(Show_REM, 1, 6);
+
+        analyze_options.add(new Label("Show SD of sleep duration: "), 0, 7);
+        Button Show_SD = new Button();
+        Show_SD.setText("Display SD");
+        analyze_options.add(Show_SD, 1, 7);
+
+        analyze_options.add(new Label("Exit: "), 0, 8);
+        Button Exit = new Button();
+        Exit.setText("Exit");
+        analyze_options.add(Exit, 1, 8);
+
+        borderPane.setCenter(analyze_options);
+    }
+
     private Button getSubmitButton(GridPane recordPanel) {
         Button submitButton = new Button("Submit!");
         submitButton.setMinWidth(100);
