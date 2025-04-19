@@ -1,6 +1,7 @@
 package SleepTracker;
 
 import com.sun.tools.javac.Main;
+import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.event.*;
 import javafx.fxml.*;
@@ -17,7 +18,11 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.*;
 import java.io.*;
+import java.time.temporal.TemporalQueries;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SleepTrackerMainController {
     //Button menus
@@ -165,12 +170,71 @@ public class SleepTrackerMainController {
         borderPane.setCenter(splitPane);
     }
 
+    private boolean validateForm(TextField[] fields) {
+        boolean valid = true;
+
+        double[][] ranges = {
+                {1,10},
+                {10.0,30.0},
+                {0,24},
+                {0,1380},
+                {0,180},
+                {0,24},
+                {0,1560},
+                {0,12000},
+                {0,24},
+                {0,24},
+        };
+        for (int i = 0; i < fields.length; i++) {
+            if (!isValidInput(fields[i], ranges[i][0], ranges[i][1])) {
+                valid = false;
+            }
+        }
+        return valid;
+    }
+
+    private boolean isValidInput(TextField field, double min, double max) {
+        try {
+            String input = field.getText();
+            if (input.contains(":")) {
+                Time time = new Time(input);
+                double timeNum = time.getTimeNum();
+
+                if (timeNum < min || timeNum > max) {
+                    System.out.println("Time must be between " + min + " and " + max + " inclusive");
+                    return false;
+                }
+            } else {
+                double value = Double.parseDouble(input);
+                if (value < min || value > max) {
+                    System.out.println("Value must be between " + min + " and " + max + " inclusive");
+                    return false;
+                }
+            }
+            return true;
+        } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
+            System.out.println("Please enter a valid number.");
+            return false;
+        }
+    }
+
     private Button getSubmitButton(GridPane recordPanel) {
         Button submitButton = new Button("Submit!");
         submitButton.setMinWidth(100);
 
         submitButton.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY) {
+                List<TextField> fieldList = new ArrayList<>();
+                for (Node n : recordPanel.getChildren()) {
+                    if (n instanceof TextField) {
+                        fieldList.add((TextField) n);
+                    }
+                }
+                TextField[] fields = fieldList.toArray(new TextField[0]);
+                if (!validateForm(fields)) {
+                    System.out.println("Invalid Input Detected. Submission canceled.");
+                    return;
+                }
                 int count = 1;
                 double[] res = new double[11];
                 for (Node n : recordPanel.getChildren()) {
@@ -181,7 +245,6 @@ public class SleepTrackerMainController {
                     res[count] = Double.parseDouble(((TextField) n).getText());
                     count++;
                 }
-
                 if (user == null) {
                     user = new User(new ArrayList<>());
                     user.addRow(res);
@@ -226,4 +289,3 @@ public class SleepTrackerMainController {
         }
     }
 }
-
