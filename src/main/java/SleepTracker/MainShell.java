@@ -23,12 +23,16 @@ public class MainShell {
     }
 
     /**
-     * Loads user data from a .csv file.
+     * Loads user data from a .csv file. (now have overload, for optional filename)
      * Watch out! This method may throw FileNotFound exception!
      * @return Loaded sleep logs.
      */
     public static User load() throws FileNotFoundException {
-        File f = new File(PATH);
+        return load(PATH);
+    }
+
+    public static User load(String filename) throws FileNotFoundException {
+        File f = new File(filename);
         ArrayList<double[]> data = new ArrayList<>();
         Scanner input = new Scanner(f);
         input.nextLine(); // skip header.
@@ -45,11 +49,15 @@ public class MainShell {
     }
 
     /**
-     * Saves user data to a .csv file.
+     * Saves user data to a .csv file. (now have overload, for optional filename)
      * @param userData User's sleep logs.
      */
     public static void save(ArrayList<double[]> userData) {
-        File f = new File(PATH);
+        save(userData, PATH);
+    }
+
+    public static void save(ArrayList<double[]> userData, String filename) {
+        File f = new File(filename);
         try {
             FileWriter fw = new FileWriter(f);
             // header

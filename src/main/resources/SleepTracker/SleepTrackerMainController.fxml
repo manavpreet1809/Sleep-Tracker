@@ -49,7 +49,11 @@
           <items>
             <MenuItem mnemonicParsing="false" onAction="#load" text="Load" />
             <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#loadFrom" text="Load From...." />
+                  <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#save" text="Save" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveAs" text="Save As..." />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Quit">
@@ -70,7 +74,7 @@
                <children>
                   <Button fx:id="dashboardButton" mnemonicParsing="false" prefHeight="100.0" prefWidth="140.0" text="Dashboard" />
                   <Button fx:id="logButton" mnemonicParsing="false" onAction="#recordLog" prefHeight="100.0" prefWidth="124.0" text="Record new log" />
-                  <Button fx:id="analyzeButton" mnemonicParsing="false" prefHeight="100.0" prefWidth="126.0" text="Analysis and trends" wrapText="true" />
+                  <Button mnemonicParsing="false" onAction="#AnalyzeScreen" prefHeight="100.0" prefWidth="126.0" text="Analysis and trends" wrapText="true" />
                   <Button fx:id="viewLogsButton" mnemonicParsing="false" prefHeight="100.0" prefWidth="130.0" text="Sleep logs" />
                   <Button fx:id="settingsButton" mnemonicParsing="false" prefHeight="100.0" prefWidth="142.0" text="Settings" />
                </children>

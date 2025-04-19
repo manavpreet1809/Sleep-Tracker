@@ -177,6 +177,18 @@ public class SleepTrackerMainController {
         MainShell.save(user.getUserData());
         // TODO: should show status
     }
+
+    @FXML
+    void saveAs() {
+        FileChooser fc = new FileChooser();
+        try {
+            MainShell.save(user.getUserData(), fc.showSaveDialog(new Stage()).getPath());
+        } catch (Exception e) {
+            // TODO: should show status
+        }
+    }
+
+
     @FXML
     void load() {
         try {
@@ -186,5 +198,14 @@ public class SleepTrackerMainController {
         }
     }
 
+    @FXML
+    void loadFrom() {
+        try {
+            FileChooser fc = new FileChooser();
+            user = MainShell.load(fc.showSaveDialog(new Stage()).getPath());
+        } catch (Exception _) {
+            // TODO: should also show status
+        }
+    }
 }
 
