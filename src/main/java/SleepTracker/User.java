@@ -54,6 +54,40 @@ public class User {
     }
 
     /**
+     * Calculates a weighted moving average giving more importance to recent data.
+     *
+     * @param userData The sleep data to analyze
+     * @param factor The Factor enum to calculate the weighted average for
+     * @param daysToConsider Number of recent days to include, or 0 for all days
+     * @return The weighted average value
+     */
+    public static double weightedMovingAverage(ArrayList<double[]> userData, Factor factor, int daysToConsider) {
+        int row = factor.getArrayIndex();
+        int dataSize = userData.size();
+
+        // If no data or invalid factor, return 0
+        if (dataSize == 0) return 0;
+
+        // Limit days to consider if specified
+        int startIndex = (daysToConsider > 0 && daysToConsider < dataSize)
+                ? dataSize - daysToConsider
+                : 0;
+
+        double sum = 0;
+        double weightSum = 0;
+
+        for (int i = startIndex; i < dataSize; i++) {
+            // Calculate weight: more recent data gets higher weight
+            // Linear weight function: (i + 1 - startIndex) / total
+            double weight = (double)(i + 1 - startIndex) / (dataSize - startIndex);
+            sum += userData.get(i)[row] * weight;
+            weightSum += weight;
+        }
+
+        return weightSum > 0 ? sum / weightSum : 0;
+    }
+
+    /**
      * Allows user of the class to add a row to userData.
      * @param row Row to add.
      */
