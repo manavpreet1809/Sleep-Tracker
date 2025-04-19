@@ -362,65 +362,74 @@ public class User {
     }
 
     /**
-     * Calculates the standard deviation for a specific factor across all sleep logs.
-     * Enhanced to handle different types of standard deviations and extreme values.
+     * Gets the standard deviation for a sleep factor, with option to exclude extreme values.
      *
-     * @param dataset The sleep data to analyze
-     * @param factor The Factor enum to calculate standard deviation for
-     * @param excludeOutliers Whether to exclude statistical outliers from calculation
-     * @return The standard deviation value
+     * @param sleepData All recorded sleep logs
+     * @param factor Which sleep factor to analyze
+     * @param removeOutliers Set true to ignore unusual values that might skew results
+     * @return Standard deviation value
      */
-    public static double enhancedStandardDeviation(ArrayList<double[]> dataset, Factor factor, boolean excludeOutliers) {
-        int row = factor.getArrayIndex();
-        double count = dataset.size();
-        if (count <= 1) return 0;
+    public static double enhancedStandardDeviation(ArrayList<double[]> sleepData, Factor factor, boolean removeOutliers) {
+        int index = factor.getArrayIndex();
+        int dataPoints = sleepData.size();
 
-        // Calculate the average first
-        double avg = calculateAverages(dataset)[row];
+        // Need at least two points to calculate standard deviation
+        if (dataPoints <= 1)
+            return 0;
 
-        // Collect all values and optionally filter outliers
-        ArrayList<Double> values = new ArrayList<>();
-        for (double[] log : dataset) {
-            values.add(log[row]);
+        // First get the average
+        double mean = calculateAverages(sleepData)[index];
+
+        // Grab all the values we want to analyze
+        ArrayList<Double> allValues = new ArrayList<>();
+        for (double[] night : sleepData) {
+            allValues.add(night[index]);
         }
 
-        // Optionally remove outliers (values more than 2 standard deviations from mean)
-        if (excludeOutliers && count > 3) {
-            // Calculate initial standard deviation to identify outliers
-            double initialVariance = 0;
-            for (Double value : values) {
-                initialVariance += Math.pow(value - avg, 2);
+        // Filter out weird values if requested (need enough data points)
+        if (removeOutliers && dataPoints > 3) {
+            // Quick and dirty initial standard deviation
+            double sumSquaredDiffs = 0;
+            for (Double val : allValues) {
+                double diff = val - mean;
+                sumSquaredDiffs += diff * diff;
             }
-            double initialStdDev = Math.sqrt(initialVariance / count);
+            double roughStdDev = Math.sqrt(sumSquaredDiffs / dataPoints);
 
-            // Filter values to exclude outliers
-            ArrayList<Double> filteredValues = new ArrayList<>();
-            double filteredSum = 0;
-            for (Double value : values) {
-                if (Math.abs(value - avg) <= 2 * initialStdDev) {
-                    filteredValues.add(value);
-                    filteredSum += value;
+            // Keep only the reasonable values
+            ArrayList<Double> normalValues = new ArrayList<>();
+            double newSum = 0;
+            int removed = 0;
+
+            for (Double val : allValues) {
+                // Within 2 standard deviations is considered normal
+                if (Math.abs(val - mean) <= 2 * roughStdDev) {
+                    normalValues.add(val);
+                    newSum += val;
+                } else {
+                    removed++;
                 }
             }
 
-            // Recalculate average without outliers
-            if (!filteredValues.isEmpty()) {
-                values = filteredValues;
-                avg = filteredSum / filteredValues.size();
-                count = filteredValues.size();
+            // Only use filtered data if we have enough points left
+            if (normalValues.size() > 1) {
+                allValues = normalValues;
+                mean = newSum / normalValues.size();
+                dataPoints = normalValues.size();
             }
         }
 
-        // Calculate final variance and standard deviation
-        double varianceSum = 0;
-        for (Double value : values) {
-            varianceSum += Math.pow(value - avg, 2);
+        // Final calculation using the possibly filtered dataset
+        double sumSquares = 0;
+        for (Double val : allValues) {
+            double diff = val - mean;
+            sumSquares += diff * diff;
         }
 
-        // Use n-1 for sample standard deviation (Bessel's correction)
-        double variance = varianceSum / (count - 1);
-        return Math.sqrt(variance);
+        // Sample standard deviation formula
+        return Math.sqrt(sumSquares / (dataPoints - 1));
     }
+
 
     /**
      * Analyzes and displays the factors that positively or negatively affect sleep quality based on user's recorded sleep data.
