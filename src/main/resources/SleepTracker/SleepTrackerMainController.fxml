@@ -38,7 +38,6 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -77,9 +76,6 @@
                </children>
             </VBox>
          </left>
-         <right>
-            <TextArea fx:id="screen_output" prefHeight="375.0" prefWidth="304.0" BorderPane.alignment="CENTER" />
-         </right>
          <bottom>
             <Label fx:id="status" text="Welcome to SleepTracker!" BorderPane.alignment="CENTER" />
          </bottom>
