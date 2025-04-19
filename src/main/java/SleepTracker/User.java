@@ -53,10 +53,10 @@ public class User {
         double sleepDuration = lastEntry[Factor.SLEEP_DURATION.getArrayIndex()];
         double sleepQuality = lastEntry[Factor.SLEEP_QUALITY.getArrayIndex()];
 
-        // Base calculation: average cycle is 90 minutes (1.5 hours)
+        // Base calculation: average cycle is 90 minutes
         double cycleLength = 1.5;
 
-        // Adjust cycle length based on sleep quality (higher quality = more efficient cycles)
+        // Adjust cycle length based on sleep quality
         if (sleepQuality >= 7) {
             cycleLength = 1.4; // Shorter, more efficient cycles
         } else if (sleepQuality <= 3) {
@@ -66,20 +66,20 @@ public class User {
         // Calculate number of sleep cycles
         int completeCycles = (int)(sleepDuration / cycleLength);
 
-        // Calculate REM sleep (typically 20-25% of total sleep in healthy adults)
+        // Calculate REM sleep
         // Quality affects REM percentage
         double remPercentage = 0.2 + (sleepQuality / 50); // Ranges from 0.2 to 0.4
         double remDuration = sleepDuration * remPercentage;
 
-        // Calculate deep sleep (typically 10-20% of total sleep)
-        double deepSleepPercentage = 0.1 + (sleepQuality / 100); // Ranges from 0.1 to 0.2
+        // Calculate deep sleep
+        double deepSleepPercentage = 0.1 + (sleepQuality / 100);
         double deepSleepDuration = sleepDuration * deepSleepPercentage;
 
         return new SleepCycleInfo(
                 completeCycles,
-                remDuration * 60, // Convert to minutes
-                deepSleepDuration * 60, // Convert to minutes
-                cycleLength * 60 // Convert to minutes
+                remDuration * 60,
+                deepSleepDuration * 60,
+                cycleLength * 60
         );
     }
 
