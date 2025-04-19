@@ -693,7 +693,7 @@ public class User {
 
         // Calculate average values across all logs
         double[] averages = calculateAverages(userData);
-        double[] coefficients = calculateFactorCoefficients(userData);
+         double[] coefficients = calculateFactorCoefficients(userData);
 
         // Start from the average sleep quality
         double predicted = averages[Factor.SLEEP_QUALITY.getArrayIndex()];
@@ -701,14 +701,14 @@ public class User {
         // Adjust prediction based on differences from the average
         for (Factor factor : new Factor[] {
                 Factor.ROOM_TEMPERATURE,
-                Factor.SLEEP_DURATION,
+                  Factor.SLEEP_DURATION,
                 Factor.CARDIO_DURATION,
                 Factor.NAPPING_DURATION,
-                Factor.SCREEN_TIME,
+                  Factor.SCREEN_TIME,
                 Factor.WATER_INTAKE
         }) {
             int i = factor.getArrayIndex();
-            double delta = currentFactors[i] - averages[i];
+                double delta = currentFactors[i] - averages[i];
             predicted += coefficients[i] * delta;
         }
 
@@ -739,13 +739,13 @@ public class User {
 
             // Assign scale based on expected impact direction and magnitude
             switch (factor) {
-                case ROOM_TEMPERATURE:
+                   case ROOM_TEMPERATURE:
                     coefficients[i] = correlation * -0.2; break;
                 case SLEEP_DURATION:
                     coefficients[i] = correlation * 0.5; break;
                 case CARDIO_DURATION:
                     coefficients[i] = correlation * 0.01; break;
-                case NAPPING_DURATION:
+                   case NAPPING_DURATION:
                     coefficients[i] = correlation * -0.005; break;
                 case SCREEN_TIME:
                     coefficients[i] = correlation * -0.3; break;
@@ -774,13 +774,17 @@ public class User {
         double sumX2 = 0, sumY2 = 0;
 
         for (double[] entry : data) {
-            double x = entry[xIndex];
-            double y = entry[yIndex];
+               double x = entry[xIndex];
 
             sumX += x;
+            double y;
             sumY += y;
+
             sumXY += x * y;
             sumX2 += x * x;
+
+
+
             sumY2 += y * y;
         }
 
