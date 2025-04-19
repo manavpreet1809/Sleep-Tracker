@@ -38,6 +38,82 @@ public class User {
     }
 
     /**
+     * Enhanced sleep cycle analysis that accounts for sleep quality and interruptions.
+     * Standard sleep cycles are 90-110 minutes, but quality affects the calculation.
+     *
+     * @param userData The sleep data to analyze
+     * @return SleepCycleInfo object containing detailed sleep cycle information
+     */
+    public static SleepCycleInfo analyzeSleepCycles(ArrayList<double[]> userData) {
+        if (userData.isEmpty()) {
+            return new SleepCycleInfo(0, 0, 0, 0);
+        }
+
+        double[] lastEntry = userData.getLast();
+        double sleepDuration = lastEntry[Factor.SLEEP_DURATION.getArrayIndex()];
+        double sleepQuality = lastEntry[Factor.SLEEP_QUALITY.getArrayIndex()];
+
+        // Base calculation: average cycle is 90 minutes (1.5 hours)
+        double cycleLength = 1.5;
+
+        // Adjust cycle length based on sleep quality (higher quality = more efficient cycles)
+        if (sleepQuality >= 7) {
+            cycleLength = 1.4; // Shorter, more efficient cycles
+        } else if (sleepQuality <= 3) {
+            cycleLength = 1.7; // Longer, less efficient cycles
+        }
+
+        // Calculate number of sleep cycles
+        int completeCycles = (int)(sleepDuration / cycleLength);
+
+        // Calculate REM sleep (typically 20-25% of total sleep in healthy adults)
+        // Quality affects REM percentage
+        double remPercentage = 0.2 + (sleepQuality / 50); // Ranges from 0.2 to 0.4
+        double remDuration = sleepDuration * remPercentage;
+
+        // Calculate deep sleep (typically 10-20% of total sleep)
+        double deepSleepPercentage = 0.1 + (sleepQuality / 100); // Ranges from 0.1 to 0.2
+        double deepSleepDuration = sleepDuration * deepSleepPercentage;
+
+        return new SleepCycleInfo(
+                completeCycles,
+                remDuration * 60, // Convert to minutes
+                deepSleepDuration * 60, // Convert to minutes
+                cycleLength * 60 // Convert to minutes
+        );
+    }
+
+    /**
+     * Class to hold detailed sleep cycle information
+     */
+    public static class SleepCycleInfo {
+        private final int numberOfCycles;
+        private final double remMinutes;
+        private final double deepSleepMinutes;
+        private final double averageCycleMinutes;
+
+        public SleepCycleInfo(int numberOfCycles, double remMinutes, double deepSleepMinutes, double averageCycleMinutes) {
+            this.numberOfCycles = numberOfCycles;
+            this.remMinutes = remMinutes;
+            this.deepSleepMinutes = deepSleepMinutes;
+            this.averageCycleMinutes = averageCycleMinutes;
+        }
+
+        public int getNumberOfCycles() { return numberOfCycles; }
+        public double getRemMinutes() { return remMinutes; }
+        public double getDeepSleepMinutes() { return deepSleepMinutes; }
+        public double getAverageCycleMinutes() { return averageCycleMinutes; }
+
+        @Override
+        public String toString() {
+            return String.format(
+                    "Sleep Cycles: %d\nREM Sleep: %.1f minutes\nDeep Sleep: %.1f minutes\nAverage Cycle Length: %.1f minutes",
+                    numberOfCycles, remMinutes, deepSleepMinutes, averageCycleMinutes
+            );
+        }
+    }
+
+    /**
      * Analyzes and displays the factors that affect sleep duration based on the recorded sleep data.
      *
      * @param userData The list of user's recorded sleep logs, where each entry is a double array containing sleep related variables.
