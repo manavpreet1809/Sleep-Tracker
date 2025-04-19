@@ -665,4 +665,137 @@ public class User {
         }
         return true;
     }
+
+    /**
+     * Predicts sleep quality based on previous data using a simple regression model.
+     *
+     * @param userData The sleep data history
+     * @param currentFactors The factors for the night to predict
+     * @return Predicted sleep quality (1-10 scale)
+     */
+    public static double predictSleepQuality(ArrayList<double[]> userData, double[] currentFactors) {
+        if (userData.size() < 5) {
+            // Not enough data for reliable prediction
+            return -1;
+        }
+
+        // Initialize coefficients to measure impact of each factor
+        double[] coefficients = calculateFactorCoefficients(userData);
+
+        // Start with baseline (average sleep quality)
+        double baseQuality = calculateAverages(userData)[Factor.SLEEP_QUALITY.getArrayIndex()];
+
+        // Adjust baseline using coefficients and current factors
+        double predictedQuality = baseQuality;
+
+        // Apply each coefficient to the difference between current factor and average
+        double[] averages = calculateAverages(userData);
+
+        // Apply factor impacts
+        for (Factor factor : new Factor[] {
+                Factor.ROOM_TEMPERATURE,
+                Factor.SLEEP_DURATION,
+                Factor.CARDIO_DURATION,
+                Factor.NAPPING_DURATION,
+                Factor.SCREEN_TIME,
+                Factor.WATER_INTAKE
+        }) {
+            int idx = factor.getArrayIndex();
+            double avgValue = averages[idx];
+            double currentValue = currentFactors[idx];
+            double impact = coefficients[idx] * (currentValue - avgValue);
+            predictedQuality += impact;
+        }
+
+        // Ensure prediction is within valid range (1-10)
+        predictedQuality = Math.max(1, Math.min(10, predictedQuality));
+
+        return predictedQuality;
+    }
+
+    /**
+     * Calculates correlation coefficients between each factor and sleep quality
+     *
+     * @param userData The sleep data to analyze
+     * @return Array of coefficients for each factor
+     */
+    private static double[] calculateFactorCoefficients(ArrayList<double[]> userData) {
+        int qualityIdx = Factor.SLEEP_QUALITY.getArrayIndex();
+        double[] coefficients = new double[11]; // Match data array size
+
+        // For each factor, calculate correlation coefficient with sleep quality
+        for (Factor factor : Factor.values()) {
+            int factorIdx = factor.getArrayIndex();
+
+            // Skip sleep quality itself
+            if (factorIdx == qualityIdx) continue;
+
+            // Calculate correlation (simplified)
+            double correlation = calculateCorrelation(userData, factorIdx, qualityIdx);
+
+            // Convert correlation to coefficient (empirically determined scale factors)
+            switch (factor) {
+                case ROOM_TEMPERATURE:
+                    // Negative correlation - lower temp often means better sleep
+                    coefficients[factorIdx] = correlation * -0.2;
+                    break;
+                case SLEEP_DURATION:
+                    // Positive correlation - more sleep often means better quality
+                    coefficients[factorIdx] = correlation * 0.5;
+                    break;
+                case CARDIO_DURATION:
+                    // Positive correlation up to a point
+                    coefficients[factorIdx] = correlation * 0.01;
+                    break;
+                case NAPPING_DURATION:
+                    // Negative correlation - more napping can disrupt night sleep
+                    coefficients[factorIdx] = correlation * -0.005;
+                    break;
+                case SCREEN_TIME:
+                    // Negative correlation - more screen time often means worse sleep
+                    coefficients[factorIdx] = correlation * -0.3;
+                    break;
+                case WATER_INTAKE:
+                    // Positive correlation up to a point, then negative (bathroom trips)
+                    coefficients[factorIdx] = correlation * 0.0005;
+                    break;
+                default:
+                    coefficients[factorIdx] = 0;
+            }
+        }
+
+        return coefficients;
+    }
+
+    /**
+     * Calculates Pearson correlation coefficient between two variables in the dataset
+     *
+     * @param userData The sleep data to analyze
+     * @param factorIdx Index of the first variable
+     * @param qualityIdx Index of the second variable (typically sleep quality)
+     * @return Correlation coefficient (-1 to 1)
+     */
+    private static double calculateCorrelation(ArrayList<double[]> userData, int factorIdx, int qualityIdx) {
+        double sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0;
+        int n = userData.size();
+
+        // Calculate sums for correlation formula
+        for (double[] entry : userData) {
+            double x = entry[factorIdx];
+            double y = entry[qualityIdx];
+
+            sumX += x;
+            sumY += y;
+            sumXY += x * y;
+            sumX2 += x * x;
+            sumY2 += y * y;
+        }
+
+        // Calculate Pearson correlation coefficient
+        double numerator = n * sumXY - sumX * sumY;
+        double denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+
+        if (denominator == 0) return 0;
+        return numerator / denominator;
+    }
 }
