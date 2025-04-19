@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.*;
 import java.io.*;
@@ -100,6 +101,7 @@ public class SleepTrackerMainController {
         splitPane.getItems().add(analyze_options);
         TextArea textArea = new TextArea("Data can go here (as a string for now, I guess.)");
         splitPane.getItems().add(textArea);
+        textArea.setEditable(false);
 
         analyze_options.setHgap(10);
         analyze_options.setVgap(10);
