@@ -13,6 +13,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -98,7 +99,9 @@ public class SleepTrackerMainController {
         splitPane.setOrientation(Orientation.HORIZONTAL);
         GridPane analyze_options = new GridPane();
         splitPane.getItems().add(analyze_options);
-        TextArea textArea = new TextArea("Data can go here (as a string for now, I guess.)");
+        TextArea textArea = new TextArea();
+        textArea.setFont(new Font("Monospace", 12));
+
         splitPane.getItems().add(textArea);
 
         analyze_options.setHgap(10);
@@ -108,6 +111,7 @@ public class SleepTrackerMainController {
         analyze_options.add(new Label("Show recorded data so far: "), 0, 0);
         Button Show_data = new Button();
         Show_data.setText("Display data");
+        Show_data.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData())));
         analyze_options.add(Show_data, 1, 0);
 
         analyze_options.add(new Label("Show factors affecting sleep quality: "), 0, 1);
@@ -194,7 +198,6 @@ public class SleepTrackerMainController {
             // TODO: should show status
         }
     }
-
 
     @FXML
     void load() {

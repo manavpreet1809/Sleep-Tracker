@@ -1,5 +1,7 @@
 package SleepTracker;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 public class Menu {
@@ -191,7 +193,7 @@ public class Menu {
      */
     public static void displayData(ArrayList<double[]> userData) {
         System.out.println("---------------------–-----------------------------");
-        displayRow("Sleep quality (1-10):\t", userData, 1);
+        displayRow("Sleep quality (1-10):\t\t", userData, 1);
         displayRow("Room temperature (°C):\t", userData, 2);
         displayRow("Sleep duration (hrs):\t", userData, 3);
         displayRow("Cardio duration (minutes):", userData, 4);
@@ -202,6 +204,22 @@ public class Menu {
         displayRow("Wake time (24hr):\t\t", userData, 9);
         displayRow("Sleep time (24hr):\t\t", userData, 10);
         System.out.println("---------------------–-----------------------------");
+    }
+
+    /**
+     * Analyze the recorded sleep data based on user's desired preferences.
+     *
+     * @param userData The list of user's recorded sleep logs to be analyzed.
+     */
+    public static String dataString(ArrayList<double[]> userData) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+        PrintStream old = System.out;
+        System.setOut(ps);
+        displayData(userData);
+        System.out.flush();
+        System.setOut(old);
+        return baos.toString();
     }
 
     /**
