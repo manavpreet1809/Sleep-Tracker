@@ -35,7 +35,6 @@ public class SleepTrackerMainController {
 
     @FXML
     void initialize() {
-        screen_output.setEditable(false);
     }
 
     @FXML
@@ -173,10 +172,12 @@ public class SleepTrackerMainController {
         return submitButton;
     }
 
+    @FXML
     void save() {
         MainShell.save(user.getUserData());
+        // TODO: should show status
     }
-
+    @FXML
     void load() {
         try {
             user = MainShell.load();
