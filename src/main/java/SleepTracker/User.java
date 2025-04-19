@@ -95,6 +95,67 @@ public class User {
     }
 
     /**
+     * Calculates the standard deviation for a specific factor across all sleep logs.
+     * Enhanced to handle different types of standard deviations and extreme values.
+     *
+     * @param dataset The sleep data to analyze
+     * @param factor The Factor enum to calculate standard deviation for
+     * @param excludeOutliers Whether to exclude statistical outliers from calculation
+     * @return The standard deviation value
+     */
+    public static double enhancedStandardDeviation(ArrayList<double[]> dataset, Factor factor, boolean excludeOutliers) {
+        int row = factor.getArrayIndex();
+        double count = dataset.size();
+        if (count <= 1) return 0;
+
+        // Calculate the average first
+        double avg = calculateAverages(dataset)[row];
+
+        // Collect all values and optionally filter outliers
+        ArrayList<Double> values = new ArrayList<>();
+        for (double[] log : dataset) {
+            values.add(log[row]);
+        }
+
+        // Optionally remove outliers (values more than 2 standard deviations from mean)
+        if (excludeOutliers && count > 3) {
+            // Calculate initial standard deviation to identify outliers
+            double initialVariance = 0;
+            for (Double value : values) {
+                initialVariance += Math.pow(value - avg, 2);
+            }
+            double initialStdDev = Math.sqrt(initialVariance / count);
+
+            // Filter values to exclude outliers
+            ArrayList<Double> filteredValues = new ArrayList<>();
+            double filteredSum = 0;
+            for (Double value : values) {
+                if (Math.abs(value - avg) <= 2 * initialStdDev) {
+                    filteredValues.add(value);
+                    filteredSum += value;
+                }
+            }
+
+            // Recalculate average without outliers
+            if (!filteredValues.isEmpty()) {
+                values = filteredValues;
+                avg = filteredSum / filteredValues.size();
+                count = filteredValues.size();
+            }
+        }
+
+        // Calculate final variance and standard deviation
+        double varianceSum = 0;
+        for (Double value : values) {
+            varianceSum += Math.pow(value - avg, 2);
+        }
+
+        // Use n-1 for sample standard deviation (Bessel's correction)
+        double variance = varianceSum / (count - 1);
+        return Math.sqrt(variance);
+    }
+
+    /**
      * Analyzes and displays the factors that positively or negatively affect sleep quality based on user's recorded sleep data.
      *
      * @param userData The list of user's recorded sleep logs,each entry is a double array containing sleep-related variables.
