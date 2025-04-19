@@ -1,5 +1,6 @@
 package SleepTracker;
 
+import com.sun.tools.javac.Main;
 import javafx.fxml.FXML;
 import javafx.event.*;
 import javafx.fxml.*;
@@ -9,9 +10,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.stage.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class SleepTrackerMainController {
     //Button menus
@@ -21,6 +24,8 @@ public class SleepTrackerMainController {
     private BorderPane borderPane;
     @FXML
     private Label status;
+    @FXML
+    private User user;
 
 
     @FXML
@@ -80,11 +85,48 @@ public class SleepTrackerMainController {
         TextField wakeTime = new TextField();
         recordPanel.add(wakeTime, 1, 9);
 
-        Button submitButton = new Button("Submit!");
-        submitButton.setMinWidth(100);
+        Button submitButton = getSubmitButton(recordPanel);
         recordPanel.add(submitButton, 1,10);
 
         borderPane.setCenter(recordPanel);
+    }
+
+    private Button getSubmitButton(GridPane recordPanel) {
+        Button submitButton = new Button("Submit!");
+        submitButton.setMinWidth(100);
+
+        submitButton.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY) {
+                int count = 1;
+                double[] res = new double[11];
+                for (Node n : recordPanel.getChildren()) {
+                    if (!(n instanceof TextField)){
+                        continue;
+                    }
+                    // TODO: merge with num validator (pretty easy change but not too important rn)
+                    res[count] = Double.parseDouble(((TextField) n).getText());
+                    count++;
+                }
+
+                if (user == null) {
+                    user = new User(new ArrayList<>());
+                    user.addRow(res);
+                }
+            }
+        });
+        return submitButton;
+    }
+
+    void save() {
+        MainShell.save(user.getUserData());
+    }
+
+    void load() {
+        try {
+            user = MainShell.load();
+        } catch (Exception _) {
+            // TODO: should also show status
+        }
     }
 
 }
