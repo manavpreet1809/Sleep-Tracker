@@ -101,7 +101,6 @@ public class SleepTrackerMainController {
         GridPane analyze_options = new GridPane();
         splitPane.getItems().add(analyze_options);
         TextArea textArea = new TextArea();
-        textArea.setFont(new Font("Monospace", 20));
 
         splitPane.getItems().add(textArea);
         textArea.setEditable(false);
@@ -145,22 +144,23 @@ public class SleepTrackerMainController {
         analyze_options.add(new Label("Show last night's # of sleep cycles: "), 0, 5);
         Button Show_last_night = new Button();
         Show_last_night.setText("Display sleep cycles");
+        int sleepCycles = User.sleepCycles(user.getUserData());
+        Show_last_night.setOnAction(_ -> textArea.setText(String.format("Last night, you slept for %d sleep cycles.%n", sleepCycles)));
         analyze_options.add(Show_last_night, 1, 5);
 
         analyze_options.add(new Label("Show last night's REM duration: "), 0, 6);
         Button Show_REM = new Button();
         Show_REM.setText("Display REM");
+        int efficient = User.REM_Duration(user.getUserData());
+        Show_REM.setOnAction(_ -> textArea.setText(String.format("Last night, your Rapid Eye Movement was about: %d minutes.%n", efficient)));
         analyze_options.add(Show_REM, 1, 6);
 
         analyze_options.add(new Label("Show SD of sleep duration: "), 0, 7);
         Button Show_SD = new Button();
         Show_SD.setText("Display SD");
+        double stdeviation = User.standardDeviation(user.getUserData(), Factor.SLEEP_DURATION.getArrayIndex());
+        Show_SD.setOnAction(_ -> textArea.setText(String.format("The standard deviation of your sleep duration is " + stdeviation + " hrs.")));
         analyze_options.add(Show_SD, 1, 7);
-
-        analyze_options.add(new Label("Exit: "), 0, 8);
-        Button Exit = new Button();
-        Exit.setText("Exit");
-        analyze_options.add(Exit, 1, 8);
 
         borderPane.setCenter(splitPane);
     }
