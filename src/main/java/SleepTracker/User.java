@@ -678,31 +678,27 @@ public class User {
     }
 
     /**
-     * Predicts sleep quality based on previous data using a simple regression model.
+     * Predicts the sleep quality for tonight using trends from past data.
+     * Uses a basic linear regression approach with weighted factors.
      *
-     * @param userData The sleep data history
-     * @param currentFactors The factors for the night to predict
-     * @return Predicted sleep quality (1-10 scale)
+     * @param userData Recorded sleep data
+     * @param currentFactors Values for tonight's conditions
+     * @return Predicted sleep quality on a scale from 1 to 10
      */
     public static double predictSleepQuality(ArrayList<double[]> userData, double[] currentFactors) {
         if (userData.size() < 5) {
-            // Not enough data for reliable prediction
+            // Need at least 5 entries for a reliable prediction
             return -1;
         }
 
-        // Initialize coefficients to measure impact of each factor
+        // Calculate average values across all logs
+        double[] averages = calculateAverages(userData);
         double[] coefficients = calculateFactorCoefficients(userData);
 
-        // Start with baseline (average sleep quality)
-        double baseQuality = calculateAverages(userData)[Factor.SLEEP_QUALITY.getArrayIndex()];
+        // Start from the average sleep quality
+        double predicted = averages[Factor.SLEEP_QUALITY.getArrayIndex()];
 
-        // Adjust baseline using coefficients and current factors
-        double predictedQuality = baseQuality;
-
-        // Apply each coefficient to the difference between current factor and average
-        double[] averages = calculateAverages(userData);
-
-        // Apply factor impacts
+        // Adjust prediction based on differences from the average
         for (Factor factor : new Factor[] {
                 Factor.ROOM_TEMPERATURE,
                 Factor.SLEEP_DURATION,
@@ -711,89 +707,75 @@ public class User {
                 Factor.SCREEN_TIME,
                 Factor.WATER_INTAKE
         }) {
-            int idx = factor.getArrayIndex();
-            double avgValue = averages[idx];
-            double currentValue = currentFactors[idx];
-            double impact = coefficients[idx] * (currentValue - avgValue);
-            predictedQuality += impact;
+            int i = factor.getArrayIndex();
+            double delta = currentFactors[i] - averages[i];
+            predicted += coefficients[i] * delta;
         }
 
-        // Ensure prediction is within valid range (1-10)
-        predictedQuality = Math.max(1, Math.min(10, predictedQuality));
-
-        return predictedQuality;
+        // Keep prediction within range 1–10
+        return Math.max(1, Math.min(10, predicted));
     }
 
+    private static double[] calculateFactorCoefficients(ArrayList<double[]> userData) {
+    }
     /**
-     * Calculates correlation coefficients between each factor and sleep quality
+     * Determines how strongly each factor affects sleep quality using correlation.
+     * Converts correlation into a scale factor for prediction.
      *
-     * @param userData The sleep data to analyze
-     * @return Array of coefficients for each factor
+     * @param userData Recorded sleep logs
+     * @return Coefficient array showing factor importance
      */
     private static double[] calculateFactorCoefficients(ArrayList<double[]> userData) {
-        int qualityIdx = Factor.SLEEP_QUALITY.getArrayIndex();
-        double[] coefficients = new double[11]; // Match data array size
+        double[] coefficients = new double[11];
+        int qualityIndex = Factor.SLEEP_QUALITY.getArrayIndex();
 
-        // For each factor, calculate correlation coefficient with sleep quality
         for (Factor factor : Factor.values()) {
-            int factorIdx = factor.getArrayIndex();
+            int i = factor.getArrayIndex();
 
             // Skip sleep quality itself
-            if (factorIdx == qualityIdx) continue;
+            if (i == qualityIndex) continue;
 
-            // Calculate correlation (simplified)
-            double correlation = calculateCorrelation(userData, factorIdx, qualityIdx);
+            double correlation = calculateCorrelation(userData, i, qualityIndex);
 
-            // Convert correlation to coefficient (empirically determined scale factors)
+            // Assign scale based on expected impact direction and magnitude
             switch (factor) {
                 case ROOM_TEMPERATURE:
-                    // Negative correlation - lower temp often means better sleep
-                    coefficients[factorIdx] = correlation * -0.2;
-                    break;
+                    coefficients[i] = correlation * -0.2; break;
                 case SLEEP_DURATION:
-                    // Positive correlation - more sleep often means better quality
-                    coefficients[factorIdx] = correlation * 0.5;
-                    break;
+                    coefficients[i] = correlation * 0.5; break;
                 case CARDIO_DURATION:
-                    // Positive correlation up to a point
-                    coefficients[factorIdx] = correlation * 0.01;
-                    break;
+                    coefficients[i] = correlation * 0.01; break;
                 case NAPPING_DURATION:
-                    // Negative correlation - more napping can disrupt night sleep
-                    coefficients[factorIdx] = correlation * -0.005;
-                    break;
+                    coefficients[i] = correlation * -0.005; break;
                 case SCREEN_TIME:
-                    // Negative correlation - more screen time often means worse sleep
-                    coefficients[factorIdx] = correlation * -0.3;
-                    break;
+                    coefficients[i] = correlation * -0.3; break;
                 case WATER_INTAKE:
-                    // Positive correlation up to a point, then negative (bathroom trips)
-                    coefficients[factorIdx] = correlation * 0.0005;
-                    break;
+                    coefficients[i] = correlation * 0.0005; break;
                 default:
-                    coefficients[factorIdx] = 0;
+                    coefficients[i] = 0; break;
             }
         }
 
         return coefficients;
     }
 
-    /**
-     * Calculates Pearson correlation coefficient between two variables in the dataset
-     *
-     * @param userData The sleep data to analyze
-     * @param factorIdx Index of the first variable
-     * @param qualityIdx Index of the second variable (typically sleep quality)
-     * @return Correlation coefficient (-1 to 1)
-     */
-    private static double calculateCorrelation(ArrayList<double[]> userData, int factorIdx, int qualityIdx) {
-        double sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0;
-        int n = userData.size();
 
-        // Calculate sums for correlation formula
-        for (double[] entry : userData) {
-            double x = entry[factorIdx];
-            double y = entry[qualityIdx];
+    /**
+     * Calculates how much two variables are linearly related (Pearson correlation).
+     *
+     * @param data All sleep logs
+     * @param xIndex Index of the independent variable
+     * @param yIndex Index of the dependent variable (usually sleep quality)
+     * @return Correlation value from -1 (inverse) to 1 (direct), or 0 (no relation)
+     */
+    private static double calculateCorrelation(ArrayList<double[]> data, int xIndex, int yIndex) {
+        int n = data.size();
+        double sumX = 0, sumY = 0, sumXY = 0;
+        double sumX2 = 0, sumY2 = 0;
+
+        for (double[] entry : data) {
+            double x = entry[xIndex];
+            double y = entry[yIndex];
 
             sumX += x;
             sumY += y;
@@ -802,11 +784,9 @@ public class User {
             sumY2 += y * y;
         }
 
-        // Calculate Pearson correlation coefficient
         double numerator = n * sumXY - sumX * sumY;
         double denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
 
         if (denominator == 0) return 0;
         return numerator / denominator;
     }
-}
