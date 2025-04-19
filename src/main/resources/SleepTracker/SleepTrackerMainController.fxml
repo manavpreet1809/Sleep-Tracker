@@ -72,11 +72,8 @@
          <left>
             <VBox prefHeight="374.0" prefWidth="124.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="dashboardButton" mnemonicParsing="false" prefHeight="100.0" prefWidth="140.0" text="Dashboard" />
-                  <Button fx:id="logButton" mnemonicParsing="false" onAction="#recordLog" prefHeight="100.0" prefWidth="124.0" text="Record new log" />
-                  <Button mnemonicParsing="false" onAction="#AnalyzeScreen" prefHeight="100.0" prefWidth="126.0" text="Analysis and trends" wrapText="true" />
-                  <Button fx:id="viewLogsButton" mnemonicParsing="false" prefHeight="100.0" prefWidth="130.0" text="Sleep logs" />
-                  <Button fx:id="settingsButton" mnemonicParsing="false" prefHeight="100.0" prefWidth="142.0" text="Settings" />
+                  <Button fx:id="logButton" mnemonicParsing="false" onAction="#recordLog" prefHeight="500.0" prefWidth="124.0" text="Record new log" />
+                  <Button mnemonicParsing="false" onAction="#AnalyzeScreen" prefHeight="500.0" prefWidth="126.0" text="Analysis and trends" wrapText="true" />
                </children>
             </VBox>
          </left>

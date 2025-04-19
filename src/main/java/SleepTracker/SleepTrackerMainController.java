@@ -81,8 +81,8 @@ public class SleepTrackerMainController {
         recordPanel.add(sleepField, 1, 8);
 
         recordPanel.add(new Label("Wake time (24:00)"), 0, 9);
-        TextField wakeTime = new TextField();
-        recordPanel.add(wakeTime, 1, 9);
+        TextField wakeTimeField = new TextField();
+        recordPanel.add(wakeTimeField, 1, 9);
 
         Button submitButton = getSubmitButton(recordPanel);
         recordPanel.add(submitButton, 1,10);
