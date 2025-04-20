@@ -132,14 +132,30 @@ public class User {
      * @param userData The list of user's recorded sleep logs, where each entry is a double array containing sleep related variables.
      */
     public static double[] calculateAverages(ArrayList<double[]> userData) {
-        double[] avg = new double[userData.getFirst().length];
-        for (double[] log : userData)
-            for (int i = 0; i < log.length; i++)
-                avg[i] += log[i];
-        int numDays = userData.size();
-        for (int i = 0; i < avg.length; i++)
-            avg[i] /= numDays;
-        return avg;
+        int numColumns = userData.get(0).length; //Number of input needed per log
+        double[] avg = new double[numColumns];
+        ArrayList<Double> bed_time = new ArrayList<>();
+        ArrayList<Double> wake_time = new ArrayList<>();
+        for (double[] log : userData) {
+            for (int i = 0; i < numColumns; i++) {
+                if (i == numColumns - 2) { //Checks if index is on the sleep_time or bedtime
+                    bed_time.add(log[i]);
+                } else if (i == numColumns - 1) {
+                    wake_time.add(log[i]);
+                } else { //If input is not time, it will be treated as averaging multiple values instead
+                    avg[i] += log[i];
+                }
+            }
+        }
+        int numDays = userData.size(); //Number of days to divide by
+        for (int i = 0; i < numColumns; i++) {
+            if (i != numColumns - 2 && i != numColumns - 1) { //Only non-time values are averaged by dividing the number of days
+                avg[i] /= numDays;
+            }
+        }
+        avg[numColumns - 2] = Time.averageTime(bed_time); //The last two indexes are handled differently as they are time!
+        avg[numColumns - 1] = Time.averageTime(wake_time); //Returns the last two indexes with the averageTime method's calculations
+        return avg; //The average.
     }
 
     /**
