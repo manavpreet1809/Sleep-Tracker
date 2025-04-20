@@ -201,8 +201,8 @@ public class Menu {
         displayRow("Screen time (hrs):\t\t", userData, 6);
         displayRow("Mattress age (months):\t", userData, 7);
         displayRow("Water intake (mL):\t\t", userData, 8);
-        displayRow("Wake time (24hr):\t\t", userData, 9);
-        displayRow("Sleep time (24hr):\t\t", userData, 10);
+        displayRow("Sleep time (24hr):\t\t", userData, 9);
+        displayRow("Wake time (24hr):\t\t", userData, 10);
         System.out.println("---------------------–-----------------------------");
     }
 
