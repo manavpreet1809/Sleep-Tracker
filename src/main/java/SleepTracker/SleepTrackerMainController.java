@@ -93,7 +93,7 @@ public class SleepTrackerMainController {
         recordPanel.add(wakeTimeField, 1, 9);
 
         Button submitButton = getSubmitButton(recordPanel);
-        recordPanel.add(submitButton, 1,10);
+        recordPanel.add(submitButton, 1, 10);
 
         borderPane.setCenter(recordPanel);
     }
@@ -174,16 +174,16 @@ public class SleepTrackerMainController {
         boolean valid = true;
 
         double[][] ranges = {
-                {1,10},
-                {10.0,30.0},
-                {0,24},
-                {0,1380},
-                {0,180},
-                {0,24},
-                {0,1560},
-                {0,12000},
-                {0,24},
-                {0,24},
+                {1, 10},
+                {10.0, 30.0},
+                {0, 24},
+                {0, 1380},
+                {0, 180},
+                {0, 24},
+                {0, 1560},
+                {0, 12000},
+                {0, 24},
+                {0, 24},
         };
         for (int i = 0; i < fields.length; i++) {
             if (!isValidInput(fields[i], ranges[i][0], ranges[i][1])) {
@@ -238,7 +238,7 @@ public class SleepTrackerMainController {
                 int count = 1;
                 double[] res = new double[11];
                 for (Node n : recordPanel.getChildren()) {
-                    if (!(n instanceof TextField)){
+                    if (!(n instanceof TextField)) {
                         continue;
                     }
                     String input = ((TextField) n).getText().trim();
@@ -294,4 +294,21 @@ public class SleepTrackerMainController {
             // TODO: should also show status
         }
     }
+
+
+
+
+
+
+@FXML
+void showAbout() {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("About");
+    alert.setHeaderText("Sleep Tracker Project - CPSC 233 W25");
+    alert.setContentText(
+            "Author: Manavpreet Singh\n" +
+                    "Email: manavpreet.singh@ucalgary.ca\n\n" +
+                    "This project tracks sleep data, analyzes trends, and helps improve sleep quality."
+    );
+    alert.showAndWait();
 }
