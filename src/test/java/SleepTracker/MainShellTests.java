@@ -306,4 +306,13 @@ public class MainShellTests {
         User.SleepCycleInfo info = User.analyzeSleepCycles(logs);
         assertTrue(info.getDeepSleepMinutes() > 50);
     }
+
+
+    @Test
+    public void testDeepSleepMinutesLowQuality() {
+        ArrayList<double[]> logs = new ArrayList<>();
+        logs.add(new double[]{-1, 3, 0, 8, 0, 0, 0, 0, 0, 0});
+        User.SleepCycleInfo info = User.analyzeSleepCycles(logs);
+        assertTrue(info.getDeepSleepMinutes() > 40);
+    }
 }
