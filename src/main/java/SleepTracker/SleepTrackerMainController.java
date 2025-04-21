@@ -201,7 +201,7 @@ public class SleepTrackerMainController {
                 double timeNum = time.getTimeNum();
 
                 if (timeNum < min || timeNum > max) {
-                    System.out.println("Time must be between " + min + " and " + max + " inclusive");
+                    System.out.println("Time must be between " + Math.round(min) + "0:" + "00 and " + Math.round(max - 1) + ":" + "59" + " inclusive");
                     return false;
                 }
             } else {
@@ -213,7 +213,7 @@ public class SleepTrackerMainController {
             }
             return true;
         } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-            System.out.println("Please enter a valid number.");
+            System.out.println("Please enter a number.");
             return false;
         }
     }
@@ -289,7 +289,7 @@ public class SleepTrackerMainController {
     void loadFrom() {
         try {
             FileChooser fc = new FileChooser();
-            user = MainShell.load(fc.showSaveDialog(new Stage()).getPath());
+            user = MainShell.load(fc.showOpenDialog(new Stage()).getPath());
         } catch (Exception _) {
             // TODO: should also show status
         }

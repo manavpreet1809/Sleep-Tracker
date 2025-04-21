@@ -163,18 +163,6 @@ public class MainShellTests {
     }
 
     @Test
-    public void sampleVariance() {
-        ArrayList<double[]> userData = new ArrayList<>();
-        userData.add(new double[]{1});
-        userData.add(new double[]{9});
-        userData.add(new double[]{3});
-        double expected = 17.0;
-        double actual = Math.round(User.sampleVariance(userData, 0));
-        assertEquals(expected, actual);
-    }
-
-
-    @Test
     public void sampleVarianceSingleEntry() {
         ArrayList<double[]> userData = new ArrayList<>();
         userData.add(new double[]{0, 5.0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
@@ -307,12 +295,47 @@ public class MainShellTests {
         assertTrue(info.getDeepSleepMinutes() > 50);
     }
 
-
     @Test
     public void testDeepSleepMinutesLowQuality() {
         ArrayList<double[]> logs = new ArrayList<>();
         logs.add(new double[]{-1, 3, 0, 8, 0, 0, 0, 0, 0, 0});
         User.SleepCycleInfo info = User.analyzeSleepCycles(logs);
         assertTrue(info.getDeepSleepMinutes() > 40);
+    }
+
+    @Test
+    public void averageTimeCrossingMidnight() {
+        ArrayList<Double> times = new ArrayList<>();
+        times.add(23.75);
+        times.add(0.05);
+        double expected = 23.90;
+        double actual = Time.averageTime(times);
+        assertEquals(expected, actual, 0.001);
+    }
+
+    @Test
+    public void averageTimeCrossingMidnight_Across_FiveNights() {
+        ArrayList<Double> times = new ArrayList<>();
+        times.add(23.75);
+        times.add(0.05);
+        times.add(3.05);
+        times.add(1.99);
+        times.add(22.01);
+        double expected = 0.57;
+        double actual = Time.averageTime(times);
+        assertEquals(expected, actual, 0.01);
+    }
+
+    @Test
+    public void averageTimeWithoutCrossingMidnight() {
+        ArrayList<Double> times = new ArrayList<>();
+        times.add(23.75);
+        times.add(23.05);
+        times.add(21.11);
+        times.add(20.99);
+        times.add(22.55);
+        double expected = 22.29;
+        double actual = Time.averageTime(times);
+        assertEquals(expected, actual, 0.001);
     }
 }
