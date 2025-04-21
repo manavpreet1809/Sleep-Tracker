@@ -157,7 +157,20 @@ public class User {
         avg[numColumns - 1] = Time.averageTime(wake_time); //Returns the last two indexes with the averageTime method's calculations
         return avg; //The average.
     }
+    /**
+     * Gets the average water intake from all user data.
+     *
+     * @param userData List of all recorded sleep logs
+     * @return Average water intake in mL
+     */
+    public static double averageWaterIntake(ArrayList<double[]> userData) {
+           if (userData.isEmpty()) {
+               return 0;
+        }
 
+            double avg = calculateAverages(userData)[Factor.WATER_INTAKE.getArrayIndex()];
+            return avg;
+    }
     /**
      * Calculates weighted average of a sleep factor, giving more importance to recent nights.
      *
@@ -373,7 +386,7 @@ public class User {
         }
 
         @Override
-        public String toString() {
+        public String  toString() {
             return String.format(
                     "Sleep Consistency Report:\n" +
                             "Overall Consistency: %d/100 (%s)\n" +
