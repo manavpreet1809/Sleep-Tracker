@@ -302,8 +302,8 @@ public class SleepTrackerMainController {
         alert.setTitle("About");
         alert.setHeaderText("Sleep Tracker Project - CPSC 233 W25");
         alert.setContentText(
-                "Author: Manavpreet Singh\n" +
-                        "Email: manavpreet.singh@ucalgary.ca\n\n" +
+                "Author: Manavpreet Singh, Dylan Crombie, and Gary Liao\n" +
+                        "Email: manavpreet.singh@ucalgary.ca, dylan.crombie@ucalgary.ca, gary.liao@ucalgary.ca\n\n" +
                         "This project tracks sleep data, analyzes trends, and helps improve sleep quality."
         );
         alert.showAndWait();
