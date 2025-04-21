@@ -63,7 +63,7 @@
         </Menu>
         <Menu mnemonicParsing="false" text="About">
           <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+            <MenuItem mnemonicParsing="false" onAction="#showAbout" text="About MyHelloApp" />
           </items>
         </Menu>
       </menus>
