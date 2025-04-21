@@ -200,6 +200,7 @@ public class MainShellTests {
         double actual = new TimeValidator().validateStream(0, 24);
         assertEquals(expected, actual, 0.001);
     }
+
     @Test
     public void Rapid_eye_movement() {
         ArrayList<double[]> userData = new ArrayList<>();
@@ -208,6 +209,7 @@ public class MainShellTests {
         double actual = User.REM_Duration(userData);
         assertEquals(expected, actual);
     }
+
     @Test
     public void Rapid_eye_movement_for_11_hours_of_sleep() {
         ArrayList<double[]> userData = new ArrayList<>();
@@ -216,6 +218,7 @@ public class MainShellTests {
         double actual = User.REM_Duration(userData);
         assertEquals(expected, actual);
     }
+
     @Test
     public void standard_deviation() {
         ArrayList<double[]> userData = new ArrayList<>();
@@ -223,9 +226,10 @@ public class MainShellTests {
         userData.add(new double[]{-1, 0, 24, 7, 0, 0, 0, 0, 0, 0});
         userData.add(new double[]{-1, 0, 11, 7, 0, 0, 0, 0, 0, 0});
         double expected = 6.0;
-        double actual = Math.round(User.standardDeviation(userData,2));
+        double actual = Math.round(User.standardDeviation(userData, 2));
         assertEquals(expected, actual, 0.001);
     }
+
     @Test
     public void standard_deviation_many_entries_to_verify_its_validity() {
         ArrayList<double[]> userData = new ArrayList<>();
@@ -237,9 +241,10 @@ public class MainShellTests {
         userData.add(new double[]{-1, 0, 47, 7, 0, 0, 0, 0, 0, 0});
         userData.add(new double[]{-1, 0, 19, 7, 0, 0, 0, 0, 0, 0});
         double expected = 19.0;
-        double actual = Math.round(User.standardDeviation(userData,2));
+        double actual = Math.round(User.standardDeviation(userData, 2));
         assertEquals(expected, actual, 0.001);
     }
+
     @Test
     public void standard_deviation_negative_numbers() {
         ArrayList<double[]> userData = new ArrayList<>();
@@ -247,9 +252,10 @@ public class MainShellTests {
         userData.add(new double[]{-1, 0, -2, 7, 0, 0, 0, 0, 0, 0});
         userData.add(new double[]{-1, 0, -8, 7, 0, 0, 0, 0, 0, 0});
         double expected = 4.0;
-        double actual = Math.round(User.standardDeviation(userData,2));
+        double actual = Math.round(User.standardDeviation(userData, 2));
         assertEquals(expected, actual, 0.001);
     }
+
     @Test
     public void standard_deviation_decimals() {
         ArrayList<double[]> userData = new ArrayList<>();
@@ -260,9 +266,10 @@ public class MainShellTests {
         userData.add(new double[]{-1, 0, 75.25, 7, 0, 0, 0, 0, 0, 0});
         userData.add(new double[]{-1, 0, 69.71, 7, 0, 0, 0, 0, 0, 0});
         double expected = 33.0;
-        double actual = Math.round((User.standardDeviation(userData,2)));
+        double actual = Math.round((User.standardDeviation(userData, 2)));
         assertEquals(expected, actual, 0.001);
     }
+
     @Test
     void testEquals() {
         Time t1 = new Time(8.0);  // 08:00
@@ -289,5 +296,14 @@ public class MainShellTests {
         System.setIn(new ByteArrayInputStream("5\n".getBytes()));
         NumValidator validator = new NumValidator();
         assertEquals(5, validator.validateStream(1, 10));
+    }
+
+
+    @Test
+    public void testDeepSleepMinutes() {
+        ArrayList<double[]> logs = new ArrayList<>();
+        logs.add(new double[]{-1, 9, 0, 8, 0, 0, 0, 0, 0, 0});
+        User.SleepCycleInfo info = User.analyzeSleepCycles(logs);
+        assertTrue(info.getDeepSleepMinutes() > 50);
     }
 }
