@@ -1,10 +1,6 @@
 package SleepTracker;
-
-import com.sun.tools.javac.Main;
-import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.event.*;
-import javafx.fxml.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -13,21 +9,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
 import javafx.stage.*;
-import java.io.*;
-import java.time.temporal.TemporalQueries;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SleepTrackerMainController {
     //Button menus
-    @FXML
-    private TextArea screen_output;
     @FXML
     private BorderPane borderPane;
     @FXML
@@ -96,78 +84,84 @@ public class SleepTrackerMainController {
         recordPanel.add(submitButton, 1, 10);
 
         borderPane.setCenter(recordPanel);
+        status.setText("Record data on this page");
     }
 
     @FXML
     void AnalyzeScreen(ActionEvent event) {
-        borderPane.setCenter(null);
-        SplitPane splitPane = new SplitPane();
-        splitPane.setOrientation(Orientation.HORIZONTAL);
-        GridPane analyze_options = new GridPane();
-        splitPane.getItems().add(analyze_options);
-        TextArea textArea = new TextArea();
+        try {
+            borderPane.setCenter(null);
+            SplitPane splitPane = new SplitPane();
+            splitPane.setOrientation(Orientation.HORIZONTAL);
+            GridPane analyze_options = new GridPane();
+            splitPane.getItems().add(analyze_options);
+            TextArea textArea = new TextArea();
 
-        splitPane.getItems().add(textArea);
-        textArea.setEditable(false);
+            splitPane.getItems().add(textArea);
+            textArea.setEditable(false);
 
-        analyze_options.setHgap(10);
-        analyze_options.setVgap(10);
-        analyze_options.setPadding(new Insets(20));
-        //Options are listed below
-        analyze_options.add(new Label("Show recorded data so far: "), 0, 0);
-        Button Show_data = new Button();
-        Show_data.setText("Display data");
-        Show_data.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData(), Menu::displayData)));
-        analyze_options.add(Show_data, 1, 0);
+            analyze_options.setHgap(10);
+            analyze_options.setVgap(10);
+            analyze_options.setPadding(new Insets(20));
+            //Options are listed below
+            analyze_options.add(new Label("Show recorded data so far: "), 0, 0);
+            Button Show_data = new Button();
+            Show_data.setText("Display data");
+            Show_data.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData(), Menu::displayData)));
+            analyze_options.add(Show_data, 1, 0);
 
-        analyze_options.add(new Label("Show factors affecting sleep quality: "), 0, 1);
-        Button Show_factors = new Button();
-        Show_factors.setText("Display factors");
-        Show_factors.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData(), User::sleepQualityFactors)));
-        analyze_options.add(Show_factors, 1, 1);
+            analyze_options.add(new Label("Show factors affecting sleep quality: "), 0, 1);
+            Button Show_factors = new Button();
+            Show_factors.setText("Display factors");
+            Show_factors.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData(), User::sleepQualityFactors)));
+            analyze_options.add(Show_factors, 1, 1);
 
-        analyze_options.add(new Label("Show factors affecting sleep duration: "), 0, 2);
-        Button Show_sleep = new Button();
-        Show_sleep.setText("Display sleep Duration");
-        Show_sleep.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData(), User::sleepDurationFactors)));
-        analyze_options.add(Show_sleep, 1, 2);
+            analyze_options.add(new Label("Show factors affecting sleep duration: "), 0, 2);
+            Button Show_sleep = new Button();
+            Show_sleep.setText("Display sleep Duration");
+            Show_sleep.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData(), User::sleepDurationFactors)));
+            analyze_options.add(Show_sleep, 1, 2);
 
-        analyze_options.add(new Label("Show averages of recorded data: "), 0, 3);
-        Button Show_averages = new Button();
-        Show_averages.setText("Display averages");
-        ArrayList<double[]> avg = new ArrayList<>();
-        avg.add(User.calculateAverages(user.getUserData()));
-        Show_averages.setOnAction(_ -> textArea.setText(Menu.dataString(avg, Menu::displayData)));
-        analyze_options.add(Show_averages, 1, 3);
+            analyze_options.add(new Label("Show averages of recorded data: "), 0, 3);
+            Button Show_averages = new Button();
+            Show_averages.setText("Display averages");
+            ArrayList<double[]> avg = new ArrayList<>();
+            avg.add(User.calculateAverages(user.getUserData()));
+            Show_averages.setOnAction(_ -> textArea.setText(Menu.dataString(avg, Menu::displayData)));
+            analyze_options.add(Show_averages, 1, 3);
 
-        analyze_options.add(new Label("Show relative consistency of sleep/wake times: "), 0, 4);
-        Button Show_relative_consistency = new Button();
-        Show_relative_consistency.setText("Display relative consistency");
-        Show_relative_consistency.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData(), Menu::printSleepWakeConsistency)));
-        analyze_options.add(Show_relative_consistency, 1, 4);
+            analyze_options.add(new Label("Show relative consistency of sleep/wake times: "), 0, 4);
+            Button Show_relative_consistency = new Button();
+            Show_relative_consistency.setText("Display relative consistency");
+            Show_relative_consistency.setOnAction(_ -> textArea.setText(Menu.dataString(user.getUserData(), Menu::printSleepWakeConsistency)));
+            analyze_options.add(Show_relative_consistency, 1, 4);
 
-        analyze_options.add(new Label("Show last night's # of sleep cycles: "), 0, 5);
-        Button Show_last_night = new Button();
-        Show_last_night.setText("Display sleep cycles");
-        int sleepCycles = User.sleepCycles(user.getUserData());
-        Show_last_night.setOnAction(_ -> textArea.setText(String.format("Last night, you slept for %d sleep cycles.%n", sleepCycles)));
-        analyze_options.add(Show_last_night, 1, 5);
+            analyze_options.add(new Label("Show last night's # of sleep cycles: "), 0, 5);
+            Button Show_last_night = new Button();
+            Show_last_night.setText("Display sleep cycles");
+            int sleepCycles = User.sleepCycles(user.getUserData());
+            Show_last_night.setOnAction(_ -> textArea.setText(String.format("Last night, you slept for %d sleep cycles.%n", sleepCycles)));
+            analyze_options.add(Show_last_night, 1, 5);
 
-        analyze_options.add(new Label("Show last night's REM duration: "), 0, 6);
-        Button Show_REM = new Button();
-        Show_REM.setText("Display REM");
-        int efficient = User.REM_Duration(user.getUserData());
-        Show_REM.setOnAction(_ -> textArea.setText(String.format("Last night, your Rapid Eye Movement was about: %d minutes.%n", efficient)));
-        analyze_options.add(Show_REM, 1, 6);
+            analyze_options.add(new Label("Show last night's REM duration: "), 0, 6);
+            Button Show_REM = new Button();
+            Show_REM.setText("Display REM");
+            int efficient = User.REM_Duration(user.getUserData());
+            Show_REM.setOnAction(_ -> textArea.setText(String.format("Last night, your Rapid Eye Movement was about: %d minutes.%n", efficient)));
+            analyze_options.add(Show_REM, 1, 6);
 
-        analyze_options.add(new Label("Show SD of sleep duration: "), 0, 7);
-        Button Show_SD = new Button();
-        Show_SD.setText("Display SD");
-        double stdeviation = User.standardDeviation(user.getUserData(), Factor.SLEEP_DURATION.getArrayIndex());
-        Show_SD.setOnAction(_ -> textArea.setText(String.format("The standard deviation of your sleep duration is " + stdeviation + " hrs.")));
-        analyze_options.add(Show_SD, 1, 7);
+            analyze_options.add(new Label("Show SD of sleep duration: "), 0, 7);
+            Button Show_SD = new Button();
+            Show_SD.setText("Display SD");
+            double stdeviation = User.standardDeviation(user.getUserData(), Factor.SLEEP_DURATION.getArrayIndex());
+            Show_SD.setOnAction(_ -> textArea.setText(String.format("The standard deviation of your sleep duration is " + stdeviation + " hrs.")));
+            analyze_options.add(Show_SD, 1, 7);
 
-        borderPane.setCenter(splitPane);
+            borderPane.setCenter(splitPane);
+            status.setText("Data uploaded");
+        } catch (Exception e) {
+            status.setText("No data found");
+        }
     }
 
     private boolean validateForm(TextField[] fields) {
@@ -213,7 +207,6 @@ public class SleepTrackerMainController {
             }
             return true;
         } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-            System.out.println("Please enter a number.");
             return false;
         }
     }
@@ -232,7 +225,7 @@ public class SleepTrackerMainController {
                 }
                 TextField[] fields = fieldList.toArray(new TextField[0]);
                 if (!validateForm(fields)) {
-                    System.out.println("Invalid Input Detected. Submission canceled.");
+                    status.setText("Submission canceled. Please CORRECTLY complete all fields.");
                     return;
                 }
                 int count = 1;
@@ -255,6 +248,7 @@ public class SleepTrackerMainController {
                     user = new User(new ArrayList<>());
                 }
                 user.addRow(res);
+                status.setText("Log submitted");
             }
         });
         return submitButton;
@@ -263,7 +257,7 @@ public class SleepTrackerMainController {
     @FXML
     void save() {
         MainShell.save(user.getUserData());
-        // TODO: should show status
+        status.setText("Log saved");
     }
 
     @FXML
@@ -271,8 +265,9 @@ public class SleepTrackerMainController {
         FileChooser fc = new FileChooser();
         try {
             MainShell.save(user.getUserData(), fc.showSaveDialog(new Stage()).getPath());
+            status.setText("Log saved as " + fc.showSaveDialog(new Stage()).getPath());
         } catch (Exception e) {
-            // TODO: should show status
+            status.setText("Data failed to save");
         }
     }
 
@@ -280,8 +275,9 @@ public class SleepTrackerMainController {
     void load() {
         try {
             user = MainShell.load();
+            status.setText("Log loaded");
         } catch (Exception _) {
-            // TODO: should also show status
+            status.setText("Data failed to load");
         }
     }
 
@@ -290,8 +286,9 @@ public class SleepTrackerMainController {
         try {
             FileChooser fc = new FileChooser();
             user = MainShell.load(fc.showOpenDialog(new Stage()).getPath());
+            status.setText("Log loaded from " + fc.showOpenDialog(new Stage()).getPath());
         } catch (Exception _) {
-            // TODO: should also show status
+            status.setText("Data failed to load from file");
         }
     }
 
