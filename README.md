@@ -12,7 +12,7 @@ and see helpful and interesting information, such as factors which influence you
 3. Unzip the file, and copy the folder that looks like javafx-sdk-XX.X.X.
 4. Paste that folder into C:\Program Files\Java\\.
 5. You now have two options: either run 233-final.jar with this command:`java --module-path "C:\Program Files\Java\javafx-sdk-XX.X.X\lib" --add-modules
-   javafx.controls,javafx.fxml -jar CPSC233W25A3.jar`
+   javafx.controls,javafx.fxml -jar 233-final.jar`
    or navigate to 233-final/src/main/java/SleepTracker/ and run 
    `java --module-path "C:\Program Files\Java\javafx-sdk-XX.X.X\lib" --add-modules javafx.controls,javafx.fxml SleepTrackerMainController.java` 
 (Replace XX.X.X with your JavaFX version.) 
