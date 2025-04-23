@@ -23,16 +23,25 @@ public class SleepTrackerMainController {
     @FXML
     private User user;
 
-
+    /**
+     *
+     * @param event quits upon trigger
+     */
     @FXML
     void quit(ActionEvent event) {
         System.exit(0);
     }
 
+    /**
+     * What needs to be executed at the start
+     */
     @FXML
     void initialize() {
     }
 
+    /**
+     * No parameters, but is a crucial part of collecting user data
+     */
     @FXML
     void recordLog() {
         GridPane recordPanel = new GridPane();
@@ -87,6 +96,10 @@ public class SleepTrackerMainController {
         status.setText("Record data on this page");
     }
 
+    /**
+     *
+     * @param event triggers the analysis of data in 7 different ways upon the users's choice
+     */
     @FXML
     void AnalyzeScreen(ActionEvent event) {
         try {
@@ -164,6 +177,11 @@ public class SleepTrackerMainController {
         }
     }
 
+    /**
+     *
+     * @param fields based on fields entered from recordLog
+     * @return boolean, which verifies the validity of a value entered in a specific field
+     */
     private boolean validateForm(TextField[] fields) {
         boolean valid = true;
 
@@ -187,6 +205,13 @@ public class SleepTrackerMainController {
         return valid;
     }
 
+    /**
+     *
+     * @param field fields from recordLog, where the user provides information
+     * @param min minimum accepted value
+     * @param max maximum accepted value
+     * @return boolean, verifies whether an input passes the range test
+     */
     private boolean isValidInput(TextField field, double min, double max) {
         try {
             String input = field.getText().trim();
@@ -211,6 +236,11 @@ public class SleepTrackerMainController {
         }
     }
 
+    /**
+     *
+     * @param recordPanel recordLog, where the user enters data, but at the submit button instead
+     * @return it will process all data and saves it to the analysis window
+     */
     private Button getSubmitButton(GridPane recordPanel) {
         Button submitButton = new Button("Submit!");
         submitButton.setMinWidth(100);
@@ -254,12 +284,18 @@ public class SleepTrackerMainController {
         return submitButton;
     }
 
+    /**
+     * Saves whatever is on the log
+     */
     @FXML
     void save() {
         MainShell.save(user.getUserData());
         status.setText("Log saved");
     }
 
+    /**
+     * Saves all data onto a csv file
+     */
     @FXML
     void saveAs() {
         FileChooser fc = new FileChooser();
@@ -271,6 +307,9 @@ public class SleepTrackerMainController {
         }
     }
 
+    /**
+     * Loads the user's latest data to the recordLog but not to the analysis page
+     */
     @FXML
     void load() {
         try {
@@ -281,6 +320,9 @@ public class SleepTrackerMainController {
         }
     }
 
+    /**
+     * Loads the user's data from a csv file
+     */
     @FXML
     void loadFrom() {
         try {
@@ -292,7 +334,9 @@ public class SleepTrackerMainController {
         }
     }
 
-
+    /**
+     * Displays information about this project
+     */
     @FXML
     void showAbout() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
