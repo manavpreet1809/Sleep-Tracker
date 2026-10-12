@@ -11,7 +11,7 @@ class SleepLogTest {
 
     private static SleepLog log(int quality, double sleepHours) {
         return new SleepLog(LocalDate.of(2026, 1, 1), quality, LocalTime.of(23, 0), LocalTime.of(7, 0),
-                sleepHours, 19, 30, 0, 3, 24, 2000);
+                sleepHours, 19.0, 30, 0, 3.0, 24, 2000);
     }
 
     @Test
@@ -30,6 +30,6 @@ class SleepLogTest {
     @Test
     void rejectsMissingTimes() {
         assertThrows(NullPointerException.class, () -> new SleepLog(LocalDate.of(2026, 1, 1), 7, null,
-                LocalTime.of(7, 0), 8, 19, 30, 0, 3, 24, 2000));
+                LocalTime.of(7, 0), 8, 19.0, 30, 0, 3.0, 24, 2000));
     }
 }

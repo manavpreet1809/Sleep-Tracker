@@ -11,7 +11,7 @@ import java.util.Map;
  * Averages across a set of nights. Bedtime and wake time use the clock-aware mean.
  *
  * @param nights   number of nights summarised
- * @param averages mean of every numeric factor
+ * @param averages mean of every factor recorded on at least one night
  * @param bedtime  typical bedtime
  * @param wakeTime typical wake time
  */
@@ -27,14 +27,18 @@ public record SleepSummary(int nights, Map<SleepFactor, Double> averages, LocalT
         }
         Map<SleepFactor, Double> averages = new EnumMap<>(SleepFactor.class);
         for (SleepFactor factor : SleepFactor.values()) {
-            averages.put(factor, Statistics.mean(factor.of(logs)));
+            double[] values = factor.of(logs);
+            if (values.length > 0) {
+                averages.put(factor, Statistics.mean(values));
+            }
         }
         return new SleepSummary(logs.size(), averages,
                 ClockTime.mean(logs.stream().map(SleepLog::bedtime).toList()),
                 ClockTime.mean(logs.stream().map(SleepLog::wakeTime).toList()));
     }
 
-    public double average(SleepFactor factor) {
+    /** The average, or null if the factor was never recorded. */
+    public Double average(SleepFactor factor) {
         return averages.get(factor);
     }
 }

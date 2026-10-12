@@ -13,7 +13,7 @@ import java.util.List;
  * @param habit          the habit compared
  * @param outcome        the measurement compared
  * @param nightsWith     nights the habit was followed
- * @param nightsWithout  nights it was not
+ * @param nightsWithout  nights it was recorded but not followed
  * @param averageWith    mean outcome with the habit, or null without such nights
  * @param averageWithout mean outcome without the habit, or null without such nights
  */
@@ -42,8 +42,9 @@ public record HabitImpact(
     }
 
     private static HabitImpact compare(List<SleepLog> logs, Habit habit, SleepFactor outcome) {
-        List<SleepLog> with = logs.stream().filter(habit::followedOn).toList();
-        List<SleepLog> without = logs.stream().filter(night -> !habit.followedOn(night)).toList();
+        List<SleepLog> recorded = logs.stream().filter(habit::recordedOn).toList();
+        List<SleepLog> with = recorded.stream().filter(habit::followedOn).toList();
+        List<SleepLog> without = recorded.stream().filter(night -> !habit.followedOn(night)).toList();
         return new HabitImpact(habit, outcome, with.size(), without.size(), mean(with, outcome), mean(without, outcome));
     }
 

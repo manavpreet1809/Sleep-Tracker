@@ -34,8 +34,8 @@ class HabitImpactTest {
         // The original app credited every good night to every habit. Here screens differ only
         // on nights of equal quality, so they show no difference.
         List<HabitImpact> impacts = HabitImpact.of(List.of(
-                night().screenTime(1).quality(8).log(),
-                night().screenTime(6).quality(8).log()), SleepFactor.QUALITY);
+                night().screenTime(1.0).quality(8).log(),
+                night().screenTime(6.0).quality(8).log()), SleepFactor.QUALITY);
         assertEquals(0.0, find(impacts, Habit.LIMITED_SCREENS).difference());
     }
 
@@ -61,5 +61,17 @@ class HabitImpactTest {
     void durationOutcomeSkipsTheDurationHabit() {
         List<HabitImpact> impacts = HabitImpact.of(List.of(night().log()), SleepFactor.SLEEP_DURATION);
         assertTrue(impacts.stream().noneMatch(i -> i.habit() == Habit.FULL_NIGHT));
+    }
+
+    @Test
+    void nightsWithoutTheMeasurementAreLeftOut() {
+        List<HabitImpact> impacts = HabitImpact.of(List.of(
+                night().water(3000).quality(9).log(),
+                night().water(null).quality(2).log(),
+                night().water(1000).quality(5).log()), SleepFactor.QUALITY);
+        HabitImpact water = find(impacts, Habit.HYDRATED);
+        assertEquals(1, water.nightsWith());
+        assertEquals(1, water.nightsWithout());
+        assertEquals(4.0, water.difference());
     }
 }

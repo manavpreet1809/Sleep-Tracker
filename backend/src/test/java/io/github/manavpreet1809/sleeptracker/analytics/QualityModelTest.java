@@ -17,7 +17,7 @@ class QualityModelTest {
     private static List<SleepLog> screenTimeHistory() {
         List<SleepLog> nights = new ArrayList<>();
         for (int hours = 1; hours <= 8; hours++) {
-            nights.add(night().screenTime(hours).quality(10 - hours).log());
+            nights.add(night().screenTime((double) hours).quality(10 - hours).log());
         }
         return nights;
     }
@@ -57,5 +57,28 @@ class QualityModelTest {
     void predictionStaysOnTheScale() {
         QualityModel model = QualityModel.fit(screenTimeHistory()).orElseThrow();
         assertEquals(1, model.predict(Map.of(SleepFactor.SCREEN_TIME, 24.0)));
+    }
+
+    @Test
+    void ignoresHabitsRarelyRecorded() {
+        List<SleepLog> nights = new ArrayList<>();
+        for (SleepLog night : screenTimeHistory()) {
+            nights.add(new SleepLog(night.date(), night.quality(), night.bedtime(), night.wakeTime(),
+                    night.sleepHours(), night.roomTemperatureC(), night.cardioMinutes(), night.napMinutes(),
+                    night.screenTimeHours(), night.mattressAgeMonths(), nights.size() < 2 ? 2000 : null));
+        }
+        QualityModel model = QualityModel.fit(nights).orElseThrow();
+        assertTrue(!model.features().contains(SleepFactor.WATER_INTAKE));
+        assertTrue(model.effects().get(SleepFactor.SCREEN_TIME) < 0);
+    }
+
+    @Test
+    void noModelWithoutAnyRecordedHabits() {
+        List<SleepLog> nights = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            nights.add(new SleepLog(night().log().date(), 5 + i % 3, night().log().bedtime(), night().log().wakeTime(),
+                    7 + i % 2, null, null, null, null, null, null));
+        }
+        assertTrue(QualityModel.fit(nights).map(m -> m.features().equals(List.of(SleepFactor.SLEEP_DURATION))).orElse(false));
     }
 }

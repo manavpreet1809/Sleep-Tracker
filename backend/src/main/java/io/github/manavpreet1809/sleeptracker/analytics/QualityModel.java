@@ -13,23 +13,29 @@ import java.util.Optional;
  */
 public final class QualityModel {
 
-    /** Habits the model uses, in coefficient order. */
-    public static final List<SleepFactor> FEATURES = List.of(
+    /** Habits the model may use. */
+    public static final List<SleepFactor> CANDIDATES = List.of(
             SleepFactor.SLEEP_DURATION, SleepFactor.ROOM_TEMPERATURE, SleepFactor.CARDIO,
             SleepFactor.NAPPING, SleepFactor.SCREEN_TIME, SleepFactor.WATER_INTAKE);
 
-    /** Fewer nights than this cannot support six coefficients. */
+    /** Fewer complete nights than this cannot support six coefficients. */
     public static final int MINIMUM_NIGHTS = 7;
+
+    /** A habit is used only if recorded on at least this share of nights. */
+    static final double MINIMUM_COVERAGE = 0.8;
 
     static final double RIDGE_PENALTY = 1.0;
 
+    private final List<SleepFactor> features;
     private final double baseline;
     private final double[] means;
     private final double[] spreads;
     private final double[] coefficients;
     private final int nights;
 
-    private QualityModel(double baseline, double[] means, double[] spreads, double[] coefficients, int nights) {
+    private QualityModel(List<SleepFactor> features, double baseline, double[] means, double[] spreads,
+                         double[] coefficients, int nights) {
+        this.features = features;
         this.baseline = baseline;
         this.means = means;
         this.spreads = spreads;
@@ -37,19 +43,29 @@ public final class QualityModel {
         this.nights = nights;
     }
 
-    public static Optional<QualityModel> fit(List<SleepLog> logs) {
-        if (logs.size() < MINIMUM_NIGHTS) {
+    /**
+     * Fits on the habits recorded on most nights, using only nights where all of them were
+     * recorded. Empty when fewer than {@link #MINIMUM_NIGHTS} such nights exist.
+     */
+    public static Optional<QualityModel> fit(List<SleepLog> history) {
+        List<SleepFactor> features = CANDIDATES.stream()
+                .filter(f -> history.stream().filter(f::recordedOn).count() >= MINIMUM_COVERAGE * history.size())
+                .toList();
+        List<SleepLog> logs = history.stream()
+                .filter(night -> features.stream().allMatch(f -> f.recordedOn(night)))
+                .toList();
+        if (features.isEmpty() || logs.size() < MINIMUM_NIGHTS) {
             return Optional.empty();
         }
         int n = logs.size();
-        int p = FEATURES.size();
+        int p = features.size();
         double[] quality = SleepFactor.QUALITY.of(logs);
         double baseline = Statistics.mean(quality);
         double[] means = new double[p];
         double[] spreads = new double[p];
         double[][] z = new double[n][p];
         for (int j = 0; j < p; j++) {
-            double[] column = FEATURES.get(j).of(logs);
+            double[] column = features.get(j).of(logs);
             means[j] = Statistics.mean(column);
             spreads[j] = Statistics.populationStandardDeviation(column);
             for (int i = 0; i < n; i++) {
@@ -73,7 +89,7 @@ public final class QualityModel {
             }
             system[a][p] = target;
         }
-        return Optional.of(new QualityModel(baseline, means, spreads, solve(system), n));
+        return Optional.of(new QualityModel(features, baseline, means, spreads, solve(system), n));
     }
 
     /**
@@ -81,8 +97,8 @@ public final class QualityModel {
      */
     public double predict(Map<SleepFactor, Double> tonight) {
         double prediction = baseline;
-        for (int j = 0; j < FEATURES.size(); j++) {
-            Double value = tonight.get(FEATURES.get(j));
+        for (int j = 0; j < features.size(); j++) {
+            Double value = tonight.get(features.get(j));
             if (value != null && spreads[j] != 0) {
                 prediction += coefficients[j] * (value - means[j]) / spreads[j];
             }
@@ -93,14 +109,20 @@ public final class QualityModel {
     /** Change in predicted quality for a one-standard-deviation increase in each habit. */
     public Map<SleepFactor, Double> effects() {
         Map<SleepFactor, Double> effects = new EnumMap<>(SleepFactor.class);
-        for (int j = 0; j < FEATURES.size(); j++) {
-            effects.put(FEATURES.get(j), coefficients[j]);
+        for (int j = 0; j < features.size(); j++) {
+            effects.put(features.get(j), coefficients[j]);
         }
         return effects;
     }
 
+    /** Nights the model was fitted on. */
     public int nights() {
         return nights;
+    }
+
+    /** Habits the model uses. */
+    public List<SleepFactor> features() {
+        return features;
     }
 
     /** Gaussian elimination with partial pivoting on an augmented matrix. */

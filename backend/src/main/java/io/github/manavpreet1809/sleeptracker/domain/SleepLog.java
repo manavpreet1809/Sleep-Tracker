@@ -12,6 +12,9 @@ import java.util.Objects;
  * @param bedtime           when the person fell asleep
  * @param wakeTime          when the person woke up
  * @param sleepHours        time actually asleep, which can be shorter than bedtime to wake time
+ *
+ * <p>The remaining habits are optional (null when not recorded):
+ *
  * @param roomTemperatureC  bedroom temperature in degrees Celsius
  * @param cardioMinutes     cardio exercise that day
  * @param napMinutes        daytime napping
@@ -25,12 +28,12 @@ public record SleepLog(
         LocalTime bedtime,
         LocalTime wakeTime,
         double sleepHours,
-        double roomTemperatureC,
-        int cardioMinutes,
-        int napMinutes,
-        double screenTimeHours,
-        int mattressAgeMonths,
-        int waterIntakeMl) {
+        Double roomTemperatureC,
+        Integer cardioMinutes,
+        Integer napMinutes,
+        Double screenTimeHours,
+        Integer mattressAgeMonths,
+        Integer waterIntakeMl) {
 
     public SleepLog {
         Objects.requireNonNull(date, "date");
@@ -46,9 +49,13 @@ public record SleepLog(
         requireRange("waterIntakeMl", waterIntakeMl, 0, 20_000);
     }
 
-    private static void requireRange(String name, double value, double min, double max) {
-        if (!(value >= min && value <= max)) { // also rejects NaN
-            throw new IllegalArgumentException(name + " must be between " + min + " and " + max + ", was " + value);
+    private static void requireRange(String name, Number value, double min, double max) {
+        if (value == null) {
+            return; // optional habit not recorded
+        }
+        double v = value.doubleValue();
+        if (!(v >= min && v <= max)) { // also rejects NaN
+            throw new IllegalArgumentException(name + " must be between " + min + " and " + max + ", was " + v);
         }
     }
 }
