@@ -12,7 +12,7 @@ class OpenApiConfiguration {
     OpenAPI openApi() {
         return new OpenAPI().info(new Info()
                 .title("Sleep Tracker API")
-                .version("0.2.0")
+                .version("1.0.0")
                 .description("Record nights of sleep and analyse what is associated with sleeping well."));
     }
 }
