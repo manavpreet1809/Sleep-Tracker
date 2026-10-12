@@ -16,7 +16,9 @@ public enum SleepFactor {
     NAPPING("Napping", "minutes", SleepLog::napMinutes),
     SCREEN_TIME("Screen time", "hours", SleepLog::screenTimeHours),
     MATTRESS_AGE("Mattress age", "months", SleepLog::mattressAgeMonths),
-    WATER_INTAKE("Water intake", "mL", SleepLog::waterIntakeMl);
+    WATER_INTAKE("Water intake", "mL", SleepLog::waterIntakeMl),
+    RESTING_HEART_RATE("Resting heart rate", "bpm", SleepLog::restingHeartRate),
+    HRV("Heart-rate variability", "ms", SleepLog::hrvMs);
 
     private final String displayName;
     private final String unit;

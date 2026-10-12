@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -19,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -161,5 +163,41 @@ class NightsApiTest {
         mvc.perform(get(base + "/analysis"))
                 .andExpect(jsonPath("$.summary.bedtime").value("00:00:00"))
                 .andExpect(jsonPath("$.summary.averages[?(@.key=='QUALITY')].value").value(org.hamcrest.Matchers.contains(closeTo(7.0, 1e-9))));
+    }
+
+    private MockMultipartFile garminSample() throws Exception {
+        try (var in = getClass().getResourceAsStream("/garmin-sleep-sample.csv")) {
+            return new MockMultipartFile("file", "sleep.csv", "text/csv", in.readAllBytes());
+        }
+    }
+
+    @Test
+    void garminImportAddsNightsAndKeepsHabitsAlreadyLogged() throws Exception {
+        // A hand-logged night on the same date as one Garmin row.
+        send(post(base + "/nights"), night("2026-03-08", 3)).andExpect(status().isCreated());
+        mvc.perform(multipart(base + "/imports/garmin").file(garminSample()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.added").value(3))
+                .andExpect(jsonPath("$.updated").value(1))
+                .andExpect(jsonPath("$.skipped", hasSize(2)));
+        mvc.perform(get(base + "/nights/2026-03-08"))
+                .andExpect(jsonPath("$.quality").value(8))
+                .andExpect(jsonPath("$.screenTimeHours").value(3.0))
+                .andExpect(jsonPath("$.restingHeartRate").value(52))
+                .andExpect(jsonPath("$.source").value("garmin"));
+
+        // Editing by hand keeps the heart-rate data the form doesn't show.
+        send(put(base + "/nights/2026-03-08"), night("2026-03-08", 9)).andExpect(status().isOk());
+        mvc.perform(get(base + "/nights/2026-03-08"))
+                .andExpect(jsonPath("$.quality").value(9))
+                .andExpect(jsonPath("$.hrvMs").value(61));
+    }
+
+    @Test
+    void garminImportRejectsOtherFiles() throws Exception {
+        mvc.perform(multipart(base + "/imports/garmin")
+                        .file(new MockMultipartFile("file", "steps.csv", "text/csv", "Date,Steps\n".getBytes())))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail").value("This doesn't look like a Garmin sleep export: no \"Score\" column"));
     }
 }

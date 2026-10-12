@@ -17,12 +17,15 @@ public record NightResponse(
         Double screenTimeHours,
         Integer mattressAgeMonths,
         Integer waterIntakeMl,
+        Integer sleepScore,
+        Integer restingHeartRate,
+        Integer hrvMs,
         String source) {
 
     static NightResponse of(SleepNight stored) {
         SleepLog n = stored.toLog();
         return new NightResponse(n.date(), n.quality(), n.bedtime(), n.wakeTime(), n.sleepHours(), n.roomTemperatureC(),
                 n.cardioMinutes(), n.napMinutes(), n.screenTimeHours(), n.mattressAgeMonths(), n.waterIntakeMl(),
-                stored.source().label());
+                n.sleepScore(), n.restingHeartRate(), n.hrvMs(), stored.source().label());
     }
 }

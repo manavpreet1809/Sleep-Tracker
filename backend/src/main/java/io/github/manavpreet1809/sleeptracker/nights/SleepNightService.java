@@ -58,7 +58,8 @@ public class SleepNightService {
     public SleepNight put(UUID workspace, SleepLog night) {
         return repository.findByWorkspaceIdAndNightDate(workspace, night.date())
                 .map(existing -> {
-                    existing.apply(night, NightSource.MANUAL);
+                    // A hand edit keeps measurements the form cannot show, such as Garmin heart rate.
+                    existing.apply(night.keepingMeasurementsFrom(existing.toLog()), NightSource.MANUAL);
                     return existing;
                 })
                 .orElseGet(() -> create(workspace, night));
@@ -77,6 +78,30 @@ public class SleepNightService {
         repository.flush();
         repository.saveAll(nights.stream().map(night -> new SleepNight(workspace, night, source)).toList());
         return nights.size();
+    }
+
+    /**
+     * Records imported nights. A night already logged keeps its habits and takes the imported sleep
+     * measurements.
+     */
+    public ImportCounts importNights(UUID workspace, List<SleepLog> imported, NightSource source) {
+        int added = 0;
+        int updated = 0;
+        for (SleepLog night : imported) {
+            var existing = repository.findByWorkspaceIdAndNightDate(workspace, night.date());
+            if (existing.isPresent()) {
+                existing.get().apply(night.withHabitsFrom(existing.get().toLog()), source);
+                updated++;
+            } else {
+                requireRoom(workspace, 1);
+                repository.save(new SleepNight(workspace, night, source));
+                added++;
+            }
+        }
+        return new ImportCounts(added, updated);
+    }
+
+    public record ImportCounts(int added, int updated) {
     }
 
     public int clear(UUID workspace) {

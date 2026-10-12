@@ -40,6 +40,9 @@ public class SleepNight {
     private Double screenTimeHours;
     private Integer mattressAgeMonths;
     private Integer waterIntakeMl;
+    private Integer sleepScore;
+    private Integer restingHeartRate;
+    private Integer hrvMs;
 
     @Column(nullable = false)
     private String source;
@@ -72,12 +75,15 @@ public class SleepNight {
         this.screenTimeHours = night.screenTimeHours();
         this.mattressAgeMonths = night.mattressAgeMonths();
         this.waterIntakeMl = night.waterIntakeMl();
+        this.sleepScore = night.sleepScore();
+        this.restingHeartRate = night.restingHeartRate();
+        this.hrvMs = night.hrvMs();
         this.source = source.label();
     }
 
     public SleepLog toLog() {
         return new SleepLog(nightDate, quality, bedtime, wakeTime, sleepHours, roomTemperatureC, cardioMinutes,
-                napMinutes, screenTimeHours, mattressAgeMonths, waterIntakeMl);
+                napMinutes, screenTimeHours, mattressAgeMonths, waterIntakeMl, sleepScore, restingHeartRate, hrvMs);
     }
 
     public LocalDate nightDate() {

@@ -21,6 +21,9 @@ import java.util.Objects;
  * @param screenTimeHours   screen time that day
  * @param mattressAgeMonths age of the mattress
  * @param waterIntakeMl     water drunk that day
+ * @param sleepScore        a wearable's 0-100 sleep score
+ * @param restingHeartRate  overnight resting heart rate from a wearable, beats per minute
+ * @param hrvMs             overnight heart-rate variability from a wearable, milliseconds
  */
 public record SleepLog(
         LocalDate date,
@@ -33,7 +36,10 @@ public record SleepLog(
         Integer napMinutes,
         Double screenTimeHours,
         Integer mattressAgeMonths,
-        Integer waterIntakeMl) {
+        Integer waterIntakeMl,
+        Integer sleepScore,
+        Integer restingHeartRate,
+        Integer hrvMs) {
 
     public SleepLog {
         Objects.requireNonNull(date, "date");
@@ -47,6 +53,33 @@ public record SleepLog(
         requireRange("screenTimeHours", screenTimeHours, 0, 24);
         requireRange("mattressAgeMonths", mattressAgeMonths, 0, 600);
         requireRange("waterIntakeMl", waterIntakeMl, 0, 20_000);
+        requireRange("sleepScore", sleepScore, 0, 100);
+        requireRange("restingHeartRate", restingHeartRate, 20, 220);
+        requireRange("hrvMs", hrvMs, 1, 500);
+    }
+
+    /** A night logged by hand, without wearable measurements. */
+    public SleepLog(LocalDate date, int quality, LocalTime bedtime, LocalTime wakeTime, double sleepHours,
+                    Double roomTemperatureC, Integer cardioMinutes, Integer napMinutes, Double screenTimeHours,
+                    Integer mattressAgeMonths, Integer waterIntakeMl) {
+        this(date, quality, bedtime, wakeTime, sleepHours, roomTemperatureC, cardioMinutes, napMinutes,
+                screenTimeHours, mattressAgeMonths, waterIntakeMl, null, null, null);
+    }
+
+    /** This night with any wearable measurements it lacks taken from {@code earlier}. */
+    public SleepLog keepingMeasurementsFrom(SleepLog earlier) {
+        return new SleepLog(date, quality, bedtime, wakeTime, sleepHours, roomTemperatureC, cardioMinutes, napMinutes,
+                screenTimeHours, mattressAgeMonths, waterIntakeMl,
+                sleepScore != null ? sleepScore : earlier.sleepScore,
+                restingHeartRate != null ? restingHeartRate : earlier.restingHeartRate,
+                hrvMs != null ? hrvMs : earlier.hrvMs);
+    }
+
+    /** This night's sleep measurements with the habits recorded on {@code habits}. */
+    public SleepLog withHabitsFrom(SleepLog habits) {
+        return new SleepLog(date, quality, bedtime, wakeTime, sleepHours, habits.roomTemperatureC,
+                habits.cardioMinutes, habits.napMinutes, habits.screenTimeHours, habits.mattressAgeMonths,
+                habits.waterIntakeMl, sleepScore, restingHeartRate, hrvMs);
     }
 
     private static void requireRange(String name, Number value, double min, double max) {

@@ -107,6 +107,8 @@ table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nu
 th { text-align: left; color: var(--muted); font-size: .8rem; font-weight: 600; padding: 6px 8px; }
 td { padding: 7px 8px; border-top: 1px solid var(--line); white-space: nowrap; }
 .row-actions { text-align: right; }
+.badge { margin-left: 6px; padding: 0 6px; border-radius: 6px; background: var(--second-soft); color: var(--text); font-size: .72rem; font-weight: 600; }
+.stack { display: flex; flex-direction: column; gap: 14px; }
 .pill { display: inline-block; min-width: 2em; text-align: center; border-radius: 999px; font-weight: 700; padding: 0 6px; }
 .pill.q0, .pill.q1 { background: var(--bad-soft); color: var(--bad); }
 .pill.q2 { background: var(--accent-soft); color: var(--accent); }

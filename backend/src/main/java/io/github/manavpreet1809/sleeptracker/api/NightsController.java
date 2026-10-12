@@ -1,12 +1,17 @@
 package io.github.manavpreet1809.sleeptracker.api;
 
 import io.github.manavpreet1809.sleeptracker.demo.DemoNights;
+import io.github.manavpreet1809.sleeptracker.imports.GarminSleepCsv;
 import io.github.manavpreet1809.sleeptracker.nights.NightSource;
 import io.github.manavpreet1809.sleeptracker.nights.SleepNightService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
@@ -14,6 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,7 +30,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Nights and analysis for one workspace. A workspace is a random UUID chosen by the client, which
@@ -102,6 +110,24 @@ public class NightsController {
                 DemoNights.generate(LocalDate.now(clock).minusDays(1), DEMO_NIGHTS, workspace.getLeastSignificantBits()),
                 NightSource.DEMO);
         return Map.of("loaded", loaded);
+    }
+
+    @PostMapping(path = "/imports/garmin", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Import a Garmin Connect sleep CSV; nights already logged keep their habits")
+    public ImportResponse importGarmin(@PathVariable UUID workspace, @RequestPart("file") MultipartFile file)
+            throws IOException {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("The file is empty");
+        }
+        GarminSleepCsv.Result parsed;
+        try (Reader reader = new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8)) {
+            parsed = GarminSleepCsv.parse(reader);
+        }
+        var counts = nights.importNights(workspace, parsed.nights(), NightSource.GARMIN);
+        return new ImportResponse(counts.added(), counts.updated(), parsed.skipped());
+    }
+
+    public record ImportResponse(int added, int updated, List<GarminSleepCsv.Skipped> skipped) {
     }
 
     @GetMapping("/analysis")

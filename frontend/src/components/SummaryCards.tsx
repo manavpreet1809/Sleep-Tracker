@@ -10,6 +10,8 @@ export function SummaryCards({ analysis }: { analysis: Analysis }) {
   const hours = average(analysis, 'SLEEP_DURATION')
   const consistency = analysis.consistency
   const cycles = analysis.lastNight
+  const heartRate = average(analysis, 'RESTING_HEART_RATE')
+  const hrv = average(analysis, 'HRV')
   return (
     <section className="cards" aria-label="Summary">
       <div className="card stat">
@@ -35,7 +37,14 @@ export function SummaryCards({ analysis }: { analysis: Analysis }) {
           <span className="muted">Needs 3 nights</span>
         )}
       </div>
-      {cycles && (
+      {heartRate !== undefined && (
+        <div className="card stat">
+          <span className="label">Resting heart rate</span>
+          <span className="value">{Math.round(heartRate)}<small> bpm</small></span>
+          {hrv !== undefined && <span className="muted">HRV {Math.round(hrv)} ms · from your wearable</span>}
+        </div>
+      )}
+      {cycles && heartRate === undefined && (
         <div className="card stat">
           <span className="label">Last night (estimate)</span>
           <span className="value">{cycles.cycles}<small> cycles</small></span>

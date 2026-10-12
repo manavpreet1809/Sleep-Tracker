@@ -8,6 +8,7 @@ import { ModelPanel } from './components/ModelPanel'
 import { NightForm } from './components/NightForm'
 import { NightsTable } from './components/NightsTable'
 import { Welcome } from './components/Welcome'
+import { GarminImport } from './components/GarminImport'
 
 export default function App({ workspace }: { workspace: string }) {
   const client = useMemo(() => api(workspace), [workspace])
@@ -64,13 +65,16 @@ export default function App({ workspace }: { workspace: string }) {
 
       {data && (
         <div className="two-columns">
-          <NightForm
-            key={editing?.date ?? 'new'}
-            client={client}
-            editing={editing}
-            onSaved={() => { setEditing(null); refresh() }}
-            onCancel={() => setEditing(null)}
-          />
+          <div className="stack">
+            <NightForm
+              key={editing?.date ?? 'new'}
+              client={client}
+              editing={editing}
+              onSaved={() => { setEditing(null); refresh() }}
+              onCancel={() => setEditing(null)}
+            />
+            <GarminImport client={client} onImported={refresh} />
+          </div>
           {!empty && nights.data && (
             <NightsTable nights={nights.data} client={client} onEdit={setEditing} onChanged={refresh} />
           )}

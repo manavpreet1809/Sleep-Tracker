@@ -5,7 +5,8 @@ import java.util.Arrays;
 /** Where a night's record came from. */
 public enum NightSource {
     MANUAL("manual"),
-    DEMO("demo");
+    DEMO("demo"),
+    GARMIN("garmin");
 
     private final String label;
 

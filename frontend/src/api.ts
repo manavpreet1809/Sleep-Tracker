@@ -12,8 +12,13 @@ export interface Night {
   screenTimeHours: number | null
   mattressAgeMonths: number | null
   waterIntakeMl: number | null
+  sleepScore?: number | null
+  restingHeartRate?: number | null
+  hrvMs?: number | null
   source?: string
 }
+
+export interface ImportResult { added: number; updated: number; skipped: { line: number; reason: string }[] }
 
 export interface Factor { key: string; name: string; unit: string; value: number }
 export interface HabitResult {
@@ -86,6 +91,11 @@ export function api(workspace: string) {
     deleteNight: (date: string) => request<void>(`${base}/nights/${date}`, { method: 'DELETE' }),
     clear: () => request<{ deleted: number }>(`${base}/nights`, { method: 'DELETE' }),
     loadDemo: () => request<{ loaded: number }>(`${base}/demo`, { method: 'POST' }),
+    importGarmin: (file: File) => {
+      const form = new FormData()
+      form.append('file', file)
+      return request<ImportResult>(`${base}/imports/garmin`, { method: 'POST', body: form })
+    },
     analysis: () => request<Analysis>(`${base}/analysis`),
     predict: (input: PredictionInput) =>
       request<Prediction>(`${base}/predictions`, { method: 'POST', body: JSON.stringify(input) }),

@@ -26,7 +26,10 @@ export function NightsTable({ nights, client, onEdit, onChanged }: {
           <tbody>
             {shown.map(night => (
               <tr key={night.date}>
-                <td>{day(night.date)}</td>
+                <td>
+                  {day(night.date)}
+                  {night.source === 'garmin' && <span className="badge" title="Imported from Garmin">Garmin</span>}
+                </td>
                 <td><span className={`pill q${Math.round(night.quality / 3.4)}`}>{night.quality}</span></td>
                 <td>{hoursAndMinutes(night.sleepHours)}</td>
                 <td className="muted">{clock(night.bedtime)}–{clock(night.wakeTime)}</td>
