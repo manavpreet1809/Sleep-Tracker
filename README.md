@@ -1,8 +1,6 @@
 # Sleep Tracker
 
-Track sleep times, import Garmin records, and compare sleep patterns with daily habits.
-
-![Sleep Tracker with example sleep records](docs/images/dashboard.png)
+Sleep Tracker brings manual sleep logs and Garmin records into one dashboard. Users can follow changes in sleep duration, quality, and schedule, and explore how those patterns relate to daily habits.
 
 ## The app
 
