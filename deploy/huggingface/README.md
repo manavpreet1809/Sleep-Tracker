@@ -1,17 +1,17 @@
 ---
 title: Sleep Tracker
-emoji: 🌙
-colorFrom: indigo
-colorTo: blue
+emoji: 🛏️
+colorFrom: red
+colorTo: yellow
 sdk: docker
 app_port: 7860
-short_description: Log sleep and see which habits go with your best nights
+short_description: Log your sleep and see which habits help
 ---
 
 # Sleep Tracker
 
-Log nights of sleep, import a Garmin export, and see schedule consistency, which habits go with better sleep, and a prediction for tonight from a model trained on your own nights.
+Log your nights, import a Garmin sleep export, and see your trends, how regular your schedule is, and which habits line up with your better nights.
 
-This demo keeps data in memory, so it resets when the Space restarts. Each browser gets its own anonymous workspace; there are no accounts.
+This demo keeps data in memory, so it resets when the Space restarts. Each browser gets its own random ID, and there are no accounts.
 
-Source code and documentation: [github.com/manavpreet1809/Sleep-Tracker](https://github.com/manavpreet1809/Sleep-Tracker)
+Code: [github.com/manavpreet1809/Sleep-Tracker](https://github.com/manavpreet1809/Sleep-Tracker)

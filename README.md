@@ -1,115 +1,67 @@
-# 🌙 Sleep Tracker
+# Sleep Tracker
 
 [![CI](https://github.com/manavpreet1809/Sleep-Tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/manavpreet1809/Sleep-Tracker/actions/workflows/ci.yml)
 
-Log your nights, import a Garmin export, and see how regular your schedule is, which habits go with your best sleep, and a prediction for tonight from a model trained on your own nights.
+A web app for logging your sleep. You enter when you slept, how well you slept, and a few habits like screen time or exercise. The app then shows your trends, how regular your schedule is, and which habits line up with your better nights. You can also import sleep data exported from Garmin Connect.
 
-A full-stack rebuild of a JavaFX university project: **Java 25 · Spring Boot 4 · PostgreSQL · React 19 · TypeScript · Docker**.
+![Sleep Tracker dashboard](docs/images/dashboard.png)
 
-![Dashboard with sleep-quality and duration trends and a bedtime chart](docs/images/dashboard.png)
+## What it does
 
-## Features
+- Log a night: date, quality (1 to 10), bedtime, wake time, hours asleep, and optional habits.
+- Charts for sleep quality, sleep duration, and bedtime/wake time over time.
+- A consistency score out of 100 for how regular your schedule is.
+- Compares nights with and without each habit, for example nights with 4 hours or less of screen time against nights with more.
+- Predicts tonight's sleep quality from your past nights once you have at least 7.
+- Imports a Garmin Connect sleep CSV. Sleep score, times, resting heart rate and HRV are added, and habits you typed in yourself are kept.
+- No accounts. Each browser gets its own random ID, so people trying the demo don't see each other's data.
 
-- **Log nights** with quality, bedtime, wake time and hours asleep, plus optional habits: screen time, cardio, naps, room temperature, water and mattress age.
-- **Import from Garmin Connect**: upload the sleep CSV; scores, times, resting heart rate and HRV are added, and habits you logged by hand are kept.
-- **Trends**: nightly quality and duration with 7-night weighted averages, and a bedtime/wake-time chart that handles schedules crossing midnight.
-- **Schedule consistency** score (0-100) from the variance of bedtime, wake time and duration.
-- **What goes with better sleep**: average quality or duration on nights with versus without each habit.
-- **Predict tonight**: a ridge-regression model fitted to the user's own nights, with the effect it learned for each habit.
-- **No accounts**: each browser gets an anonymous workspace ID, so visitors' data stays separate. One click loads 60 example nights.
-- Dark mode, phone layout, and interactive API docs.
+The habit comparisons show patterns in your own data, not proof that a habit causes better sleep. Sleep cycle numbers are rough estimates. None of this is medical advice.
 
-| Habits and prediction | Garmin import | API docs |
-|---|---|---|
-| ![Habit comparison and model effects](docs/images/dashboard-full.png) | ![Garmin import panel](docs/images/garmin-import.png) | ![Swagger UI](docs/images/api-docs.png) |
+## Built with
 
-## Tech stack
+Java 25 and Spring Boot 4 for the backend, PostgreSQL with Flyway for the database, and React with TypeScript for the frontend. Tests use JUnit, Testcontainers and Vitest. It runs in Docker, and GitHub Actions runs the tests on every push.
 
-| Layer | Technology |
-|---|---|
-| API | Java 25, Spring Boot 4.1 (Web MVC, Data JPA, Validation, Actuator), springdoc OpenAPI |
-| Data | PostgreSQL 18 with Flyway migrations; H2 in-memory for the hosted demo |
-| Web app | React 19, TypeScript, Vite, TanStack Query, Recharts |
-| Testing | JUnit 5, Spring MockMvc, Testcontainers (real PostgreSQL), JaCoCo; Vitest, Testing Library |
-| Delivery | Multi-stage Docker image, Docker Compose, GitHub Actions CI |
+## Running it
 
-## Architecture
-
-```mermaid
-flowchart LR
-    Browser["React app<br/>(TanStack Query, Recharts)"] -- "JSON / REST" --> API["Spring Boot API<br/>controllers · validation · problem details"]
-    API --> Service["Night service<br/>Garmin CSV parser"]
-    API --> Analytics["Analytics<br/>consistency · habits · ridge regression"]
-    Service --> DB[("PostgreSQL<br/>Flyway migrations")]
-```
-
-The analytics are plain Java with no framework dependencies (`backend/src/main/java/.../analytics`), so they are unit-tested directly. The React build is bundled into the Spring Boot jar and served from the same origin.
-
-## Run it
-
-**With Docker** (only Docker needed):
+You only need Docker:
 
 ```sh
 docker compose up --build
 ```
 
-Open <http://localhost:8080> for the app and <http://localhost:8080/api/docs> for the API docs.
+Then open http://localhost:8080. Click "Try it with 60 example nights" to see it with sample data. The API documentation is at http://localhost:8080/api/docs.
 
-**For development:**
+To work on the code instead:
 
 ```sh
-# API on :8080 with the in-memory database (needs Java 25)
-cd backend && ./mvnw spring-boot:run -Dspring-boot.run.profiles=demo
-
-# Web app on :5173 with hot reload, proxying /api to :8080 (needs Node 24)
-cd frontend && npm install && npm run dev
+cd backend && ./mvnw spring-boot:run -Dspring-boot.run.profiles=demo   # API on port 8080, needs Java 25
+cd frontend && npm install && npm run dev                               # site on port 5173, needs Node 24
 ```
 
-Without the `demo` profile the API connects to PostgreSQL at `localhost:5432` (database, user and password `sleeptracker`), or wherever `SPRING_DATASOURCE_URL` points.
-
-## API
-
-All endpoints are under `/api/workspaces/{workspace}`, where `workspace` is a client-chosen UUID. Errors are [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) problem details, with per-field messages for invalid input.
-
-| Method | Path | Purpose |
-|---|---|---|
-| `GET` | `/nights?from=&to=` | List nights, oldest first |
-| `PUT` | `/nights/{date}` | Record or replace a night |
-| `POST` | `/nights` | Record a new night (409 if the date exists) |
-| `DELETE` | `/nights/{date}` | Delete a night |
-| `GET` | `/analysis` | Averages, consistency, habit comparisons, model and trend |
-| `POST` | `/predictions` | Predict tonight's quality (422 until 7 comparable nights exist) |
-| `POST` | `/imports/garmin` | Upload a Garmin Connect sleep CSV (multipart, up to 1 MB) |
-| `POST` | `/demo` | Replace the workspace with 60 example nights |
-
-## How the analysis works
-
-- **Consistency**: sample variance of bedtime and wake time measured around the clock (23:30 and 00:30 are one hour apart), and of sleep duration, mapped to 0-100 and weighted 40/40/20.
-- **Habits**: for each habit, the average outcome on nights it was followed versus nights it was not, using only nights where it was recorded. These are associations in the user's own data, not causes.
-- **Prediction**: ridge regression (λ = 1) on standardized habits recorded on at least 80% of nights, solved with Gaussian elimination. The penalty keeps coefficients stable with few nights, and predictions are clamped to 1-10.
-- **Sleep cycles** are a rough estimate from duration and self-rated quality, not a measurement.
-
-Nothing here is medical advice.
-
-## Importing from Garmin
-
-In Garmin Connect, open **Sleep → Sleep Score**, choose a date range and export the CSV. Then use **Import from Garmin** in the app. Garmin labels each night by the morning it ended; the app labels nights by the evening they began. The 0-100 sleep score becomes the 1-10 quality, and rows without sleep data are listed rather than failing the import.
+The `demo` profile uses an in-memory database, so nothing is saved after you stop it. Without it, the backend connects to PostgreSQL on localhost:5432 (database, user and password are all `sleeptracker`).
 
 ## Tests
 
 ```sh
-cd backend && ./mvnw verify        # 62 tests; API tests start PostgreSQL in Docker; coverage in target/site/jacoco
+cd backend && ./mvnw verify
 cd frontend && npm run lint && npm test
 ```
 
-Backend line coverage is about 96%. CI runs both suites and builds the Docker image on every push.
+The backend tests start a real PostgreSQL database in Docker for the API tests.
 
-## Project history
+## How the numbers are worked out
 
-Sleep Tracker began as a JavaFX desktop app for CPSC 233 at the University of Calgary, built by **Manavpreet Singh, Dylan Crombie and Gary Liao**. That version, which stored nights in a CSV file, is preserved at the [`javafx-v1`](https://github.com/manavpreet1809/Sleep-Tracker/tree/javafx-v1) tag.
+- **Consistency:** how much your bedtime, wake time and sleep length vary from night to night. Times are compared on a 24-hour clock, so 11:30 pm and 12:30 am count as one hour apart.
+- **Habits:** the average quality (or hours) on nights you followed a habit, compared with nights you didn't. Nights where you didn't record that habit are left out.
+- **Prediction:** a ridge regression fitted to your own nights, using the habits you record most often. The result is kept between 1 and 10.
 
-Manavpreet Singh rebuilt it as a web application, keeping the team's analytics ideas (the circular average of bedtimes, consistency scoring, habit thresholds and sleep-cycle estimates) and correcting three behaviours along the way:
+## History
 
-- The habit analysis counted every good night towards every habit; it now compares nights with and without each habit.
-- Wake times on either side of noon looked 23 hours apart in the consistency score; times are now compared around the clock.
-- The quality prediction scaled correlations by hand-picked constants; it is now a ridge regression fitted to the user's data.
+This started as a JavaFX desktop app for CPSC 233 at the University of Calgary, made by Manavpreet Singh, Dylan Crombie and Gary Liao. That version is saved under the [`javafx-v1`](https://github.com/manavpreet1809/Sleep-Tracker/tree/javafx-v1) tag.
+
+I rebuilt it as a web app. The main ideas from the original are still here: averaging bedtimes across midnight, the consistency score, the habit thresholds and the sleep cycle estimate. While rebuilding, I fixed three problems in the original:
+
+- The habit analysis counted every good night for every habit. It now compares nights with and without each habit.
+- Waking up at 11:30 and at 12:30 looked 23 hours apart in the consistency score. Times are now compared around the clock.
+- The quality prediction used hand-picked multipliers. It now fits a model to your own data.

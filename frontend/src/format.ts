@@ -29,3 +29,10 @@ export function yesterday(today = new Date()): string {
   d.setDate(d.getDate() - 1)
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
+
+/** A signed change such as "+1.5" or "−0.8"; values that round to zero show as "0.0" with no sign. */
+export function signed(value: number, digits = 1): { text: string; tone: 'good' | 'bad' | 'neutral' } {
+  const rounded = Number(value.toFixed(digits))
+  if (rounded === 0) return { text: (0).toFixed(digits), tone: 'neutral' }
+  return { text: `${rounded > 0 ? '+' : '−'}${Math.abs(rounded).toFixed(digits)}`, tone: rounded > 0 ? 'good' : 'bad' }
+}

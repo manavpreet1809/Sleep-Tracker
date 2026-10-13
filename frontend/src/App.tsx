@@ -82,8 +82,8 @@ export default function App({ workspace }: { workspace: string }) {
       )}
 
       <footer>
-        Your nights are stored under an anonymous ID kept in this browser; there are no accounts.
-        Estimates such as sleep cycles are approximations, not medical advice.
+        Your data is saved under a random ID kept in this browser. There are no accounts. Sleep cycle numbers are
+        rough estimates, not medical advice.
         <br />
         Built by Manavpreet Singh, extending a university project with Dylan Crombie and Gary Liao ·{' '}
         <a href="https://github.com/manavpreet1809/Sleep-Tracker">Source on GitHub</a> ·{' '}

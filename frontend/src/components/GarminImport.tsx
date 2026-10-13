@@ -11,8 +11,8 @@ export function GarminImport({ client, onImported }: { client: ReturnType<typeof
     <section className="card">
       <h2>Import from Garmin</h2>
       <p className="muted">
-        In Garmin Connect, open Sleep → Sleep Score, choose a range, and export the CSV. Sleep times, scores, resting
-        heart rate and HRV are added; habits you logged by hand are kept.
+        Export your sleep data from Garmin Connect as a CSV file and upload it here. Habits you already typed in are
+        kept.
       </p>
       <div className="actions">
         <input

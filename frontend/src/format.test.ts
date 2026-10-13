@@ -1,4 +1,4 @@
-import { clock, hoursAndMinutes, hoursBetween, yesterday } from './format'
+import { clock, hoursAndMinutes, hoursBetween, signed, yesterday } from './format'
 
 test('formats times and durations', () => {
   expect(clock('23:15:00')).toBe('23:15')
@@ -13,4 +13,11 @@ test('hours between crosses midnight', () => {
 
 test('yesterday handles month boundaries', () => {
   expect(yesterday(new Date(2026, 2, 1))).toBe('2026-02-28')
+})
+
+test('signed changes never show minus zero', () => {
+  expect(signed(1.46)).toEqual({ text: '+1.5', tone: 'good' })
+  expect(signed(-0.75)).toEqual({ text: '−0.8', tone: 'bad' })
+  expect(signed(-0.04)).toEqual({ text: '0.0', tone: 'neutral' })
+  expect(signed(0.004, 2)).toEqual({ text: '0.00', tone: 'neutral' })
 })

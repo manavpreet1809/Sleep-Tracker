@@ -27,7 +27,7 @@ export function TrendCharts({ trend }: { trend: TrendPoint[] }) {
               formatter={(value, name) => [Number(value).toFixed(1), name === 'quality' ? 'Quality' : '7-night trend']}
             />
             <Scatter isAnimationActive={false} dataKey="quality" fill="var(--accent-soft-strong)" />
-            <Line isAnimationActive={false} dataKey="qualityTrend" stroke="var(--accent)" strokeWidth={2.5} dot={false} />
+            <Line isAnimationActive={false} dataKey="qualityTrend" stroke="var(--quality)" strokeWidth={2.5} dot={false} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
@@ -66,7 +66,7 @@ export function TrendCharts({ trend }: { trend: TrendPoint[] }) {
                 name === 'bed' ? 'Fell asleep' : 'Woke up',
               ]}
             />
-            <Line isAnimationActive={false} dataKey="bed" stroke="var(--accent)" strokeWidth={2} dot={{ r: 2 }} />
+            <Line isAnimationActive={false} dataKey="bed" stroke="var(--quality)" strokeWidth={2} dot={{ r: 2 }} />
             <Line isAnimationActive={false} dataKey="wake" stroke="var(--second)" strokeWidth={2} dot={{ r: 2 }} />
           </ComposedChart>
         </ResponsiveContainer>

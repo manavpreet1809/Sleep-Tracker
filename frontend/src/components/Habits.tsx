@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { HabitResult } from '../api'
-import { hoursAndMinutes, oneDecimal } from '../format'
+import { hoursAndMinutes, oneDecimal, signed } from '../format'
 
 type Outcome = 'quality' | 'duration'
 
@@ -13,6 +13,12 @@ export function Habits({ quality, duration }: { quality: HabitResult[]; duration
   const rows = outcome === 'quality' ? quality : duration
   const format = (value: number) => (outcome === 'quality' ? oneDecimal(value) : hoursAndMinutes(value))
   const scale = Math.max(0.5, ...rows.map(r => Math.abs(r.difference ?? 0)))
+  const change = (difference: number) => {
+    if (outcome === 'quality') return signed(difference)
+    const minutes = Math.round(Math.abs(difference) * 60)
+    if (minutes === 0) return { text: '0 min', tone: 'neutral' }
+    return { text: `${difference > 0 ? '+' : '−'}${hoursAndMinutes(minutes / 60)}`, tone: difference > 0 ? 'good' : 'bad' }
+  }
   return (
     <section className="card">
       <div className="card-head">
@@ -40,10 +46,7 @@ export function Habits({ quality, duration }: { quality: HabitResult[]; duration
                     style={{ width: `${(Math.abs(row.difference) / scale) * 50}%` }}
                   />
                 </div>
-                <span className={`delta ${row.difference >= 0 ? 'good' : 'bad'}`}>
-                  {row.difference >= 0 ? '+' : '−'}
-                  {outcome === 'quality' ? oneDecimal(Math.abs(row.difference)) : hoursAndMinutes(Math.abs(row.difference))}
-                </span>
+                <span className={`delta ${change(row.difference).tone}`}>{change(row.difference).text}</span>
                 <span className="muted small">{format(row.averageWith!)} vs {format(row.averageWithout!)}</span>
               </div>
             )}

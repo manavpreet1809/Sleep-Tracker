@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import type { Analysis, PredictionInput, api } from '../api'
-import { oneDecimal } from '../format'
+import { oneDecimal, signed } from '../format'
 
 const FIELDS: { key: keyof PredictionInput; label: string; unit: string; step: number; placeholder: string }[] = [
   { key: 'sleepHours', label: 'Planned sleep', unit: 'h', step: 0.25, placeholder: '8' },
@@ -21,7 +21,7 @@ export function ModelPanel({ model, client }: { model: Analysis['model']; client
       <section className="card">
         <h2>Predict tonight</h2>
         <p className="muted">
-          After 7 nights with the same habits recorded, a model trained on your own nights predicts tonight’s quality.
+          Log at least 7 nights with the same habits filled in and this will predict how well you’ll sleep tonight.
         </p>
       </section>
     )
@@ -42,7 +42,7 @@ export function ModelPanel({ model, client }: { model: Analysis['model']; client
     <section className="card">
       <h2>Predict tonight</h2>
       <p className="muted">
-        A ridge-regression model fitted to your {model.nights} nights. Leave a field blank to assume a typical day.
+        Based on your {model.nights} nights. Leave a box empty to use your usual value.
       </p>
       <form className="predict" onSubmit={submit}>
         {FIELDS.filter(f => model.effects.some(e => e.key === factorKey(f.key))).map(field => (
@@ -63,7 +63,7 @@ export function ModelPanel({ model, client }: { model: Analysis['model']; client
         </p>
       )}
       {predict.isError && <p className="error">{predict.error.message}</p>}
-      <h3>What the model learned</h3>
+      <h3>What matters most for you</h3>
       <ul className="effects">
         {model.effects.map(effect => (
           <li key={effect.key}>
@@ -72,13 +72,11 @@ export function ModelPanel({ model, client }: { model: Analysis['model']; client
               <span className={`bar ${effect.value >= 0 ? 'good' : 'bad'}`}
                 style={{ width: `${(Math.abs(effect.value) / largest) * 50}%` }} />
             </span>
-            <span className={`delta ${effect.value >= 0 ? 'good' : 'bad'}`}>
-              {effect.value >= 0 ? '+' : '−'}{Math.abs(effect.value).toFixed(2)}
-            </span>
+            <span className={`delta ${signed(effect.value, 2).tone}`}>{signed(effect.value, 2).text}</span>
           </li>
         ))}
       </ul>
-      <p className="muted small">Change in predicted quality when a habit is one typical step (one standard deviation) higher.</p>
+      <p className="muted small">How much the predicted quality moves when a habit goes up by a typical amount.</p>
     </section>
   )
 }
