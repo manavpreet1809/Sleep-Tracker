@@ -4,7 +4,24 @@ Log sleep, import Garmin CSV files, and explore sleep trends and daily habits.
 
 **Built with:** Java, Spring Boot, PostgreSQL, React, and TypeScript.
 
+## Preview
+
 ![Sleep Tracker dashboard](docs/images/dashboard.png)
+
+## Highlights
+
+- **Sleep history:** enter nights manually or import an exported Garmin CSV.
+- **Trends:** view sleep summaries and changes over time.
+- **Habit comparisons:** explore associations between daily habits and sleep without treating them as causes.
+
+## Project structure
+
+```text
+backend/    Spring Boot API, analytics, and database migrations
+frontend/   React interface and charts
+deploy/     Deployment scripts
+docs/       Project documentation and screenshots
+```
 
 ## Run locally
 
@@ -34,6 +51,8 @@ cd frontend
 npm install
 npm test
 ```
+
+## Notes and credits
 
 There are no user accounts. Sleep estimates are not medical advice.
 
