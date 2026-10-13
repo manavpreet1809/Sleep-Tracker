@@ -1,18 +1,14 @@
 # Sleep Tracker
 
-Log sleep, import Garmin CSV files, and explore sleep trends and daily habits.
+Track sleep times, import Garmin records, and compare sleep patterns with daily habits.
 
-**Built with:** Java, Spring Boot, PostgreSQL, React, and TypeScript.
+![Sleep Tracker with example sleep records](docs/images/dashboard.png)
 
-![Sleep Tracker dashboard](docs/images/dashboard.png)
+## The app
 
-## A night at a time
+A React/TypeScript dashboard backed by Spring Boot and PostgreSQL. It shows sleep duration, quality, schedule trends, and habit associations. These comparisons do not establish cause and effect.
 
-Enter sleep times manually or import a Garmin CSV. The dashboard brings those
-records together so you can compare nights, follow trends, and look for habits
-associated with better sleep. These comparisons do not establish cause and effect.
-
-## Start tracking
+## Run
 
 With Docker installed:
 
@@ -20,30 +16,13 @@ With Docker installed:
 docker compose up --build
 ```
 
-Open [localhost:8080](http://localhost:8080).
-API documentation is at [localhost:8080/api/docs](http://localhost:8080/api/docs).
-The included database credentials are for local development only.
+Open [localhost:8080](http://localhost:8080). The included database credentials are for local development. API documentation is at [/api/docs](http://localhost:8080/api/docs).
 
-## Working on the code
+## Development
 
-Backend (requires Java 25 and Docker):
-
-```sh
-cd backend
-./mvnw verify
-```
-
-Frontend (requires Node.js 24; run from the project root in another terminal):
-
-```sh
-cd frontend
-npm install
-npm test
-```
-
-## Where it started
+- Backend: Java 25 and Docker; run `./mvnw verify` in `backend/`.
+- Frontend: Node.js 24; run `npm install` and `npm test` in `frontend/`.
 
 There are no user accounts. Sleep estimates are not medical advice.
 
-Started as a CPSC 233 JavaFX group project by Manavpreet Singh, Dylan Crombie,
-and Gary Liao. The original is preserved in [javafx-v1](https://github.com/manavpreet1809/Sleep-Tracker/tree/javafx-v1).
+Started as a CPSC 233 JavaFX group project with Dylan Crombie and Gary Liao. The original version is preserved in [javafx-v1](https://github.com/manavpreet1809/Sleep-Tracker/tree/javafx-v1).

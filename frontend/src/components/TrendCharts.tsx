@@ -16,7 +16,7 @@ export function TrendCharts({ trend }: { trend: TrendPoint[] }) {
       <div className="card chart">
         <h2>Sleep quality</h2>
         <p className="muted">Each night, with a 7-night trend line</p>
-        <ResponsiveContainer width="100%" height={220}>
+        <ResponsiveContainer width="100%" height={180}>
           <ComposedChart data={trend} margin={{ top: 8, right: 8, bottom: 0, left: -20 }}>
             <CartesianGrid vertical={false} stroke="var(--grid)" />
             <XAxis dataKey="date" tickFormatter={shortDay} minTickGap={24} tick={{ fill: 'var(--muted)', fontSize: 12 }} />
@@ -34,7 +34,7 @@ export function TrendCharts({ trend }: { trend: TrendPoint[] }) {
       <div className="card chart">
         <h2>Sleep duration</h2>
         <p className="muted">Hours asleep, with a 7-night trend line</p>
-        <ResponsiveContainer width="100%" height={220}>
+        <ResponsiveContainer width="100%" height={180}>
           <ComposedChart data={trend} margin={{ top: 8, right: 8, bottom: 0, left: -20 }}>
             <CartesianGrid vertical={false} stroke="var(--grid)" />
             <XAxis dataKey="date" tickFormatter={shortDay} minTickGap={24} tick={{ fill: 'var(--muted)', fontSize: 12 }} />
@@ -52,7 +52,7 @@ export function TrendCharts({ trend }: { trend: TrendPoint[] }) {
       <div className="card chart wide">
         <h2>Bedtime and wake time</h2>
         <p className="muted">A tighter band means a more regular schedule</p>
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={170}>
           <ComposedChart data={schedule} margin={{ top: 8, right: 8, bottom: 0, left: -10 }}>
             <CartesianGrid vertical={false} stroke="var(--grid)" />
             <XAxis dataKey="date" tickFormatter={shortDay} minTickGap={24} tick={{ fill: 'var(--muted)', fontSize: 12 }} />
