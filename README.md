@@ -1,6 +1,6 @@
-# Sleep Tracker
+# SleepTrack: Sleep and Habit Analytics
 
-Sleep Tracker brings manual sleep logs and Garmin records into one dashboard. Users can follow changes in sleep duration, quality, and schedule, and explore how those patterns relate to daily habits.
+SleepTrack brings manual sleep logs and Garmin records into one dashboard. Users can follow changes in sleep duration, quality, and schedule, and explore how those patterns relate to daily habits.
 
 ## The app
 
@@ -23,4 +23,4 @@ Open [localhost:8080](http://localhost:8080). The included database credentials 
 
 There are no user accounts. Sleep estimates are not medical advice.
 
-Started as a CPSC 233 JavaFX group project with Dylan Crombie and Gary Liao. The original version is preserved in [javafx-v1](https://github.com/manavpreet1809/Sleep-Tracker/tree/javafx-v1).
+Started as a CPSC 233 JavaFX group project with Dylan Crombie and Gary Liao. The original version is preserved in [javafx-v1](https://github.com/manavpreet1809/SleepTrack/tree/javafx-v1).
